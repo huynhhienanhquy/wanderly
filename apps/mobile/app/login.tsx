@@ -1,4 +1,4 @@
-import { registerRequestSchema, type AuthResponse } from '@wanderly/contracts';
+import { loginRequestSchema, type AuthResponse } from '@wanderly/contracts';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -6,8 +6,7 @@ import { saveAuthTokens } from '../src/auth-storage';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
 
-export default function RegisterScreen() {
-  const [displayName, setDisplayName] = useState('');
+export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -15,18 +14,14 @@ export default function RegisterScreen() {
 
   async function submit() {
     setMessage('');
-    const parsed = registerRequestSchema.safeParse({
-      displayName,
-      email,
-      password,
-    });
+    const parsed = loginRequestSchema.safeParse({ email, password });
     if (!parsed.success) {
-      setMessage(parsed.error.issues[0]?.message ?? 'Dữ liệu không hợp lệ.');
+      setMessage('Email hoặc mật khẩu không hợp lệ.');
       return;
     }
     setSubmitting(true);
     try {
-      const response = await fetch(`${API_URL}/auth/register`, {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(parsed.data),
@@ -36,13 +31,15 @@ export default function RegisterScreen() {
         | { message?: string };
       if (!response.ok || !('tokens' in body)) {
         throw new Error(
-          'message' in body ? body.message : 'Không thể đăng ký.',
+          'message' in body ? body.message : 'Không thể đăng nhập.',
         );
       }
       await saveAuthTokens(body.tokens.accessToken, body.tokens.refreshToken);
-      setMessage(`Chào mừng ${body.user.displayName}!`);
+      setMessage(`Xin chào ${body.user.displayName}!`);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Không thể đăng ký.');
+      setMessage(
+        error instanceof Error ? error.message : 'Không thể đăng nhập.',
+      );
     } finally {
       setSubmitting(false);
     }
@@ -52,13 +49,7 @@ export default function RegisterScreen() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <Text style={styles.eyebrow}>WANDERLY</Text>
-        <Text style={styles.title}>Tạo tài khoản</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Họ và tên"
-          value={displayName}
-          onChangeText={setDisplayName}
-        />
+        <Text style={styles.title}>Đăng nhập</Text>
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -69,7 +60,7 @@ export default function RegisterScreen() {
         />
         <TextInput
           style={styles.input}
-          placeholder="Mật khẩu (ít nhất 8 ký tự)"
+          placeholder="Mật khẩu"
           secureTextEntry
           value={password}
           onChangeText={setPassword}
@@ -77,7 +68,7 @@ export default function RegisterScreen() {
         {message ? <Text style={styles.message}>{message}</Text> : null}
         <Pressable style={styles.button} disabled={submitting} onPress={submit}>
           <Text style={styles.buttonText}>
-            {submitting ? 'Đang tạo...' : 'Đăng ký'}
+            {submitting ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </Text>
         </Pressable>
       </View>

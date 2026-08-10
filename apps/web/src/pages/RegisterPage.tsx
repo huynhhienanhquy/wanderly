@@ -33,6 +33,7 @@ export function RegisterPage() {
       }
       const auth = (await response.json()) as AuthResponse;
       sessionStorage.setItem('wanderlyAccessToken', auth.tokens.accessToken);
+      sessionStorage.setItem('wanderlyRefreshToken', auth.tokens.refreshToken);
       setSuccess(`Chào mừng ${auth.user.displayName} đến với Wanderly!`);
       event.currentTarget.reset();
     } catch (caught) {

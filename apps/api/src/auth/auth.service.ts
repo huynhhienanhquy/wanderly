@@ -1,9 +1,18 @@
 import { createHash, createHmac, randomBytes } from 'node:crypto';
-import { ConflictException, Injectable } from '@nestjs/common';
-import type { AuthResponse, RegisterRequest } from '@wanderly/contracts';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import type {
+  AuthResponse,
+  LoginRequest,
+  RefreshTokenRequest,
+  RegisterRequest,
+} from '@wanderly/contracts';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../database/prisma.service';
-import { hashPassword } from './password';
+import { hashPassword, verifyPassword } from './password';
 
 const ACCESS_TOKEN_TTL_SECONDS = 15 * 60;
 const REFRESH_TOKEN_TTL_DAYS = 30;
@@ -65,6 +74,113 @@ export class AuthService {
       }
       throw error;
     }
+  }
+
+  async login(input: LoginRequest): Promise<AuthResponse> {
+    const user = await this.prisma.user.findUnique({
+      where: { email: input.email },
+      include: { profile: true },
+    });
+    if (
+      !user ||
+      user.status !== 'ACTIVE' ||
+      !(await verifyPassword(input.password, user.passwordHash))
+    ) {
+      throw new UnauthorizedException('Email hoặc mật khẩu không chính xác.');
+    }
+
+    const tokens = this.createTokenPair();
+    await this.prisma.$transaction([
+      this.prisma.userSession.create({
+        data: {
+          userId: user.id,
+          refreshTokenHash: tokens.refreshTokenHash,
+          expiresAt: tokens.refreshExpiresAt,
+        },
+      }),
+      this.prisma.user.update({
+        where: { id: user.id },
+        data: { lastLoginAt: new Date() },
+      }),
+    ]);
+    return this.toAuthResponse(user, tokens.refreshToken);
+  }
+
+  async refresh(input: RefreshTokenRequest): Promise<AuthResponse> {
+    const currentHash = this.hashRefreshToken(input.refreshToken);
+    const session = await this.prisma.userSession.findFirst({
+      where: {
+        refreshTokenHash: currentHash,
+        revokedAt: null,
+        expiresAt: { gt: new Date() },
+      },
+      include: { user: { include: { profile: true } } },
+    });
+    if (!session || session.user.status !== 'ACTIVE') {
+      throw new UnauthorizedException(
+        'Refresh token không hợp lệ hoặc đã hết hạn.',
+      );
+    }
+
+    const tokens = this.createTokenPair();
+    await this.prisma.$transaction(async (database) => {
+      const claimed = await database.userSession.updateMany({
+        where: { id: session.id, revokedAt: null },
+        data: { revokedAt: new Date() },
+      });
+      if (claimed.count !== 1) {
+        throw new UnauthorizedException('Refresh token đã được sử dụng.');
+      }
+      await database.userSession.create({
+        data: {
+          userId: session.userId,
+          refreshTokenHash: tokens.refreshTokenHash,
+          expiresAt: tokens.refreshExpiresAt,
+        },
+      });
+    });
+    return this.toAuthResponse(session.user, tokens.refreshToken);
+  }
+
+  private createTokenPair() {
+    const refreshToken = randomBytes(48).toString('base64url');
+    return {
+      refreshToken,
+      refreshTokenHash: this.hashRefreshToken(refreshToken),
+      refreshExpiresAt: new Date(
+        Date.now() + REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60 * 1000,
+      ),
+    };
+  }
+
+  private hashRefreshToken(refreshToken: string): string {
+    return createHash('sha256').update(refreshToken).digest('hex');
+  }
+
+  private toAuthResponse(
+    user: {
+      id: string;
+      email: string;
+      role: string;
+      createdAt: Date;
+      profile: { displayName: string } | null;
+    },
+    refreshToken: string,
+  ): AuthResponse {
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        displayName: user.profile?.displayName ?? user.email,
+        role: user.role as 'USER' | 'ADMIN',
+        createdAt: user.createdAt.toISOString(),
+      },
+      tokens: {
+        accessToken: this.createAccessToken(user.id, user.role),
+        refreshToken,
+        expiresIn: ACCESS_TOKEN_TTL_SECONDS,
+      },
+    };
   }
 
   private createAccessToken(userId: string, role: string): string {

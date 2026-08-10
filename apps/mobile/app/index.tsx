@@ -31,6 +31,9 @@ export default function HomeScreen() {
         <Link href="/register" style={styles.registerLink}>
           Tạo tài khoản
         </Link>
+        <Link href="/login" style={styles.loginLink}>
+          Đăng nhập
+        </Link>
       </View>
     </SafeAreaView>
   );
@@ -77,5 +80,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '700',
     marginTop: 24,
+  },
+  loginLink: {
+    color: '#52615b',
+    fontSize: 17,
+    fontWeight: '700',
+    marginTop: 12,
   },
 });

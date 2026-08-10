@@ -9,9 +9,16 @@ import {
 import {
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiOkResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { registerRequestSchema, type AuthResponse } from '@wanderly/contracts';
+import {
+  loginRequestSchema,
+  refreshTokenRequestSchema,
+  registerRequestSchema,
+  type AuthResponse,
+} from '@wanderly/contracts';
 import { AuthService } from './auth.service';
 
 @ApiTags('Auth')
@@ -35,5 +42,31 @@ export class AuthController {
       });
     }
     return this.authService.register(result.data);
+  }
+
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ description: 'Đăng nhập thành công.' })
+  @ApiUnauthorizedResponse({
+    description: 'Thông tin đăng nhập không chính xác.',
+  })
+  async login(@Body() body: unknown): Promise<AuthResponse> {
+    const result = loginRequestSchema.safeParse(body);
+    if (!result.success) {
+      throw new UnprocessableEntityException('Dữ liệu đăng nhập không hợp lệ.');
+    }
+    return this.authService.login(result.data);
+  }
+
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ description: 'Làm mới session thành công.' })
+  @ApiUnauthorizedResponse({ description: 'Refresh token không hợp lệ.' })
+  async refresh(@Body() body: unknown): Promise<AuthResponse> {
+    const result = refreshTokenRequestSchema.safeParse(body);
+    if (!result.success) {
+      throw new UnprocessableEntityException('Refresh token không hợp lệ.');
+    }
+    return this.authService.refresh(result.data);
   }
 }

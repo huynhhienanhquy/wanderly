@@ -7,6 +7,7 @@ import { FavoritesPage } from './pages/FavoritesPage';
 import { AdminReportsPage } from './pages/AdminReportsPage';
 import { AdminGuard } from './components/AdminGuard';
 import { PlansPage } from './pages/PlansPage';
+import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 
 export function App() {
@@ -20,6 +21,7 @@ export function App() {
       <Route path="/admin/reports" element={<AdminGuard><AdminReportsPage /></AdminGuard>} />
       <Route path="/plans" element={<PlansPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/login" element={<LoginPage />} />
     </Routes>
   );
 }

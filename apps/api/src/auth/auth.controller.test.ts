@@ -36,4 +36,29 @@ describe('AuthController', () => {
       }),
     ).rejects.toBeInstanceOf(UnprocessableEntityException);
   });
+
+  it('normalizes email before login', async () => {
+    const login = vi.fn().mockResolvedValue({});
+    const controller = new AuthController({ login } as unknown as AuthService);
+
+    await controller.login({
+      email: 'USER@EXAMPLE.COM',
+      password: 'password123',
+    });
+
+    expect(login).toHaveBeenCalledWith({
+      email: 'user@example.com',
+      password: 'password123',
+    });
+  });
+
+  it('rejects a malformed refresh token', async () => {
+    const controller = new AuthController({
+      refresh: vi.fn(),
+    } as unknown as AuthService);
+
+    await expect(
+      controller.refresh({ refreshToken: 'too-short' }),
+    ).rejects.toBeInstanceOf(UnprocessableEntityException);
+  });
 });

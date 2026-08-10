@@ -14,7 +14,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | FND-06 — Cấu hình database và migration    | Done       | 2026-08-10 | [FND-06](./tasks/FND-06.md)     |
 | FND-07 — Thiết lập convention              | Done       | 2026-08-10 | [FND-07](./tasks/FND-07.md)     |
 | AUTH-01 — Đăng ký tài khoản                | Done       | 2026-08-14 | [AUTH-01](./tasks/AUTH-01.md)   |
-| AUTH-02 — Đăng nhập và refresh token       | Branch only | 2026-08-10 | `feature/AUTH-02-login-refresh` |
+| AUTH-02 — Đăng nhập và refresh token       | Done       | 2026-08-14 | [AUTH-02](./tasks/AUTH-02.md)   |
 | AUTH-03 — Đăng xuất và thu hồi session     | Branch only | 2026-08-10 | `feature/AUTH-03-logout`        |
 | AUTH-04 — Quên và đặt lại mật khẩu         | Branch only | 2026-08-10 | `feature/AUTH-04-password-reset` |
 | AUTH-05 — Phân quyền User/Admin            | Branch only | 2026-08-10 | `feature/AUTH-05-rbac`          |
