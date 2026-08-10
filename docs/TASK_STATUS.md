@@ -17,6 +17,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | AUTH-02 — Đăng nhập và refresh token      | Done       | 2026-08-10 | [AUTH-02](./tasks/AUTH-02.md) |
 | AUTH-03 — Đăng xuất và thu hồi session    | Done       | 2026-08-10 | [AUTH-03](./tasks/AUTH-03.md) |
 | AUTH-04 — Quên và đặt lại mật khẩu        | Done       | 2026-08-10 | [AUTH-04](./tasks/AUTH-04.md) |
+| AUTH-05 — Phân quyền User/Admin           | Done       | 2026-08-10 | [AUTH-05](./tasks/AUTH-05.md) |
 
 ## Quy tắc cập nhật
 

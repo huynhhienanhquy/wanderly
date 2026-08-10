@@ -1,4 +1,4 @@
-import { createHash, createHmac, randomBytes } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 import {
   ConflictException,
   Injectable,
@@ -16,13 +16,10 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../database/prisma.service';
 import { hashPassword, verifyPassword } from './password';
 import { PasswordResetMailerService } from './password-reset-mailer.service';
+import { createAccessToken } from './access-token';
 
 const ACCESS_TOKEN_TTL_SECONDS = 15 * 60;
 const REFRESH_TOKEN_TTL_DAYS = 30;
-
-function base64Url(value: string): string {
-  return Buffer.from(value).toString('base64url');
-}
 
 @Injectable()
 export class AuthService {
@@ -66,7 +63,7 @@ export class AuthService {
           createdAt: user.createdAt.toISOString(),
         },
         tokens: {
-          accessToken: this.createAccessToken(user.id, user.role),
+          accessToken: createAccessToken(user.id, user.role),
           refreshToken,
           expiresIn: ACCESS_TOKEN_TTL_SECONDS,
         },
@@ -251,29 +248,10 @@ export class AuthService {
         createdAt: user.createdAt.toISOString(),
       },
       tokens: {
-        accessToken: this.createAccessToken(user.id, user.role),
+        accessToken: createAccessToken(user.id, user.role),
         refreshToken,
         expiresIn: ACCESS_TOKEN_TTL_SECONDS,
       },
     };
-  }
-
-  private createAccessToken(userId: string, role: string): string {
-    const header = base64Url(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-    const now = Math.floor(Date.now() / 1000);
-    const payload = base64Url(
-      JSON.stringify({
-        sub: userId,
-        role,
-        iat: now,
-        exp: now + ACCESS_TOKEN_TTL_SECONDS,
-      }),
-    );
-    const secret =
-      process.env.JWT_ACCESS_SECRET ?? 'wanderly-local-access-secret';
-    const signature = createHmac('sha256', secret)
-      .update(`${header}.${payload}`)
-      .digest('base64url');
-    return `${header}.${payload}.${signature}`;
   }
 }

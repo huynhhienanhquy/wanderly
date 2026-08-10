@@ -1,13 +1,17 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   UnprocessableEntityException,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiConflictResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiTags,
@@ -22,6 +26,8 @@ import {
   type AuthResponse,
 } from '@wanderly/contracts';
 import { AuthService } from './auth.service';
+import { AuthGuard, type AuthenticatedRequest } from './auth.guard';
+import { Roles, RolesGuard } from './roles.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -101,5 +107,20 @@ export class AuthController {
     if (!result.success)
       throw new UnprocessableEntityException('Dữ liệu không hợp lệ.');
     await this.authService.resetPassword(result.data);
+  }
+
+  @Get('access-check')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  accessCheck(@Req() request: AuthenticatedRequest) {
+    return { userId: request.user.sub, role: request.user.role };
+  }
+
+  @Get('admin-check')
+  @ApiBearerAuth()
+  @Roles('ADMIN')
+  @UseGuards(AuthGuard, RolesGuard)
+  adminCheck(@Req() request: AuthenticatedRequest) {
+    return { userId: request.user.sub, role: request.user.role };
   }
 }
