@@ -17,7 +17,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | AUTH-02 — Đăng nhập và refresh token       | Done       | 2026-08-14 | [AUTH-02](./tasks/AUTH-02.md)   |
 | AUTH-03 — Đăng xuất và thu hồi session     | Done       | 2026-08-14 | [AUTH-03](./tasks/AUTH-03.md)   |
 | AUTH-04 — Quên và đặt lại mật khẩu         | Done       | 2026-08-14 | [AUTH-04](./tasks/AUTH-04.md)   |
-| AUTH-05 — Phân quyền User/Admin            | Branch only | 2026-08-10 | `feature/AUTH-05-rbac`          |
+| AUTH-05 — Phân quyền User/Admin            | Done       | 2026-08-14 | [AUTH-05](./tasks/AUTH-05.md)   |
 | AUTH-06 — Trang hồ sơ cá nhân              | Branch only | 2026-08-10 | `feature/AUTH-06-profile`       |
 | PLACE-01 — Thiết kế bảng Place và Category | Done       | 2026-08-10 | [PLACE-01](./tasks/PLACE-01.md) |
 | PLACE-02 — Import/seed dữ liệu địa điểm    | Done       | 2026-08-11 | [PLACE-02](./tasks/PLACE-02.md) |
