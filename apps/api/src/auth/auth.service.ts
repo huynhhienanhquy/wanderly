@@ -6,13 +6,16 @@ import {
 } from '@nestjs/common';
 import type {
   AuthResponse,
+  ForgotPasswordRequest,
   LoginRequest,
   RefreshTokenRequest,
   RegisterRequest,
+  ResetPasswordRequest,
 } from '@wanderly/contracts';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../database/prisma.service';
 import { hashPassword, verifyPassword } from './password';
+import { PasswordResetMailerService } from './password-reset-mailer.service';
 
 const ACCESS_TOKEN_TTL_SECONDS = 15 * 60;
 const REFRESH_TOKEN_TTL_DAYS = 30;
@@ -23,7 +26,10 @@ function base64Url(value: string): string {
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly resetMailer: PasswordResetMailerService,
+  ) {}
 
   async register(input: RegisterRequest): Promise<AuthResponse> {
     const passwordHash = await hashPassword(input.password);
@@ -149,6 +155,65 @@ export class AuthService {
         revokedAt: null,
       },
       data: { revokedAt: new Date() },
+    });
+  }
+
+  async forgotPassword(input: ForgotPasswordRequest): Promise<void> {
+    const user = await this.prisma.user.findUnique({
+      where: { email: input.email },
+    });
+    if (!user || user.status !== 'ACTIVE') return;
+
+    const token = randomBytes(48).toString('base64url');
+    await this.prisma.$transaction([
+      this.prisma.passwordResetToken.updateMany({
+        where: { userId: user.id, usedAt: null },
+        data: { usedAt: new Date() },
+      }),
+      this.prisma.passwordResetToken.create({
+        data: {
+          userId: user.id,
+          tokenHash: this.hashRefreshToken(token),
+          expiresAt: new Date(Date.now() + 30 * 60 * 1000),
+        },
+      }),
+    ]);
+    await this.resetMailer.send(user.email, token);
+  }
+
+  async resetPassword(input: ResetPasswordRequest): Promise<void> {
+    const resetToken = await this.prisma.passwordResetToken.findFirst({
+      where: {
+        tokenHash: this.hashRefreshToken(input.token),
+        usedAt: null,
+        expiresAt: { gt: new Date() },
+      },
+    });
+    if (!resetToken) {
+      throw new UnauthorizedException(
+        'Token đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.',
+      );
+    }
+
+    const passwordHash = await hashPassword(input.password);
+    await this.prisma.$transaction(async (database) => {
+      const claimed = await database.passwordResetToken.updateMany({
+        where: { id: resetToken.id, usedAt: null },
+        data: { usedAt: new Date() },
+      });
+      if (claimed.count !== 1) {
+        throw new UnauthorizedException(
+          'Token đặt lại mật khẩu đã được sử dụng.',
+        );
+      }
+      await database.user.update({
+        where: { id: resetToken.userId },
+        data: { passwordHash },
+      });
+      await database.userSession.updateMany({
+        where: { userId: resetToken.userId, revokedAt: null },
+        data: { revokedAt: new Date() },
+      });
     });
   }
 

@@ -22,6 +22,12 @@ export const refreshTokenRequestSchema = z.object({
   refreshToken: z.string().min(32).max(4096),
 });
 
+export const forgotPasswordRequestSchema = z.object({ email: emailSchema });
+export const resetPasswordRequestSchema = z.object({
+  token: z.string().min(32).max(4096),
+  password: passwordSchema,
+});
+
 export const userSummarySchema = z.object({
   id: uuidSchema,
   email: emailSchema,
@@ -44,4 +50,6 @@ export const authResponseSchema = z.object({
 export type RegisterRequest = z.infer<typeof registerRequestSchema>;
 export type LoginRequest = z.infer<typeof loginRequestSchema>;
 export type RefreshTokenRequest = z.infer<typeof refreshTokenRequestSchema>;
+export type ForgotPasswordRequest = z.infer<typeof forgotPasswordRequestSchema>;
+export type ResetPasswordRequest = z.infer<typeof resetPasswordRequestSchema>;
 export type AuthResponse = z.infer<typeof authResponseSchema>;

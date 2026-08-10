@@ -16,6 +16,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | AUTH-01 — Đăng ký tài khoản               | Done       | 2026-08-10 | [AUTH-01](./tasks/AUTH-01.md) |
 | AUTH-02 — Đăng nhập và refresh token      | Done       | 2026-08-10 | [AUTH-02](./tasks/AUTH-02.md) |
 | AUTH-03 — Đăng xuất và thu hồi session    | Done       | 2026-08-10 | [AUTH-03](./tasks/AUTH-03.md) |
+| AUTH-04 — Quên và đặt lại mật khẩu        | Done       | 2026-08-10 | [AUTH-04](./tasks/AUTH-04.md) |
 
 ## Quy tắc cập nhật
 

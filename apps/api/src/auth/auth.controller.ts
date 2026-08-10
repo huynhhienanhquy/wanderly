@@ -14,9 +14,11 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import {
+  forgotPasswordRequestSchema,
   loginRequestSchema,
   refreshTokenRequestSchema,
   registerRequestSchema,
+  resetPasswordRequestSchema,
   type AuthResponse,
 } from '@wanderly/contracts';
 import { AuthService } from './auth.service';
@@ -78,5 +80,26 @@ export class AuthController {
       throw new UnprocessableEntityException('Refresh token không hợp lệ.');
     }
     await this.authService.logout(result.data);
+  }
+
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.ACCEPTED)
+  async forgotPassword(@Body() body: unknown): Promise<{ message: string }> {
+    const result = forgotPasswordRequestSchema.safeParse(body);
+    if (!result.success)
+      throw new UnprocessableEntityException('Email không hợp lệ.');
+    await this.authService.forgotPassword(result.data);
+    return {
+      message: 'Nếu email tồn tại, hướng dẫn đặt lại mật khẩu đã được gửi.',
+    };
+  }
+
+  @Post('reset-password')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async resetPassword(@Body() body: unknown): Promise<void> {
+    const result = resetPasswordRequestSchema.safeParse(body);
+    if (!result.success)
+      throw new UnprocessableEntityException('Dữ liệu không hợp lệ.');
+    await this.authService.resetPassword(result.data);
   }
 }
