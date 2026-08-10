@@ -15,3 +15,21 @@ export async function saveAuthTokens(
     SecureStore.setItemAsync('wanderlyRefreshToken', refreshToken),
   ]);
 }
+
+export async function getRefreshToken(): Promise<string | null> {
+  return Platform.OS === 'web'
+    ? sessionStorage.getItem('wanderlyRefreshToken')
+    : SecureStore.getItemAsync('wanderlyRefreshToken');
+}
+
+export async function clearAuthTokens(): Promise<void> {
+  if (Platform.OS === 'web') {
+    sessionStorage.removeItem('wanderlyAccessToken');
+    sessionStorage.removeItem('wanderlyRefreshToken');
+    return;
+  }
+  await Promise.all([
+    SecureStore.deleteItemAsync('wanderlyAccessToken'),
+    SecureStore.deleteItemAsync('wanderlyRefreshToken'),
+  ]);
+}

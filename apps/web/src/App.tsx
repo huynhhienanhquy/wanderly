@@ -8,6 +8,7 @@ import { AdminReportsPage } from './pages/AdminReportsPage';
 import { AdminGuard } from './components/AdminGuard';
 import { PlansPage } from './pages/PlansPage';
 import { LoginPage } from './pages/LoginPage';
+import { LogoutPage } from './pages/LogoutPage';
 import { RegisterPage } from './pages/RegisterPage';
 
 export function App() {
@@ -22,6 +23,7 @@ export function App() {
       <Route path="/plans" element={<PlansPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/logout" element={<LogoutPage />} />
     </Routes>
   );
 }

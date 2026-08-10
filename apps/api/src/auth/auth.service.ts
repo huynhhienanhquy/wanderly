@@ -142,6 +142,16 @@ export class AuthService {
     return this.toAuthResponse(session.user, tokens.refreshToken);
   }
 
+  async logout(input: RefreshTokenRequest): Promise<void> {
+    await this.prisma.userSession.updateMany({
+      where: {
+        refreshTokenHash: this.hashRefreshToken(input.refreshToken),
+        revokedAt: null,
+      },
+      data: { revokedAt: new Date() },
+    });
+  }
+
   private createTokenPair() {
     const refreshToken = randomBytes(48).toString('base64url');
     return {

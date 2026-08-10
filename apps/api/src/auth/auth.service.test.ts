@@ -106,4 +106,13 @@ describe('AuthService sessions', () => {
     ).rejects.toBeInstanceOf(UnauthorizedException);
     expect(database.userSession.create).not.toHaveBeenCalled();
   });
+
+  it('revokes the matching active session on logout', async () => {
+    await service.logout({ refreshToken: 'x'.repeat(48) });
+
+    expect(database.userSession.updateMany).toHaveBeenCalledWith({
+      where: { refreshTokenHash: expect.any(String), revokedAt: null },
+      data: { revokedAt: expect.any(Date) },
+    });
+  });
 });

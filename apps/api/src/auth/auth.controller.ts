@@ -69,4 +69,14 @@ export class AuthController {
     }
     return this.authService.refresh(result.data);
   }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async logout(@Body() body: unknown): Promise<void> {
+    const result = refreshTokenRequestSchema.safeParse(body);
+    if (!result.success) {
+      throw new UnprocessableEntityException('Refresh token không hợp lệ.');
+    }
+    await this.authService.logout(result.data);
+  }
 }
