@@ -22,6 +22,12 @@ export async function getRefreshToken(): Promise<string | null> {
     : SecureStore.getItemAsync('wanderlyRefreshToken');
 }
 
+export async function getAccessToken(): Promise<string | null> {
+  return Platform.OS === 'web'
+    ? sessionStorage.getItem('wanderlyAccessToken')
+    : SecureStore.getItemAsync('wanderlyAccessToken');
+}
+
 export async function clearAuthTokens(): Promise<void> {
   if (Platform.OS === 'web') {
     sessionStorage.removeItem('wanderlyAccessToken');
