@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "Wanderly",
+    "slug": "wanderly",
+    "scheme": "wanderly",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "plugins": ["expo-router"],
+    "android": {
+      "package": "com.wanderly.app"
+    },
+    "ios": {
+      "bundleIdentifier": "com.wanderly.app",
+      "supportsTablet": true
+    }
+  }
+}

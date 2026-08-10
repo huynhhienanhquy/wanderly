@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgis/postgis:16-3.5
+    container_name: wanderly-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: wanderly
+      POSTGRES_PASSWORD: wanderly
+      POSTGRES_USER: wanderly
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U wanderly -d wanderly']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - '5432:5432'
+    volumes:
+      - wanderly_postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: wanderly-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - '6379:6379'
+    volumes:
+      - wanderly_redis_data:/data
+
+volumes:
+  wanderly_postgres_data:
+  wanderly_redis_data:

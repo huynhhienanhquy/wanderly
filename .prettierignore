@@ -1,0 +1,10 @@
+node_modules
+.codex
+.pnpm-store
+AGENTS.md
+dist
+build
+coverage
+.turbo
+.expo
+pnpm-lock.yaml

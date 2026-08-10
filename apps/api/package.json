@@ -1,0 +1,30 @@
+{
+  "name": "@wanderly/api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "nest build",
+    "dev": "nest start --watch",
+    "lint": "tsc --noEmit",
+    "start": "node dist/main.js",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@nestjs/common": "11.1.6",
+    "@nestjs/core": "11.1.6",
+    "@nestjs/platform-express": "11.1.6",
+    "@wanderly/contracts": "workspace:*",
+    "@prisma/client": "6.16.2",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "11.0.10",
+    "@types/express": "5.0.3",
+    "@types/node": "22.18.0",
+    "ts-node": "10.9.2",
+    "tsconfig-paths": "4.2.0",
+    "vitest": "3.2.4"
+  }
+}

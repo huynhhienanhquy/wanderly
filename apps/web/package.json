@@ -1,0 +1,29 @@
+{
+  "name": "@wanderly/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b && vite build",
+    "dev": "vite --port 3000",
+    "lint": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@wanderly/contracts": "workspace:*",
+    "@tanstack/react-query": "5.85.5",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-router": "7.8.2",
+    "zustand": "5.0.8"
+  },
+  "devDependencies": {
+    "@types/node": "22.18.0",
+    "@types/react": "19.1.10",
+    "@types/react-dom": "19.1.7",
+    "@vitejs/plugin-react": "5.0.2",
+    "vite": "7.1.3",
+    "vitest": "3.2.4"
+  }
+}

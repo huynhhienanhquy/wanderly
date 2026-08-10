@@ -1,0 +1,26 @@
+node_modules/
+.pnpm-store/
+.turbo/
+dist/
+build/
+coverage/
+.env
+.env.*
+!.env.example
+
+# Web
+apps/web/dist/
+
+# Expo / React Native
+apps/mobile/.expo/
+apps/mobile/.expo-shared/
+apps/mobile/android/
+apps/mobile/ios/
+
+# Logs and editor files
+*.log
+*.tsbuildinfo
+.DS_Store
+.idea/
+.vscode/
+.codex/
