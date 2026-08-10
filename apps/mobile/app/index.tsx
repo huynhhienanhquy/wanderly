@@ -31,6 +31,9 @@ export default function HomeScreen() {
         <Link href="/login" style={styles.loginLink}>
           Đăng nhập
         </Link>
+        <Link href="/logout" style={styles.logoutLink}>
+          Đăng xuất
+        </Link>
       </View>
     </SafeAreaView>
   );
@@ -78,4 +81,5 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginTop: 12,
   },
+  logoutLink: { color: '#9d2922', fontSize: 16, marginTop: 12 },
 });

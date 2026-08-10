@@ -61,4 +61,13 @@ describe('AuthController', () => {
       controller.refresh({ refreshToken: 'too-short' }),
     ).rejects.toBeInstanceOf(UnprocessableEntityException);
   });
+
+  it('forwards a valid refresh token to logout', async () => {
+    const logout = vi.fn().mockResolvedValue(undefined);
+    const controller = new AuthController({ logout } as unknown as AuthService);
+
+    await controller.logout({ refreshToken: 'x'.repeat(48) });
+
+    expect(logout).toHaveBeenCalledWith({ refreshToken: 'x'.repeat(48) });
+  });
 });
