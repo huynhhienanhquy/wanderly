@@ -1,4 +1,5 @@
 import { planningConstraintsSchema } from '@wanderly/contracts';
+import { Link } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -24,6 +25,9 @@ export default function HomeScreen() {
           Kịch bản mẫu có {example.peopleCount} người và ngân sách {budgetLabel}
           .
         </Text>
+        <Link href="/register" style={styles.registerLink}>
+          Tạo tài khoản
+        </Link>
       </View>
     </SafeAreaView>
   );
@@ -57,6 +61,12 @@ const styles = StyleSheet.create({
     color: '#52615b',
     fontSize: 17,
     lineHeight: 27,
+    marginTop: 24,
+  },
+  registerLink: {
+    color: '#277253',
+    fontSize: 17,
+    fontWeight: '700',
     marginTop: 24,
   },
 });
