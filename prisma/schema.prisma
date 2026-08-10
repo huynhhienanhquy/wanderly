@@ -102,16 +102,16 @@ enum EventStatus {
 }
 
 model User {
-  id              String            @id @default(uuid()) @db.Uuid
-  email           String            @unique @db.VarChar(320)
-  passwordHash    String            @map("password_hash") @db.VarChar(255)
-  role            UserRole          @default(USER)
-  status          UserStatus        @default(ACTIVE)
-  emailVerifiedAt DateTime?         @map("email_verified_at") @db.Timestamptz(6)
-  lastLoginAt     DateTime?         @map("last_login_at") @db.Timestamptz(6)
-  createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt       DateTime          @updatedAt @map("updated_at") @db.Timestamptz(6)
-  deletedAt       DateTime?         @map("deleted_at") @db.Timestamptz(6)
+  id              String           @id @default(uuid()) @db.Uuid
+  email           String           @unique @db.VarChar(320)
+  passwordHash    String           @map("password_hash") @db.VarChar(255)
+  role            UserRole         @default(USER)
+  status          UserStatus       @default(ACTIVE)
+  emailVerifiedAt DateTime?        @map("email_verified_at") @db.Timestamptz(6)
+  lastLoginAt     DateTime?        @map("last_login_at") @db.Timestamptz(6)
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt       DateTime?        @map("deleted_at") @db.Timestamptz(6)
   profile         UserProfile?
   sessions        UserSession[]
   preferences     UserPreference[]
@@ -159,17 +159,18 @@ model UserSession {
 }
 
 model Category {
-  id              String             @id @default(uuid()) @db.Uuid
-  slug            String             @unique @db.VarChar(80)
-  name            String             @db.VarChar(100)
-  icon            String?            @db.VarChar(100)
+  id              String           @id @default(uuid()) @db.Uuid
+  slug            String           @unique @db.VarChar(80)
+  name            String           @db.VarChar(100)
+  icon            String?          @db.VarChar(100)
   description     String?
-  isActive        Boolean            @default(true) @map("is_active")
-  createdAt       DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt       DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
+  isActive        Boolean          @default(true) @map("is_active")
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
   userPreferences UserPreference[]
   places          PlaceCategory[]
 
+  @@index([isActive, name])
   @@map("categories")
 }
 
@@ -225,6 +226,7 @@ model Place {
   @@index([city, status])
   @@index([rating(sort: Desc)])
   @@index([priceMin, priceMax])
+  @@index([provider, lastSyncedAt])
   @@map("places")
 }
 
@@ -255,15 +257,15 @@ model PlaceImage {
 }
 
 model PlaceOpeningHour {
-  id         String    @id @default(uuid()) @db.Uuid
-  placeId    String    @map("place_id") @db.Uuid
-  dayOfWeek  Int       @map("day_of_week") @db.SmallInt
-  openTime   DateTime? @map("open_time") @db.Time(0)
-  closeTime  DateTime? @map("close_time") @db.Time(0)
-  isClosed   Boolean   @default(false) @map("is_closed")
-  validFrom  DateTime? @map("valid_from") @db.Date
-  validTo    DateTime? @map("valid_to") @db.Date
-  place      Place     @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  id        String    @id @default(uuid()) @db.Uuid
+  placeId   String    @map("place_id") @db.Uuid
+  dayOfWeek Int       @map("day_of_week") @db.SmallInt
+  openTime  DateTime? @map("open_time") @db.Time(0)
+  closeTime DateTime? @map("close_time") @db.Time(0)
+  isClosed  Boolean   @default(false) @map("is_closed")
+  validFrom DateTime? @map("valid_from") @db.Date
+  validTo   DateTime? @map("valid_to") @db.Date
+  place     Place     @relation(fields: [placeId], references: [id], onDelete: Cascade)
 
   @@index([placeId, dayOfWeek])
   @@map("place_opening_hours")
@@ -333,25 +335,25 @@ model Plan {
 }
 
 model PlanItem {
-  id                    String          @id @default(uuid()) @db.Uuid
-  planId                String          @map("plan_id") @db.Uuid
-  placeId               String          @map("place_id") @db.Uuid
-  orderIndex            Int             @map("order_index")
-  startTime             DateTime        @map("start_time") @db.Timestamptz(6)
-  endTime               DateTime        @map("end_time") @db.Timestamptz(6)
-  estimatedCost         BigInt          @default(0) @map("estimated_cost")
-  travelMode            TravelMode?     @map("travel_mode")
-  travelDistanceMeters  Int             @default(0) @map("travel_distance_meters")
-  travelDurationMinutes Int             @default(0) @map("travel_duration_minutes")
-  matchScore            Decimal?        @map("match_score") @db.Decimal(5, 4)
-  recommendationReason  String?         @map("recommendation_reason")
-  weatherSnapshot       Json?           @map("weather_snapshot")
-  source                 PlanItemSource
-  createdAt              DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt              DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
-  plan                   Plan            @relation(fields: [planId], references: [id], onDelete: Cascade)
-  place                  Place           @relation(fields: [placeId], references: [id], onDelete: Restrict)
-  feedbacks              UserFeedback[]
+  id                    String         @id @default(uuid()) @db.Uuid
+  planId                String         @map("plan_id") @db.Uuid
+  placeId               String         @map("place_id") @db.Uuid
+  orderIndex            Int            @map("order_index")
+  startTime             DateTime       @map("start_time") @db.Timestamptz(6)
+  endTime               DateTime       @map("end_time") @db.Timestamptz(6)
+  estimatedCost         BigInt         @default(0) @map("estimated_cost")
+  travelMode            TravelMode?    @map("travel_mode")
+  travelDistanceMeters  Int            @default(0) @map("travel_distance_meters")
+  travelDurationMinutes Int            @default(0) @map("travel_duration_minutes")
+  matchScore            Decimal?       @map("match_score") @db.Decimal(5, 4)
+  recommendationReason  String?        @map("recommendation_reason")
+  weatherSnapshot       Json?          @map("weather_snapshot")
+  source                PlanItemSource
+  createdAt             DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
+  plan                  Plan           @relation(fields: [planId], references: [id], onDelete: Cascade)
+  place                 Place          @relation(fields: [placeId], references: [id], onDelete: Restrict)
+  feedbacks             UserFeedback[]
 
   @@unique([planId, orderIndex])
   @@index([planId, startTime])
