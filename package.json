@@ -22,10 +22,12 @@
     "db:validate": "prisma validate --schema prisma/schema.prisma",
     "db:migrate": "prisma migrate dev --schema prisma/schema.prisma",
     "db:seed": "tsx prisma/seed.ts",
-    "db:seed:test": "tsx --test prisma/seed-data/places.test.ts"
+    "db:seed:test": "tsx --test prisma/seed-data/places.test.ts",
+    "api:validate": "node scripts/validate-openapi.mjs"
   },
   "devDependencies": {
     "@types/node": "22.18.0",
+    "@apidevtools/swagger-parser": "12.1.0",
     "prettier": "3.6.2",
     "prisma": "6.16.2",
     "tsx": "4.20.5",

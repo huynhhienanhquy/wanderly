@@ -1,0 +1,894 @@
+openapi: 3.1.0
+info:
+  title: Wanderly API
+  version: 0.1.0
+  description: Contract dùng chung cho Wanderly Web React và Mobile React Native.
+servers:
+  - url: http://localhost:4000
+    description: Local development
+tags:
+  - name: System
+  - name: Auth
+  - name: Users
+  - name: Places
+  - name: Planner
+  - name: Plans
+  - name: Admin
+paths:
+  /health:
+    get:
+      tags: [System]
+      operationId: getHealth
+      summary: Kiểm tra API process
+      responses:
+        '200':
+          description: API đang hoạt động
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /auth/register:
+    post:
+      tags: [Auth]
+      operationId: register
+      summary: Đăng ký tài khoản
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Đăng ký thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /auth/login:
+    post:
+      tags: [Auth]
+      operationId: login
+      summary: Đăng nhập
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Đăng nhập thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      operationId: refreshSession
+      summary: Làm mới access token và xoay refresh token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refreshToken]
+              properties:
+                refreshToken:
+                  type: string
+                  minLength: 32
+      responses:
+        '200':
+          description: Token mới
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokens'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /users/me:
+    get:
+      tags: [Users]
+      operationId: getCurrentUser
+      summary: Lấy hồ sơ hiện tại
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Hồ sơ người dùng
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSummary'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /users/me/preferences:
+    get:
+      tags: [Users]
+      operationId: getPreferences
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Danh sách sở thích
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserPreference'
+    put:
+      tags: [Users]
+      operationId: replacePreferences
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [preferences]
+              properties:
+                preferences:
+                  type: array
+                  maxItems: 30
+                  items:
+                    $ref: '#/components/schemas/UserPreferenceInput'
+      responses:
+        '200':
+          description: Sở thích đã cập nhật
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /places:
+    get:
+      tags: [Places]
+      operationId: listPlaces
+      summary: Tìm kiếm và lọc địa điểm
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - name: query
+          in: query
+          schema:
+            type: string
+            maxLength: 200
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: city
+          in: query
+          schema:
+            type: string
+        - name: priceMax
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+        - name: ratingMin
+          in: query
+          schema:
+            type: number
+            minimum: 0
+            maximum: 5
+        - name: latitude
+          in: query
+          schema:
+            type: number
+            minimum: -90
+            maximum: 90
+        - name: longitude
+          in: query
+          schema:
+            type: number
+            minimum: -180
+            maximum: 180
+        - name: radiusMeters
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100000
+      responses:
+        '200':
+          description: Trang địa điểm
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceListResponse'
+  /places/{placeId}:
+    get:
+      tags: [Places]
+      operationId: getPlace
+      parameters:
+        - $ref: '#/components/parameters/PlaceId'
+      responses:
+        '200':
+          description: Chi tiết địa điểm
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceSummary'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /places/{placeId}/favorite:
+    post:
+      tags: [Places]
+      operationId: addFavorite
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlaceId'
+      responses:
+        '204':
+          description: Đã lưu
+    delete:
+      tags: [Places]
+      operationId: removeFavorite
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlaceId'
+      responses:
+        '204':
+          description: Đã bỏ lưu
+  /planner/constraints:
+    post:
+      tags: [Planner]
+      operationId: extractPlanningConstraints
+      summary: Trích xuất constraint từ ngôn ngữ tự nhiên
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExtractConstraintsRequest'
+      responses:
+        '200':
+          description: Constraint đã chuẩn hóa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtractConstraintsResponse'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /plans/generate:
+    post:
+      tags: [Plans]
+      operationId: generatePlan
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [constraints]
+              properties:
+                title:
+                  type: string
+                  maxLength: 255
+                constraints:
+                  $ref: '#/components/schemas/PlanningConstraints'
+      responses:
+        '201':
+          description: Lịch trình đã tạo và lưu
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+        '409':
+          description: Không tồn tại plan đáp ứng constraint cứng
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /plans/{planId}:
+    get:
+      tags: [Plans]
+      operationId: getPlan
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlanId'
+      responses:
+        '200':
+          description: Lịch trình
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Plans]
+      operationId: deletePlan
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlanId'
+      responses:
+        '204':
+          description: Đã xóa lịch trình
+  /plans/{planId}/items/{itemId}/replacement-options:
+    post:
+      tags: [Plans]
+      operationId: getReplacementOptions
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlanId'
+        - $ref: '#/components/parameters/ItemId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notes:
+                  type: string
+                  maxLength: 500
+                excludedPlaceIds:
+                  type: array
+                  maxItems: 50
+                  items:
+                    type: string
+                    format: uuid
+      responses:
+        '200':
+          description: Candidate thay thế
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlaceSummary'
+  /plans/{planId}/items/{itemId}/replace:
+    put:
+      tags: [Plans]
+      operationId: replacePlanItem
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlanId'
+        - $ref: '#/components/parameters/ItemId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [replacementPlaceId, expectedPlanVersion]
+              properties:
+                replacementPlaceId:
+                  type: string
+                  format: uuid
+                expectedPlanVersion:
+                  type: integer
+                  minimum: 1
+      responses:
+        '200':
+          description: Plan sau khi thay thế và tính lại
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /plans/{planId}/share:
+    post:
+      tags: [Plans]
+      operationId: createPlanShare
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlanId'
+      responses:
+        '201':
+          description: Share link mới
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [url]
+                properties:
+                  url:
+                    type: string
+                    format: uri
+    delete:
+      tags: [Plans]
+      operationId: revokePlanShare
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlanId'
+      responses:
+        '204':
+          description: Share link đã bị thu hồi
+  /shared-plans/{token}:
+    get:
+      tags: [Plans]
+      operationId: getSharedPlan
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 32
+      responses:
+        '200':
+          description: Bản read-only của plan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    Cursor:
+      name: cursor
+      in: query
+      schema:
+        type: string
+    Limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    PlaceId:
+      name: placeId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    PlanId:
+      name: planId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ItemId:
+      name: itemId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    Unauthorized:
+      description: Chưa đăng nhập hoặc token không hợp lệ
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    NotFound:
+      description: Không tìm thấy tài nguyên hoặc không có quyền xem
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Conflict:
+      description: Xung đột trạng thái hiện tại
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    ValidationError:
+      description: Request không hợp lệ
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    RateLimited:
+      description: Vượt giới hạn request
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+  schemas:
+    ApiError:
+      type: object
+      additionalProperties: false
+      required: [code, message, requestId]
+      properties:
+        code:
+          type: string
+          example: VALIDATION_ERROR
+        message:
+          type: string
+        requestId:
+          type: string
+        details:
+          type: object
+          additionalProperties: true
+    HealthResponse:
+      type: object
+      required: [service, status, timestamp]
+      properties:
+        service:
+          type: string
+          example: wanderly-api
+        status:
+          type: string
+          const: ok
+        timestamp:
+          type: string
+          format: date-time
+    RegisterRequest:
+      type: object
+      additionalProperties: false
+      required: [email, password, displayName]
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 320
+        password:
+          type: string
+          minLength: 8
+          maxLength: 128
+        displayName:
+          type: string
+          minLength: 1
+          maxLength: 100
+    LoginRequest:
+      type: object
+      additionalProperties: false
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+          maxLength: 128
+    UserSummary:
+      type: object
+      required: [id, email, displayName, role, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        displayName:
+          type: string
+        role:
+          type: string
+          enum: [USER, ADMIN]
+        createdAt:
+          type: string
+          format: date-time
+    AuthTokens:
+      type: object
+      required: [accessToken, refreshToken, expiresIn]
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        expiresIn:
+          type: integer
+          minimum: 1
+    AuthResponse:
+      type: object
+      required: [user, tokens]
+      properties:
+        user:
+          $ref: '#/components/schemas/UserSummary'
+        tokens:
+          $ref: '#/components/schemas/AuthTokens'
+    UserPreference:
+      allOf:
+        - $ref: '#/components/schemas/UserPreferenceInput'
+        - type: object
+          required: [categoryName]
+          properties:
+            categoryName:
+              type: string
+    UserPreferenceInput:
+      type: object
+      required: [categoryId, weight]
+      properties:
+        categoryId:
+          type: string
+          format: uuid
+        weight:
+          type: number
+          minimum: 0
+          maximum: 1
+    Location:
+      type: object
+      required: [latitude, longitude]
+      properties:
+        latitude:
+          type: number
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          minimum: -180
+          maximum: 180
+        label:
+          type: string
+          maxLength: 255
+    PlanningConstraints:
+      type: object
+      required:
+        [peopleCount, currency, interests, excludedCategories, travelMode]
+      properties:
+        date:
+          type: string
+          format: date
+        startTime:
+          type: string
+          format: time
+        endTime:
+          type: string
+          format: time
+        peopleCount:
+          type: integer
+          minimum: 1
+        budget:
+          type: [integer, 'null']
+          minimum: 0
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          default: VND
+        interests:
+          type: array
+          maxItems: 20
+          items:
+            type: string
+        excludedCategories:
+          type: array
+          maxItems: 20
+          items:
+            type: string
+        startLocation:
+          $ref: '#/components/schemas/Location'
+        maxTravelRadiusMeters:
+          type: integer
+          minimum: 1
+          maximum: 100000
+        travelMode:
+          type: string
+          enum: [WALK, BIKE, DRIVE, TRANSIT]
+        notes:
+          type: [string, 'null']
+          maxLength: 1000
+    ExtractConstraintsRequest:
+      type: object
+      additionalProperties: false
+      required: [input]
+      properties:
+        input:
+          type: string
+          minLength: 3
+          maxLength: 2000
+        timezone:
+          type: string
+          default: Asia/Ho_Chi_Minh
+        currentLocation:
+          $ref: '#/components/schemas/Location'
+    ExtractConstraintsResponse:
+      type: object
+      required: [constraints, missingFields, warnings]
+      properties:
+        constraints:
+          $ref: '#/components/schemas/PlanningConstraints'
+        missingFields:
+          type: array
+          items:
+            type: string
+        warnings:
+          type: array
+          items:
+            type: string
+    PlaceSummary:
+      type: object
+      required:
+        [
+          id,
+          name,
+          slug,
+          address,
+          latitude,
+          longitude,
+          reviewCount,
+          indoorOutdoor,
+          categories,
+        ]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        slug:
+          type: string
+        address:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        rating:
+          type: [number, 'null']
+          minimum: 0
+          maximum: 5
+        reviewCount:
+          type: integer
+          minimum: 0
+        priceMin:
+          type: [integer, 'null']
+          minimum: 0
+        priceMax:
+          type: [integer, 'null']
+          minimum: 0
+        indoorOutdoor:
+          type: string
+          enum: [INDOOR, OUTDOOR, MIXED]
+        categories:
+          type: array
+          items:
+            type: string
+        coverImageUrl:
+          type: [string, 'null']
+          format: uri
+        distanceMeters:
+          type: integer
+          minimum: 0
+    PlaceListResponse:
+      type: object
+      required: [data, nextCursor]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlaceSummary'
+        nextCursor:
+          type: [string, 'null']
+    PlanItem:
+      type: object
+      required:
+        - id
+        - placeId
+        - orderIndex
+        - startTime
+        - endTime
+        - estimatedCost
+        - travelDistanceMeters
+        - travelDurationMinutes
+        - source
+      properties:
+        id:
+          type: string
+          format: uuid
+        placeId:
+          type: string
+          format: uuid
+        orderIndex:
+          type: integer
+          minimum: 0
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        estimatedCost:
+          type: integer
+          minimum: 0
+        travelMode:
+          type: [string, 'null']
+          enum: [WALK, BIKE, DRIVE, TRANSIT, null]
+        travelDistanceMeters:
+          type: integer
+          minimum: 0
+        travelDurationMinutes:
+          type: integer
+          minimum: 0
+        matchScore:
+          type: [number, 'null']
+          minimum: 0
+          maximum: 1
+        recommendationReason:
+          type: [string, 'null']
+        source:
+          type: string
+          enum: [GENERATED, MANUAL, REPLACED]
+    Plan:
+      type: object
+      required:
+        - id
+        - title
+        - status
+        - timezone
+        - startTime
+        - endTime
+        - peopleCount
+        - currency
+        - constraints
+        - estimatedCost
+        - estimatedDistanceMeters
+        - estimatedTravelMinutes
+        - items
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        status:
+          type: string
+          enum: [DRAFT, GENERATED, FINALIZED, COMPLETED, CANCELLED]
+        timezone:
+          type: string
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        peopleCount:
+          type: integer
+          minimum: 1
+        budget:
+          type: [integer, 'null']
+          minimum: 0
+        currency:
+          type: string
+        constraints:
+          $ref: '#/components/schemas/PlanningConstraints'
+        estimatedCost:
+          type: integer
+          minimum: 0
+        estimatedDistanceMeters:
+          type: integer
+          minimum: 0
+        estimatedTravelMinutes:
+          type: integer
+          minimum: 0
+        matchScore:
+          type: [number, 'null']
+          minimum: 0
+          maximum: 1
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlanItem'
