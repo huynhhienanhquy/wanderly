@@ -25,6 +25,11 @@ describe('AuthService sessions', () => {
       findFirst: ReturnType<typeof vi.fn>;
       updateMany: ReturnType<typeof vi.fn>;
     };
+    passwordResetToken: {
+      create: ReturnType<typeof vi.fn>;
+      findFirst: ReturnType<typeof vi.fn>;
+      updateMany: ReturnType<typeof vi.fn>;
+    };
     $transaction: ReturnType<typeof vi.fn>;
   };
   let service: AuthService;
@@ -37,13 +42,23 @@ describe('AuthService sessions', () => {
         findFirst: vi.fn(),
         updateMany: vi.fn().mockResolvedValue({ count: 1 }),
       },
+      passwordResetToken: {
+        create: vi.fn().mockResolvedValue({}),
+        findFirst: vi.fn(),
+        updateMany: vi.fn().mockResolvedValue({ count: 1 }),
+      },
       $transaction: vi.fn(async (input: unknown) =>
         typeof input === 'function'
           ? input(database)
           : Promise.all(input as Promise<unknown>[]),
       ),
     };
-    service = new AuthService(database as unknown as PrismaService);
+    service = new AuthService(
+      database as unknown as PrismaService,
+      {
+        send: vi.fn(),
+      } as never,
+    );
   });
 
   it('creates a session when credentials are valid', async () => {
@@ -114,5 +129,25 @@ describe('AuthService sessions', () => {
       where: { refreshTokenHash: expect.any(String), revokedAt: null },
       data: { revokedAt: expect.any(Date) },
     });
+  });
+
+  it('returns silently when password reset email is unknown', async () => {
+    database.user.findUnique.mockResolvedValue(null);
+
+    await expect(
+      service.forgotPassword({ email: 'missing@example.com' }),
+    ).resolves.toBeUndefined();
+    expect(database.passwordResetToken.create).not.toHaveBeenCalled();
+  });
+
+  it('rejects an expired or unknown password reset token', async () => {
+    database.passwordResetToken.findFirst.mockResolvedValue(null);
+
+    await expect(
+      service.resetPassword({
+        token: 'x'.repeat(48),
+        password: 'new-password',
+      }),
+    ).rejects.toBeInstanceOf(UnauthorizedException);
   });
 });
