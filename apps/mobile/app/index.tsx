@@ -28,6 +28,9 @@ export default function HomeScreen() {
         <Link href="/explore" style={styles.exploreLink}>
           Khám phá địa điểm
         </Link>
+        <Link href="/register" style={styles.registerLink}>
+          Tạo tài khoản
+        </Link>
       </View>
     </SafeAreaView>
   );
@@ -64,6 +67,12 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   exploreLink: {
+    color: '#277253',
+    fontSize: 17,
+    fontWeight: '700',
+    marginTop: 24,
+  },
+  registerLink: {
     color: '#277253',
     fontSize: 17,
     fontWeight: '700',
