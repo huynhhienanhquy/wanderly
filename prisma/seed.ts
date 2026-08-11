@@ -1,83 +1,98 @@
-import {
-  IndoorOutdoor,
-  PlaceProvider,
-  PlaceStatus,
-  PrismaClient,
-} from '@prisma/client';
+import { PlaceProvider, PlaceStatus, PrismaClient } from '@prisma/client';
+import { categorySeeds, placeSeeds } from './seed-data/places';
 
 const prisma = new PrismaClient();
+const time = (value: string) => new Date(`1970-01-01T${value}:00.000Z`);
 
-const categories = [
-  { slug: 'cafe', name: 'Cafe', icon: 'coffee' },
-  { slug: 'food', name: 'Ẩm thực', icon: 'utensils' },
-  { slug: 'art', name: 'Nghệ thuật', icon: 'palette' },
-  { slug: 'outdoor', name: 'Ngoài trời', icon: 'trees' },
-  { slug: 'photography', name: 'Chụp ảnh', icon: 'camera' },
-] as const;
-
-async function main() {
-  const savedCategories = await Promise.all(
-    categories.map((category) =>
+async function seedCategories() {
+  return Promise.all(
+    categorySeeds.map((category) =>
       prisma.category.upsert({
         where: { slug: category.slug },
         create: category,
-        update: {
-          icon: category.icon,
-          isActive: true,
-          name: category.name,
-        },
+        update: { ...category, isActive: true },
       }),
     ),
   );
+}
 
-  const cafeCategory = savedCategories.find(
-    (category) => category.slug === 'cafe',
-  );
-  const photographyCategory = savedCategories.find(
-    (category) => category.slug === 'photography',
-  );
-
-  if (!cafeCategory || !photographyCategory) {
-    throw new Error('Required seed categories were not created');
-  }
-
-  await prisma.place.upsert({
-    where: { slug: 'wanderly-demo-cafe' },
-    create: {
-      provider: PlaceProvider.INTERNAL,
-      name: 'Wanderly Demo Cafe',
-      slug: 'wanderly-demo-cafe',
-      description: 'Địa điểm seed dùng cho phát triển và kiểm thử local.',
-      address: 'Hoàn Kiếm, Hà Nội',
-      city: 'Hà Nội',
-      countryCode: 'VN',
-      latitude: 21.028511,
-      longitude: 105.804817,
-      rating: 4.7,
-      reviewCount: 120,
-      priceMin: 50000,
-      priceMax: 150000,
-      typicalDurationMinutes: 90,
-      indoorOutdoor: IndoorOutdoor.MIXED,
-      popularityScore: 0.82,
-      status: PlaceStatus.ACTIVE,
-      categories: {
-        create: [
-          { categoryId: cafeCategory.id, relevance: 1 },
-          { categoryId: photographyCategory.id, relevance: 0.8 },
-        ],
+async function seedPlaces(categoryIds: Map<string, string>) {
+  for (const seed of placeSeeds) {
+    const place = await prisma.place.upsert({
+      where: { slug: seed.slug },
+      create: {
+        provider: PlaceProvider.INTERNAL,
+        providerPlaceId: `demo:${seed.slug}`,
+        name: seed.name,
+        slug: seed.slug,
+        description: seed.description,
+        address: seed.address,
+        district: seed.district,
+        city: 'Hà Nội',
+        countryCode: 'VN',
+        latitude: seed.latitude,
+        longitude: seed.longitude,
+        rating: seed.rating,
+        reviewCount: seed.reviewCount,
+        priceMin: seed.priceMin,
+        priceMax: seed.priceMax,
+        typicalDurationMinutes: seed.durationMinutes,
+        indoorOutdoor: seed.indoorOutdoor,
+        popularityScore: seed.popularityScore,
+        status: PlaceStatus.ACTIVE,
       },
-    },
-    update: {
-      status: PlaceStatus.ACTIVE,
-    },
-  });
+      update: {
+        name: seed.name,
+        description: seed.description,
+        address: seed.address,
+        district: seed.district,
+        latitude: seed.latitude,
+        longitude: seed.longitude,
+        rating: seed.rating,
+        reviewCount: seed.reviewCount,
+        priceMin: seed.priceMin,
+        priceMax: seed.priceMax,
+        typicalDurationMinutes: seed.durationMinutes,
+        indoorOutdoor: seed.indoorOutdoor,
+        popularityScore: seed.popularityScore,
+        status: PlaceStatus.ACTIVE,
+      },
+    });
+
+    const categoryRows = seed.categories.map((category) => {
+      const categoryId = categoryIds.get(category.slug);
+      if (!categoryId) throw new Error(`Missing category: ${category.slug}`);
+      return { placeId: place.id, categoryId, relevance: category.relevance };
+    });
+    await prisma.$transaction([
+      prisma.placeCategory.deleteMany({ where: { placeId: place.id } }),
+      prisma.placeCategory.createMany({ data: categoryRows }),
+      prisma.placeOpeningHour.deleteMany({ where: { placeId: place.id } }),
+      prisma.placeOpeningHour.createMany({
+        data: Array.from({ length: 7 }, (_, dayOfWeek) => ({
+          placeId: place.id,
+          dayOfWeek,
+          openTime: time(seed.opening.open),
+          closeTime: time(seed.opening.close),
+          isClosed: false,
+        })),
+      }),
+    ]);
+  }
+}
+
+async function main() {
+  const categories = await seedCategories();
+  await seedPlaces(
+    new Map(categories.map((category) => [category.slug, category.id])),
+  );
+  console.info(
+    `Seeded ${categories.length} categories and ${placeSeeds.length} demo places.`,
+  );
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
+  .then(() => prisma.$disconnect())
   .catch(async (error: unknown) => {
     console.error(error);
     await prisma.$disconnect();

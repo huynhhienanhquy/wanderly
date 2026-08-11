@@ -14,6 +14,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | FND-06 — Cấu hình database và migration    | Done       | 2026-08-10 | [FND-06](./tasks/FND-06.md)     |
 | FND-07 — Thiết lập convention              | Done       | 2026-08-10 | [FND-07](./tasks/FND-07.md)     |
 | PLACE-01 — Thiết kế bảng Place và Category | Done       | 2026-08-10 | [PLACE-01](./tasks/PLACE-01.md) |
+| PLACE-02 — Import/seed dữ liệu địa điểm    | Done       | 2026-08-11 | [PLACE-02](./tasks/PLACE-02.md) |
 
 ## Quy tắc cập nhật
 

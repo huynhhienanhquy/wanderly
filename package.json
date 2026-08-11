@@ -21,7 +21,8 @@
     "db:typecheck": "tsc --noEmit -p prisma/tsconfig.json",
     "db:validate": "prisma validate --schema prisma/schema.prisma",
     "db:migrate": "prisma migrate dev --schema prisma/schema.prisma",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "db:seed:test": "tsx --test prisma/seed-data/places.test.ts"
   },
   "devDependencies": {
     "@types/node": "22.18.0",

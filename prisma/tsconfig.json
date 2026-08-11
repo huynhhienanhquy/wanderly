@@ -6,5 +6,5 @@
     "noEmit": true,
     "types": ["node"]
   },
-  "include": ["seed.ts"]
+  "include": ["seed.ts", "seed-data/**/*.ts"]
 }
