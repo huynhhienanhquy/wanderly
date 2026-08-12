@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import type { PrismaService } from '../database/prisma.service';
 import { decodePlaceCursor } from './place-cursor';
@@ -65,6 +66,57 @@ describe('PlacesService', () => {
     expect(result.nextCursor).toBeNull();
     expect(findMany).toHaveBeenCalledWith(
       expect.objectContaining({ cursor: { id }, skip: 1 }),
+    );
+  });
+
+  it('maps full detail including ordered images and opening hours', async () => {
+    const place = {
+      ...row('3307daba-1408-4f44-b361-800e6b8d22ac', 'Detail'),
+      countryCode: 'VN',
+      images: [
+        {
+          url: 'https://example.com/cover.jpg',
+          attribution: 'Demo',
+          isCover: true,
+          sortOrder: 0,
+        },
+      ],
+      openingHours: [
+        {
+          dayOfWeek: 1,
+          openTime: new Date('1970-01-01T08:30:00.000Z'),
+          closeTime: new Date('1970-01-01T22:00:00.000Z'),
+          isClosed: false,
+          validFrom: null,
+          validTo: null,
+        },
+      ],
+    };
+    const findFirst = vi.fn().mockResolvedValue(place);
+    const service = new PlacesService({
+      place: { findFirst },
+    } as unknown as PrismaService);
+    const result = await service.detail('detail');
+    expect(result).toMatchObject({
+      countryCode: 'VN',
+      coverImageUrl: 'https://example.com/cover.jpg',
+      openingHours: [
+        { dayOfWeek: 1, open: '08:30', close: '22:00', isClosed: false },
+      ],
+    });
+    expect(findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { slug: 'detail', status: 'ACTIVE', deletedAt: null },
+      }),
+    );
+  });
+
+  it('does not expose inactive, deleted or missing places', async () => {
+    const service = new PlacesService({
+      place: { findFirst: vi.fn().mockResolvedValue(null) },
+    } as unknown as PrismaService);
+    await expect(service.detail('missing')).rejects.toBeInstanceOf(
+      NotFoundException,
     );
   });
 });

@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import type {
   PlaceListQuery,
   PlaceListResponse,
   PlaceSummary,
+  PlaceDetail,
 } from '@wanderly/contracts';
 import type { Prisma } from '@prisma/client';
 import { PrismaService } from '../database/prisma.service';
@@ -32,6 +33,28 @@ const select = {
 } satisfies Prisma.PlaceSelect;
 
 type PlaceRow = Prisma.PlaceGetPayload<{ select: typeof select }>;
+
+const detailSelect = {
+  ...select,
+  countryCode: true,
+  images: {
+    orderBy: [{ isCover: 'desc' }, { sortOrder: 'asc' }],
+    select: { url: true, attribution: true, isCover: true, sortOrder: true },
+  },
+  openingHours: {
+    orderBy: { dayOfWeek: 'asc' },
+    select: {
+      dayOfWeek: true,
+      openTime: true,
+      closeTime: true,
+      isClosed: true,
+      validFrom: true,
+      validTo: true,
+    },
+  },
+} satisfies Prisma.PlaceSelect;
+
+type PlaceDetailRow = Prisma.PlaceGetPayload<{ select: typeof detailSelect }>;
 
 function orderBy(
   sort: PlaceListQuery['sort'],
@@ -70,6 +93,32 @@ function toSummary(place: PlaceRow): PlaceSummary {
   };
 }
 
+function formatTime(value: Date | null): string | null {
+  if (value === null) return null;
+  return `${value.getUTCHours().toString().padStart(2, '0')}:${value.getUTCMinutes().toString().padStart(2, '0')}`;
+}
+
+function formatDate(value: Date | null): string | null {
+  return value?.toISOString().slice(0, 10) ?? null;
+}
+
+function toDetail(place: PlaceDetailRow): PlaceDetail {
+  return {
+    ...toSummary(place),
+    countryCode: place.countryCode,
+    coverImageUrl: place.images.find(({ isCover }) => isCover)?.url ?? null,
+    images: place.images,
+    openingHours: place.openingHours.map((period) => ({
+      dayOfWeek: period.dayOfWeek,
+      open: formatTime(period.openTime),
+      close: formatTime(period.closeTime),
+      isClosed: period.isClosed,
+      validFrom: formatDate(period.validFrom),
+      validTo: formatDate(period.validTo),
+    })),
+  };
+}
+
 @Injectable()
 export class PlacesService {
   constructor(private readonly prisma: PrismaService) {}
@@ -90,5 +139,14 @@ export class PlacesService {
       data: page.map(toSummary),
       nextCursor: hasNextPage ? encodePlaceCursor(page.at(-1)!.id) : null,
     };
+  }
+
+  async detail(slug: string): Promise<PlaceDetail> {
+    const place = await this.prisma.place.findFirst({
+      where: { slug, status: 'ACTIVE', deletedAt: null },
+      select: detailSelect,
+    });
+    if (!place) throw new NotFoundException('Không tìm thấy địa điểm.');
+    return toDetail(place);
   }
 }

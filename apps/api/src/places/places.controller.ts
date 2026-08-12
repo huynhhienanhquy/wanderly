@@ -1,11 +1,14 @@
 import {
   Controller,
   Get,
+  Param,
   Query,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import {
+  placeSlugSchema,
   placeListQuerySchema,
+  type PlaceDetail,
   type PlaceListResponse,
 } from '@wanderly/contracts';
 import { PlacesService } from './places.service';
@@ -27,5 +30,14 @@ export class PlacesController {
       });
     }
     return this.places.list(result.data);
+  }
+
+  @Get(':slug')
+  detail(@Param('slug') rawSlug: string): Promise<PlaceDetail> {
+    const result = placeSlugSchema.safeParse(rawSlug);
+    if (!result.success) {
+      throw new UnprocessableEntityException('Slug địa điểm không hợp lệ.');
+    }
+    return this.places.detail(result.data);
   }
 }

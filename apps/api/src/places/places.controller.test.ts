@@ -21,4 +21,22 @@ describe('PlacesController', () => {
       UnprocessableEntityException,
     );
   });
+
+  it('normalizes a detail slug before calling the service', async () => {
+    const detail = vi.fn().mockResolvedValue({});
+    const controller = new PlacesController({
+      detail,
+    } as unknown as PlacesService);
+    await controller.detail('Wanderly-Demo');
+    expect(detail).toHaveBeenCalledWith('wanderly-demo');
+  });
+
+  it('rejects an invalid detail slug', () => {
+    const controller = new PlacesController({
+      detail: vi.fn(),
+    } as unknown as PlacesService);
+    expect(() => controller.detail('../admin')).toThrow(
+      UnprocessableEntityException,
+    );
+  });
 });
