@@ -1,40 +1,23 @@
-import { Link } from 'react-router';
 import { fetchPlaceDetail, type PlaceDetail } from '@wanderly/contracts';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router';
 
-const PLAN_KEY = 'wanderly:current-plan';
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
-const PLAN_META_KEY = 'wanderly:plan-meta';
+const PLAN_KEY = 'wanderly:current-plan';
 type PlanItem = { id: string; slug: string; name: string };
 
 export function PlansPage() {
   const [items, setItems] = useState<PlanItem[]>([]);
+  const [details, setDetails] = useState<Record<string, PlaceDetail>>({});
   const [title, setTitle] = useState('Kế hoạch cuối tuần');
   const [date, setDate] = useState('');
   const [budget, setBudget] = useState('');
-  const [weather, setWeather] = useState('clear');
-  const [validation, setValidation] = useState<string[]>([]);
-  const [details, setDetails] = useState<Record<string, PlaceDetail>>({});
-  useEffect(() => { const saved = JSON.parse(localStorage.getItem(PLAN_KEY) ?? '[]') as PlanItem[]; setItems(saved); const meta = JSON.parse(localStorage.getItem(PLAN_META_KEY) ?? '{}') as { title?: string; date?: string; budget?: string; weather?: string }; setTitle(meta.title ?? 'Kế hoạch cuối tuần'); setDate(meta.date ?? ''); setBudget(meta.budget ?? ''); setWeather(meta.weather ?? 'clear'); void Promise.all(saved.map(async (item) => { try { return await fetchPlaceDetail(API_URL, item.slug); } catch { return null; } })).then((rows) => setDetails(Object.fromEntries(rows.filter((row): row is PlaceDetail => row !== null).map((row) => [row.id, row])))); }, []);
-  function saveMeta() { localStorage.setItem(PLAN_META_KEY, JSON.stringify({ title, date, budget, weather })); }
-  function validatePlan() {
-    const issues: string[] = [];
-    if (items.length === 0) issues.push('Kế hoạch chưa có địa điểm.');
-    if (budgetValue !== null && totalCost > budgetValue) issues.push('Tổng chi phí vượt ngân sách.');
-    if (missingDuration) issues.push('Một số địa điểm chưa có thời lượng.');
-    items.forEach((item) => { const detail = details[item.id]; const hour = day === null ? null : detail?.openingHours.find((entry) => entry.dayOfWeek === day); if (hour?.isClosed) issues.push(`${item.name} đóng cửa ngày đã chọn.`); if (weather === 'rain' && detail?.indoorOutdoor === 'OUTDOOR') issues.push(`${item.name} là địa điểm ngoài trời khi trời mưa.`); });
-    setValidation(issues.length ? issues : ['Kế hoạch hợp lệ.']);
-  }
-  function remove(id: string) {
-    const next = items.filter((item) => item.id !== id);
-    localStorage.setItem(PLAN_KEY, JSON.stringify(next));
-    setItems(next);
-  }
-  const day = date ? new Date(`${date}T12:00:00`).getDay() : null;
-  const totalMinutes = items.reduce((total, item) => total + (details[item.id]?.typicalDurationMinutes ?? 0), 0);
-  const totalCost = items.reduce((total, item) => total + (details[item.id]?.priceMin ?? 0), 0);
-  const budgetValue = budget ? Number(budget) : null;
-  let timelineMinutes = 8 * 60;
-  const missingDuration = items.some((item) => details[item.id] && details[item.id].typicalDurationMinutes === null);
-  return <main className="page-shell"><Link className="home-link" to="/explore">Khám phá</Link><p className="eyebrow">Wanderly Plan</p><h1>Kế hoạch của tôi</h1><form onSubmit={(event) => { event.preventDefault(); saveMeta(); }}><input value={title} onChange={(event) => setTitle(event.target.value)} aria-label="Tên kế hoạch" /><input type="date" value={date} onChange={(event) => setDate(event.target.value)} aria-label="Ngày kế hoạch" /><input type="number" min="0" step="1000" value={budget} onChange={(event) => setBudget(event.target.value)} placeholder="Ngân sách (VND)" aria-label="Ngân sách" /><select value={weather} onChange={(event) => setWeather(event.target.value)} aria-label="Thời tiết"><option value="clear">Trời quang</option><option value="rain">Mưa</option></select><button type="submit">Lưu thông tin</button><button type="button" onClick={validatePlan}>Kiểm tra kế hoạch</button></form>{validation.length > 0 && <ul role="status">{validation.map((issue) => <li key={issue}>{issue}</li>)}</ul>}{items.length > 0 && <><p>Tổng thời lượng dự kiến: {Math.floor(totalMinutes / 60)} giờ {totalMinutes % 60} phút{missingDuration && ' (một số địa điểm chưa có thời lượng)'}</p><p>Chi phí tối thiểu: {totalCost.toLocaleString('vi-VN')}đ{budgetValue !== null && totalCost > budgetValue && ' — Vượt ngân sách'}</p></>}{items.length === 0 ? <p>Chưa có địa điểm trong kế hoạch.</p> : <ol>{items.map((item, index) => { const detail = details[item.id]; const hour = day === null ? null : detail?.openingHours.find((entry) => entry.dayOfWeek === day); const closed = hour?.isClosed === true; const weatherWarning = weather === 'rain' && detail?.indoorOutdoor === 'OUTDOOR'; const start = `${String(Math.floor(timelineMinutes / 60)).padStart(2, '0')}:${String(timelineMinutes % 60).padStart(2, '0')}`; timelineMinutes += detail?.typicalDurationMinutes ?? 60; return <li key={item.id}><b>{start}</b> — <Link to={`/places/${item.slug}`}>{index + 1}. {item.name}</Link>{closed && <small> — Đóng cửa ngày đã chọn</small>}{weatherWarning && <small> — Ngoài trời, cân nhắc khi mưa</small>}<button type="button" onClick={() => remove(item.id)}>Xóa</button></li>; })}</ol>}</main>;
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem(PLAN_KEY) ?? '[]') as PlanItem[];
+    setItems(saved);
+    void Promise.all(saved.map((item) => fetchPlaceDetail(API_URL, item.slug).catch(() => null))).then((rows) => setDetails(Object.fromEntries(rows.filter((row): row is PlaceDetail => row !== null).map((row) => [row.id, row]))));
+  }, []);
+  function persist(next: PlanItem[]) { localStorage.setItem(PLAN_KEY, JSON.stringify(next)); setItems(next); }
+  function move(index: number, direction: -1 | 1) { const target = index + direction; if (target < 0 || target >= items.length) return; const next = [...items]; [next[index], next[target]] = [next[target], next[index]]; persist(next); }
+  return <main className="page-shell"><Link className="home-link" to="/explore">Khám phá</Link><p className="eyebrow">Wanderly Plan</p><h1>{title}</h1><form onSubmit={(event) => event.preventDefault()}><input value={title} onChange={(event) => setTitle(event.target.value)} aria-label="Tên kế hoạch" /><input type="date" value={date} onChange={(event) => setDate(event.target.value)} aria-label="Ngày kế hoạch" /><input type="number" value={budget} onChange={(event) => setBudget(event.target.value)} placeholder="Ngân sách (VND)" aria-label="Ngân sách" /></form>{items.length === 0 ? <p>Chưa có địa điểm trong kế hoạch.</p> : <ol>{items.map((item, index) => <li key={item.id}><button type="button" onClick={() => move(index, -1)} disabled={index === 0}>↑</button><button type="button" onClick={() => move(index, 1)} disabled={index === items.length - 1}>↓</button> <Link to={`/places/${item.slug}`}>{item.name}</Link><button type="button" onClick={() => persist(items.filter(({ id }) => id !== item.id))}>Xóa</button></li>)}</ol>}</main>;
 }
