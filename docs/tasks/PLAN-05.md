@@ -18,3 +18,8 @@
 ## Giới hạn
 
 Chưa tính giá theo số người, `priceMax`, vé sự kiện hoặc chi phí di chuyển.
+
+## Bản sửa
+
+- Tính tổng `priceMin`, số tiền vượt ngân sách và danh sách địa điểm thiếu giá.
+- Có unit test cho vượt ngân sách và dữ liệu thiếu.
