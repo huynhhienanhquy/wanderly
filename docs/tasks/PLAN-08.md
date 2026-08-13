@@ -13,4 +13,4 @@
 
 ## Giới hạn
 
-CRUD controller và persistence Prisma cần auth context; sẽ triển khai tiếp dựa trên contract này.
+CRUD create/list/get/delete và Prisma persistence đã có. Header `x-user-id` hiện là adapter tạm; cần thay bằng JWT principal từ AUTH-05 trước production.
