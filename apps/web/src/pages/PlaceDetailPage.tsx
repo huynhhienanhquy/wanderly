@@ -6,6 +6,7 @@ import {
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useParams } from 'react-router';
+import { parseFavorites, toggleFavorite as updateFavorites } from '../favorite-storage';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 const DAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
@@ -28,8 +29,8 @@ export function PlaceDetailPage() {
   const [reportedReviews, setReportedReviews] = useState<string[]>([]);
   useEffect(() => {
     if (place) {
-      const ids = JSON.parse(localStorage.getItem(FAVORITES_KEY) ?? '[]') as string[];
-      setFavorite(ids.includes(place.id));
+      const favorites = parseFavorites(localStorage.getItem(FAVORITES_KEY));
+      setFavorite(favorites.some(({ id }) => id === place.id));
     }
   }, [place]);
   useEffect(() => {
@@ -48,10 +49,10 @@ export function PlaceDetailPage() {
   }
   function toggleFavorite() {
     if (!place) return;
-    const ids = JSON.parse(localStorage.getItem(FAVORITES_KEY) ?? '[]') as string[];
-    const next = ids.includes(place.id) ? ids.filter((id) => id !== place.id) : [...ids, place.id];
+    const favorites = parseFavorites(localStorage.getItem(FAVORITES_KEY));
+    const next = updateFavorites(favorites, { id: place.id, slug: place.slug });
     localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
-    setFavorite(next.includes(place.id));
+    setFavorite(next.some(({ id }) => id === place.id));
   }
   function submitReview(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

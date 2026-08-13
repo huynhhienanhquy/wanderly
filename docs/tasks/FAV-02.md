@@ -7,13 +7,18 @@ Cho phép người dùng xem lại các địa điểm đã lưu.
 ## Phạm vi hoàn thành
 
 - Tạo route Web `/favorites`.
-- Đọc danh sách ID từ `wanderly:favorites` và tải chi tiết địa điểm qua API hiện có.
+- Đọc danh sách `{id, slug}` từ `wanderly:favorites` và gọi đúng endpoint chi tiết theo slug.
 - Có loading, empty state và liên kết tới Place Detail.
 - Bỏ qua mục đã bị xóa hoặc không còn khả dụng thay vì làm hỏng toàn trang.
 
 ## Kiểm tra
 
 - `pnpm typecheck` đạt toàn workspace.
+- Unit test storage/migration đạt.
+
+## Tương thích dữ liệu
+
+Dữ liệu cũ chỉ chứa ID không thể chuyển thành slug nếu không gọi thêm API, vì vậy được bỏ qua an toàn. Favorite mới luôn lưu cả ID và slug.
 
 ## Việc tiếp theo
 
