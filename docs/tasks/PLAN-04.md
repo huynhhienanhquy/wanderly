@@ -18,3 +18,9 @@
 ## Giới hạn
 
 Chưa tính thời gian di chuyển giữa các địa điểm; cần MAP-03 cho dữ liệu route.
+
+## Bản sửa
+
+- Tính tổng thời lượng tại địa điểm.
+- Phát hiện mục chồng giờ và kết thúc quá giờ kế hoạch.
+- Cảnh báo dữ liệu thiếu thời lượng; travel time vẫn chờ MAP-03.
