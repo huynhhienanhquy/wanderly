@@ -21,6 +21,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | EXP-01 — Trang Explore                     | Done       | 2026-08-13 | [EXP-01](./tasks/EXP-01.md)     |
 | PLAN-02 — Planner v1                       | Done       | 2026-08-13 | [PLAN-02](./tasks/PLAN-02.md)   |
 | PLAN-03 — Kiểm tra giờ mở cửa              | Done       | 2026-08-13 | [PLAN-03](./tasks/PLAN-03.md)   |
+| PLAN-04 — Kiểm tra thời lượng              | Done       | 2026-08-13 | [PLAN-04](./tasks/PLAN-04.md)   |
 | EXP-02 — Thanh tìm kiếm và bộ lọc          | Done       | 2026-08-13 | [EXP-02](./tasks/EXP-02.md)     |
 | EXP-03 — Collection cơ bản                  | Done       | 2026-08-13 | [EXP-03](./tasks/EXP-03.md)     |
 | EXP-05 — Directions và Share                | Done       | 2026-08-13 | [EXP-05](./tasks/EXP-05.md)     |
