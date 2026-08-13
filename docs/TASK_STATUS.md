@@ -25,6 +25,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | PLAN-05 — Tối ưu ngân sách                 | Done       | 2026-08-13 | [PLAN-05](./tasks/PLAN-05.md)   |
 | PLAN-06 — Điều chỉnh theo thời tiết        | Done       | 2026-08-13 | [PLAN-06](./tasks/PLAN-06.md)   |
 | PLAN-07 — Validate kế hoạch cuối cùng      | Done       | 2026-08-13 | [PLAN-07](./tasks/PLAN-07.md)   |
+| PLAN-09 — Timeline lịch trình              | Done       | 2026-08-13 | [PLAN-09](./tasks/PLAN-09.md)   |
 | EXP-02 — Thanh tìm kiếm và bộ lọc          | Done       | 2026-08-13 | [EXP-02](./tasks/EXP-02.md)     |
 | EXP-03 — Collection cơ bản                  | Done       | 2026-08-13 | [EXP-03](./tasks/EXP-03.md)     |
 | EXP-05 — Directions và Share                | Done       | 2026-08-13 | [EXP-05](./tasks/EXP-05.md)     |
