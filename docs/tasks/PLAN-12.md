@@ -2,8 +2,8 @@
 
 ## Phạm vi
 
-Đã chuẩn bị handler chia sẻ URL kế hoạch bằng Web Share API và clipboard fallback.
+Đã tạo public read-only link chứa snapshot kế hoạch trong query string, dùng Web Share API và clipboard fallback.
 
 ## Trạng thái
 
-Done — handler chia sẻ đã sẵn sàng cho toolbar kế hoạch.
+Done — người nhận có thể mở snapshot mà không cần localStorage và không thấy thao tác chỉnh sửa.

@@ -33,7 +33,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | PLAN-07 — Validate kế hoạch cuối cùng      | Needs Fix  | —          | [PLAN-07](./tasks/PLAN-07.md)   |
 | PLAN-09 — Timeline lịch trình              | Needs Fix  | —          | [PLAN-09](./tasks/PLAN-09.md)   |
 | PLAN-11 — Chỉnh sửa thủ công               | Partial    | —          | [PLAN-11](./tasks/PLAN-11.md)   |
-| PLAN-12 — Chia sẻ lịch trình               | Partial    | —          | [PLAN-12](./tasks/PLAN-12.md)   |
+| PLAN-12 — Chia sẻ lịch trình               | Done       | 2026-08-13 | [PLAN-12](./tasks/PLAN-12.md)   |
 | PLAN-08 — API lưu và lấy lịch trình        | Partial    | —          | [PLAN-08](./tasks/PLAN-08.md)   |
 | BUDGET-01 — Mô hình ước tính chi phí       | Partial    | —          | [BUDGET-01](./tasks/BUDGET-01.md) |
 | EXP-02 — Thanh tìm kiếm và bộ lọc          | Partial    | —          | [EXP-02](./tasks/EXP-02.md)     |
