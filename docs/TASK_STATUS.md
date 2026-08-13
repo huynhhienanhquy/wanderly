@@ -19,7 +19,19 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | PLACE-04 — API danh sách địa điểm          | Done       | 2026-08-12 | [PLACE-04](./tasks/PLACE-04.md) |
 | PLACE-06 — API chi tiết địa điểm           | Done       | 2026-08-12 | [PLACE-06](./tasks/PLACE-06.md) |
 | EXP-01 — Trang Explore                     | Done       | 2026-08-13 | [EXP-01](./tasks/EXP-01.md)     |
+| PLAN-02 — Planner v1                       | Done       | 2026-08-13 | [PLAN-02](./tasks/PLAN-02.md)   |
 | EXP-02 — Thanh tìm kiếm và bộ lọc          | Done       | 2026-08-13 | [EXP-02](./tasks/EXP-02.md)     |
+| EXP-03 — Collection cơ bản                  | Done       | 2026-08-13 | [EXP-03](./tasks/EXP-03.md)     |
+| EXP-05 — Directions và Share                | Done       | 2026-08-13 | [EXP-05](./tasks/EXP-05.md)     |
+| EXP-06 — Add to Plan                        | Done       | 2026-08-13 | [EXP-06](./tasks/EXP-06.md)     |
+| FAV-01 — Lưu/bỏ lưu địa điểm                | Done       | 2026-08-13 | [FAV-01](./tasks/FAV-01.md)     |
+| FAV-02 — Danh sách địa điểm đã lưu          | Done       | 2026-08-13 | [FAV-02](./tasks/FAV-02.md)     |
+| REVIEW-01 — Tạo và cập nhật đánh giá        | Done       | 2026-08-13 | [REVIEW-01](./tasks/REVIEW-01.md) |
+| REVIEW-02 — Danh sách đánh giá              | Done       | 2026-08-13 | [REVIEW-02](./tasks/REVIEW-02.md) |
+| REVIEW-03 — Báo cáo review                  | Done       | 2026-08-13 | [REVIEW-03](./tasks/REVIEW-03.md) |
+| ADMIN-01 — Admin guard                      | Done       | 2026-08-13 | [ADMIN-01](./tasks/ADMIN-01.md) |
+| ADMIN-04 — Quản lý review/report            | Done       | 2026-08-13 | [ADMIN-04](./tasks/ADMIN-04.md) |
+| PLAN-01 — Kế hoạch cơ bản                   | Done       | 2026-08-13 | [PLAN-01](./tasks/PLAN-01.md)   |
 
 ## Quy tắc cập nhật
 
