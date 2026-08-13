@@ -18,6 +18,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | PLACE-03 — Chuẩn hóa thông tin địa điểm    | Done       | 2026-08-12 | [PLACE-03](./tasks/PLACE-03.md) |
 | PLACE-04 — API danh sách địa điểm          | Done       | 2026-08-12 | [PLACE-04](./tasks/PLACE-04.md) |
 | PLACE-06 — API chi tiết địa điểm           | Done       | 2026-08-12 | [PLACE-06](./tasks/PLACE-06.md) |
+| EXP-01 — Trang Explore                     | Done       | 2026-08-13 | [EXP-01](./tasks/EXP-01.md)     |
 
 ## Quy tắc cập nhật
 

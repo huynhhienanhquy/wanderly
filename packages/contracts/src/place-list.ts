@@ -39,5 +39,6 @@ export const placeListResponseSchema = z.object({
 });
 
 export type PlaceListQuery = z.infer<typeof placeListQuerySchema>;
+export type PlaceSort = z.infer<typeof placeSortSchema>;
 export type PlaceSummary = z.infer<typeof placeSummarySchema>;
 export type PlaceListResponse = z.infer<typeof placeListResponseSchema>;
