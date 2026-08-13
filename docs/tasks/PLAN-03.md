@@ -14,6 +14,11 @@ Phát hiện địa điểm đóng cửa vào ngày được chọn trong kế h
 
 - `pnpm typecheck` đạt toàn workspace.
 - `TASK_STATUS.md` cập nhật PLAN-03 là Done.
+- Unit test bao phủ trong giờ, ngoài giờ và trường hợp thiếu lịch.
+
+## Hoàn thiện
+
+Planner tải opening hours theo slug, cảnh báo dữ liệu cũ vi phạm và không lưu giờ mới nằm ngoài khung hoạt động.
 
 ## Giới hạn
 

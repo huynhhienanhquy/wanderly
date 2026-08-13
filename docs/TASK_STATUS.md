@@ -26,7 +26,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | PLACE-06 — API chi tiết địa điểm           | Done       | 2026-08-12 | [PLACE-06](./tasks/PLACE-06.md) |
 | EXP-01 — Trang Explore                     | Done       | 2026-08-13 | [EXP-01](./tasks/EXP-01.md)     |
 | PLAN-02 — Planner v1                       | Partial    | —          | [PLAN-02](./tasks/PLAN-02.md)   |
-| PLAN-03 — Kiểm tra giờ mở cửa              | Needs Fix  | —          | [PLAN-03](./tasks/PLAN-03.md)   |
+| PLAN-03 — Kiểm tra giờ mở cửa              | Done       | 2026-08-13 | [PLAN-03](./tasks/PLAN-03.md)   |
 | PLAN-04 — Kiểm tra thời lượng              | Needs Fix  | —          | [PLAN-04](./tasks/PLAN-04.md)   |
 | PLAN-05 — Tối ưu ngân sách                 | Needs Fix  | —          | [PLAN-05](./tasks/PLAN-05.md)   |
 | PLAN-06 — Điều chỉnh theo thời tiết        | Needs Fix  | —          | [PLAN-06](./tasks/PLAN-06.md)   |
