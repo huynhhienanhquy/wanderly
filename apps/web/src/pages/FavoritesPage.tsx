@@ -1,6 +1,7 @@
 import { fetchPlaceDetail, formatPlacePrice, type PlaceDetail } from '@wanderly/contracts';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
+import { parseFavorites } from '../favorite-storage';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 const FAVORITES_KEY = 'wanderly:favorites';
@@ -10,9 +11,9 @@ export function FavoritesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   useEffect(() => {
-    const ids = JSON.parse(localStorage.getItem(FAVORITES_KEY) ?? '[]') as string[];
-    void Promise.all(ids.map(async (id) => {
-      try { return await fetchPlaceDetail(API_URL, id); } catch { return null; }
+    const favorites = parseFavorites(localStorage.getItem(FAVORITES_KEY));
+    void Promise.all(favorites.map(async ({ slug }) => {
+      try { return await fetchPlaceDetail(API_URL, slug); } catch { return null; }
     })).then((results) => setPlaces(results.filter((place): place is PlaceDetail => place !== null)))
       .catch(() => setError('Không thể tải địa điểm đã lưu.'))
       .finally(() => setLoading(false));
