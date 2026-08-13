@@ -17,4 +17,6 @@ Cho phép đặt tên và ngày cho kế hoạch hiện tại.
 
 ## Giới hạn
 
+Planner Web đã khôi phục metadata, giờ bắt đầu và sắp xếp theo thời gian. Ranking tự động và travel time còn chờ REC-03/MAP-03.
+
 Chưa có phân bổ giờ hoặc nhiều ngày; dữ liệu vẫn là local MVP.

@@ -1,0 +1,13 @@
+import { describe, expect, it } from 'vitest';
+import { parsePlanItems, sortPlanItems } from './plan-storage';
+
+describe('plan storage', () => {
+  it('migrates items without start time', () => {
+    expect(parsePlanItems('[{"id":"1","slug":"a","name":"A"}]')[0]?.startTime).toBe('08:00');
+  });
+  it('sorts items by start time without mutating input', () => {
+    const items = parsePlanItems('[{"id":"1","slug":"a","name":"A","startTime":"10:00"},{"id":"2","slug":"b","name":"B","startTime":"08:00"}]');
+    expect(sortPlanItems(items).map(({ id }) => id)).toEqual(['2', '1']);
+    expect(items[0]?.id).toBe('1');
+  });
+});

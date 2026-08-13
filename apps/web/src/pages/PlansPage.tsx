@@ -1,23 +1,20 @@
-import { fetchPlaceDetail, type PlaceDetail } from '@wanderly/contracts';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
+import { parsePlanItems, sortPlanItems, type LocalPlanItem, type LocalPlanMeta } from '../plan-storage';
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 const PLAN_KEY = 'wanderly:current-plan';
-type PlanItem = { id: string; slug: string; name: string };
+const META_KEY = 'wanderly:plan-meta';
 
 export function PlansPage() {
-  const [items, setItems] = useState<PlanItem[]>([]);
-  const [details, setDetails] = useState<Record<string, PlaceDetail>>({});
-  const [title, setTitle] = useState('Kế hoạch cuối tuần');
-  const [date, setDate] = useState('');
-  const [budget, setBudget] = useState('');
+  const [items, setItems] = useState<LocalPlanItem[]>([]);
+  const [meta, setMeta] = useState<LocalPlanMeta>({ title: 'Kế hoạch cuối tuần', date: '', budget: '' });
+  const [message, setMessage] = useState('');
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem(PLAN_KEY) ?? '[]') as PlanItem[];
-    setItems(saved);
-    void Promise.all(saved.map((item) => fetchPlaceDetail(API_URL, item.slug).catch(() => null))).then((rows) => setDetails(Object.fromEntries(rows.filter((row): row is PlaceDetail => row !== null).map((row) => [row.id, row]))));
+    setItems(sortPlanItems(parsePlanItems(localStorage.getItem(PLAN_KEY))));
+    try { setMeta((current) => ({ ...current, ...JSON.parse(localStorage.getItem(META_KEY) ?? '{}') as Partial<LocalPlanMeta> })); } catch { /* use defaults */ }
   }, []);
-  function persist(next: PlanItem[]) { localStorage.setItem(PLAN_KEY, JSON.stringify(next)); setItems(next); }
-  function move(index: number, direction: -1 | 1) { const target = index + direction; if (target < 0 || target >= items.length) return; const next = [...items]; [next[index], next[target]] = [next[target], next[index]]; persist(next); }
-  return <main className="page-shell"><Link className="home-link" to="/explore">Khám phá</Link><p className="eyebrow">Wanderly Plan</p><h1>{title}</h1><form onSubmit={(event) => event.preventDefault()}><input value={title} onChange={(event) => setTitle(event.target.value)} aria-label="Tên kế hoạch" /><input type="date" value={date} onChange={(event) => setDate(event.target.value)} aria-label="Ngày kế hoạch" /><input type="number" value={budget} onChange={(event) => setBudget(event.target.value)} placeholder="Ngân sách (VND)" aria-label="Ngân sách" /></form>{items.length === 0 ? <p>Chưa có địa điểm trong kế hoạch.</p> : <ol>{items.map((item, index) => <li key={item.id}><button type="button" onClick={() => move(index, -1)} disabled={index === 0}>↑</button><button type="button" onClick={() => move(index, 1)} disabled={index === items.length - 1}>↓</button> <Link to={`/places/${item.slug}`}>{item.name}</Link><button type="button" onClick={() => persist(items.filter(({ id }) => id !== item.id))}>Xóa</button></li>)}</ol>}</main>;
+  function persistItems(next: LocalPlanItem[]) { const sorted = sortPlanItems(next); localStorage.setItem(PLAN_KEY, JSON.stringify(sorted)); setItems(sorted); }
+  function saveMeta() { localStorage.setItem(META_KEY, JSON.stringify(meta)); setMessage('Đã lưu thông tin kế hoạch.'); }
+  function updateTime(id: string, startTime: string) { persistItems(items.map((item) => item.id === id ? { ...item, startTime } : item)); }
+  return <main className="page-shell"><Link className="home-link" to="/explore">Khám phá</Link><p className="eyebrow">Wanderly Planner</p><h1>{meta.title}</h1><form onSubmit={(event) => { event.preventDefault(); saveMeta(); }}><input value={meta.title} onChange={(event) => setMeta({ ...meta, title: event.target.value })} aria-label="Tên kế hoạch" required /><input type="date" value={meta.date} onChange={(event) => setMeta({ ...meta, date: event.target.value })} aria-label="Ngày kế hoạch" /><input type="number" min="0" value={meta.budget} onChange={(event) => setMeta({ ...meta, budget: event.target.value })} aria-label="Ngân sách" placeholder="Ngân sách (VND)" /><button type="submit">Lưu</button>{message && <span role="status">{message}</span>}</form>{items.length === 0 ? <p>Chưa có địa điểm trong kế hoạch.</p> : <ol>{items.map((item) => <li key={item.id}><input type="time" value={item.startTime} onChange={(event) => updateTime(item.id, event.target.value)} aria-label={`Giờ bắt đầu ${item.name}`} /> <Link to={`/places/${item.slug}`}>{item.name}</Link> <button type="button" onClick={() => persistItems(items.filter(({ id }) => id !== item.id))}>Xóa</button></li>)}</ol>}</main>;
 }
