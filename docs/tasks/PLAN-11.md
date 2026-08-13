@@ -1,9 +1,13 @@
 # PLAN-11 — Chỉnh sửa thủ công
 
-## Phạm vi
+## Phạm vi hoàn thành
 
-Đã chuẩn bị thao tác đổi thứ tự bằng helper `move` trong planner; UI nút điều khiển sẽ hoàn thiện cùng API Plan.
+- Đổi giờ bắt đầu trực tiếp trên từng plan item.
+- Danh sách tự sắp xếp lại theo giờ mới.
+- Xóa plan item và lưu thay đổi vào localStorage.
+- Validation giờ mở cửa chạy trước khi chấp nhận giờ mới.
 
-## Trạng thái
+## Kiểm tra
 
-In progress — chưa đánh dấu Done do chưa gắn nút điều khiển vào timeline.
+- Unit test sorting và opening-hours đạt.
+- Web production build đạt.
