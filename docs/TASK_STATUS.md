@@ -30,7 +30,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | PLAN-04 — Kiểm tra thời lượng              | Partial    | —          | [PLAN-04](./tasks/PLAN-04.md)   |
 | PLAN-05 — Tối ưu ngân sách                 | Done       | 2026-08-13 | [PLAN-05](./tasks/PLAN-05.md)   |
 | PLAN-06 — Điều chỉnh theo thời tiết        | Partial    | —          | [PLAN-06](./tasks/PLAN-06.md)   |
-| PLAN-07 — Validate kế hoạch cuối cùng      | Needs Fix  | —          | [PLAN-07](./tasks/PLAN-07.md)   |
+| PLAN-07 — Validate kế hoạch cuối cùng      | Partial    | —          | [PLAN-07](./tasks/PLAN-07.md)   |
 | PLAN-09 — Timeline lịch trình              | Needs Fix  | —          | [PLAN-09](./tasks/PLAN-09.md)   |
 | PLAN-11 — Chỉnh sửa thủ công               | Partial    | —          | [PLAN-11](./tasks/PLAN-11.md)   |
 | PLAN-12 — Chia sẻ lịch trình               | Partial    | —          | [PLAN-12](./tasks/PLAN-12.md)   |

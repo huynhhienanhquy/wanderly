@@ -18,3 +18,8 @@ Kiểm tra tổng hợp các constraint trước khi người dùng sử dụng 
 ## Giới hạn
 
 Chưa chặn thao tác lưu backend; khi PLAN-08 có API, validation cần chạy lại ở server.
+
+## Bản sửa
+
+- Tổng hợp opening hours, duration, budget và weather thành một kết quả cuối.
+- Loại cảnh báo trùng, từ chối kế hoạch rỗng và có unit test.
