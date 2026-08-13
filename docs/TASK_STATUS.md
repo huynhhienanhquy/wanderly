@@ -28,6 +28,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | PLAN-09 — Timeline lịch trình              | Done       | 2026-08-13 | [PLAN-09](./tasks/PLAN-09.md)   |
 | PLAN-11 — Chỉnh sửa thủ công               | Done       | 2026-08-13 | [PLAN-11](./tasks/PLAN-11.md)   |
 | PLAN-12 — Chia sẻ lịch trình               | Done       | 2026-08-13 | [PLAN-12](./tasks/PLAN-12.md)   |
+| PLAN-08 — Contract API lịch trình          | Done       | 2026-08-13 | [PLAN-08](./tasks/PLAN-08.md)   |
 | EXP-02 — Thanh tìm kiếm và bộ lọc          | Done       | 2026-08-13 | [EXP-02](./tasks/EXP-02.md)     |
 | EXP-03 — Collection cơ bản                  | Done       | 2026-08-13 | [EXP-03](./tasks/EXP-03.md)     |
 | EXP-05 — Directions và Share                | Done       | 2026-08-13 | [EXP-05](./tasks/EXP-05.md)     |
