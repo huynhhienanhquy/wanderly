@@ -32,6 +32,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | PLAN-06 — Điều chỉnh theo thời tiết        | Partial    | —          | [PLAN-06](./tasks/PLAN-06.md)   |
 | PLAN-07 — Validate kế hoạch cuối cùng      | Partial    | —          | [PLAN-07](./tasks/PLAN-07.md)   |
 | PLAN-09 — Timeline lịch trình              | Done       | 2026-08-13 | [PLAN-09](./tasks/PLAN-09.md)   |
+| PLAN-10 — Bản đồ lịch trình                | Partial    | —          | [PLAN-10](./tasks/PLAN-10.md)   |
 | PLAN-11 — Chỉnh sửa thủ công               | Partial    | —          | [PLAN-11](./tasks/PLAN-11.md)   |
 | PLAN-12 — Chia sẻ lịch trình               | Partial    | —          | [PLAN-12](./tasks/PLAN-12.md)   |
 | PLAN-08 — API lưu và lấy lịch trình        | Partial    | —          | [PLAN-08](./tasks/PLAN-08.md)   |

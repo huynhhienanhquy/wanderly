@@ -43,6 +43,9 @@ export function PlansPage() {
     const budgetIssues = budgetResult.exceededBy > 0 ? [`Vượt ngân sách ${budgetResult.exceededBy.toLocaleString('vi-VN')}đ.`] : [];
     setValidation({ checked: true, issues: finalPlanIssues([openingIssues, durationResult.issues, budgetIssues, weatherWarnings], items.length) });
   }
+  const mapUrl = items.map((item) => details[item.id]).filter((place): place is PlaceDetail => Boolean(place)).length > 0
+    ? `https://www.google.com/maps/dir/${items.map((item) => details[item.id]).filter((place): place is PlaceDetail => Boolean(place)).map((place) => `${place.latitude},${place.longitude}`).join('/')}`
+    : null;
   return (
     <main className="page-shell">
       <Link className="home-link" to="/explore">Khám phá</Link><p className="eyebrow">Wanderly Planner</p><h1>{meta.title}</h1>
@@ -51,6 +54,7 @@ export function PlansPage() {
       {items.length > 0 && <section aria-label="Kiểm tra thời lượng"><p>Tổng thời lượng tại địa điểm: {Math.floor(durationResult.totalMinutes / 60)} giờ {durationResult.totalMinutes % 60} phút.</p>{durationResult.issues.length > 0 && <ul>{durationResult.issues.map((issue) => <li key={issue}>{issue}</li>)}</ul>}</section>}
       {items.length > 0 && <section aria-label="Ước tính ngân sách"><p>Chi phí tối thiểu: {budgetResult.total.toLocaleString('vi-VN')}đ.</p>{budgetResult.exceededBy > 0 && <strong>Vượt ngân sách {budgetResult.exceededBy.toLocaleString('vi-VN')}đ.</strong>}{budgetResult.missing.length > 0 && <p>Chưa có giá: {budgetResult.missing.join(', ')}.</p>}</section>}
       {weatherWarnings.length > 0 && <section aria-label="Cảnh báo thời tiết"><ul>{weatherWarnings.map((issue) => <li key={issue}>{issue}</li>)}</ul></section>}
+      {mapUrl && <p><a className="home-link" href={mapUrl} target="_blank" rel="noreferrer">Mở toàn bộ tuyến đường trên Google Maps</a></p>}
       {items.length === 0 ? <p>Chưa có địa điểm trong kế hoạch.</p> : <ol>{items.map((item) => { const open = details[item.id] ? isOpenAt(details[item.id]!.openingHours, meta.date, item.startTime) : null; return <li key={item.id}><input type="time" value={item.startTime} onChange={(event) => updateTime(item, event.target.value)} aria-label={`Giờ bắt đầu ${item.name}`} /> <Link to={`/places/${item.slug}`}>{item.name}</Link>{open === false && <strong> — Ngoài giờ mở cửa</strong>} <button type="button" onClick={() => persistItems(items.filter(({ id }) => id !== item.id))}>Xóa</button></li>; })}</ol>}
     </main>
   );
