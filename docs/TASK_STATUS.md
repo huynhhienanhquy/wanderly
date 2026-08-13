@@ -66,7 +66,9 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 
 - Unit test: 20 test đạt; Web và Mobile chưa có test case.
 - Typecheck đạt, nhưng production build thất bại tại `PlansPage.tsx`.
-- PLAN-02–PLAN-07 và PLAN-09 bị mất chức năng sau khi planner được viết lại.
-- PLAN-08 mới có contract, chưa có CRUD API và Prisma persistence.
+- PLAN-02–PLAN-07 và PLAN-09 đã được khôi phục trên chuỗi branch `feature/PLAN-02-*` đến `feature/PLAN-09-*`; các phần phụ thuộc provider giữ trạng thái `Partial`.
+- PLAN-08 đã có CRUD API và Prisma persistence; còn `Partial` đến khi thay header user tạm bằng JWT principal từ AUTH-05.
+- PLAN-10 đã có liên kết tuyến Google Maps; marker/polyline và tổng khoảng cách còn chờ MAP-04.
+- PLAN-12 đã hoàn thiện public read-only snapshot trên branch `feature/PLAN-12-share-plan`; cần merge branch đó để trạng thái `Done` xuất hiện trên nhánh tích hợp.
 - Favorites, Reviews và Admin hiện chủ yếu dùng localStorage, chưa đạt yêu cầu backend/auth.
 - Chi tiết xem [TASK-AUDIT-2026-08-13](./tasks/TASK-AUDIT-2026-08-13.md).
