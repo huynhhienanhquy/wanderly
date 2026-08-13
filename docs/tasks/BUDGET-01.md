@@ -2,8 +2,8 @@
 
 ## Phạm vi hoàn thành
 
-- Thêm contract `BudgetLine` cho địa điểm, ăn uống và di chuyển.
-- Thêm contract `BudgetEstimate` gồm currency, các dòng chi phí, subtotal và total.
+- Thêm contract `BudgetLine` cho địa điểm, ăn uống và di chuyển, gồm đơn giá và số lượng.
+- Thêm hàm `estimateBudget` tạo breakdown theo loại và tổng chi phí.
 - Export từ package contracts dùng chung.
 
 ## Kiểm tra
@@ -13,4 +13,4 @@
 
 ## Giới hạn
 
-Chưa tích hợp dữ liệu nhà hàng hoặc routing; hiện chỉ chuẩn hóa mô hình để các feature sau sử dụng.
+Dữ liệu food/routing sẽ được adapter khác cung cấp; mô hình tính toán không phụ thuộc provider.
