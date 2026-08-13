@@ -124,8 +124,16 @@ export class PlacesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async list(query: PlaceListQuery): Promise<PlaceListResponse> {
+    const where: Prisma.PlaceWhereInput = {
+      status: 'ACTIVE', deletedAt: null,
+      ...(query.q ? { OR: [{ name: { contains: query.q, mode: 'insensitive' } }, { address: { contains: query.q, mode: 'insensitive' } }, { district: { contains: query.q, mode: 'insensitive' } }] } : {}),
+      ...(query.priceMax !== undefined ? { priceMin: { lte: query.priceMax } } : {}),
+      ...(query.minRating !== undefined ? { rating: { gte: query.minRating } } : {}),
+      ...(query.indoorOutdoor ? { indoorOutdoor: query.indoorOutdoor } : {}),
+      ...(query.category ? { categories: { some: { category: { slug: query.category, isActive: true } } } } : {}),
+    };
     const rows = await this.prisma.place.findMany({
-      where: { status: 'ACTIVE', deletedAt: null },
+      where,
       select,
       orderBy: orderBy(query.sort),
       take: query.limit + 1,

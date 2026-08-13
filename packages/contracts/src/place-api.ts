@@ -12,13 +12,18 @@ export type FetchLike = (
 
 export async function fetchPlacePage(
   baseUrl: string,
-  options: { cursor?: string | null; limit?: number; sort?: PlaceSort } = {},
+  options: { cursor?: string | null; limit?: number; sort?: PlaceSort; q?: string; category?: string; priceMax?: number; minRating?: number; indoorOutdoor?: 'INDOOR' | 'OUTDOOR' | 'MIXED' } = {},
   fetcher: FetchLike = fetch,
 ): Promise<PlaceListResponse> {
   const url = new URL('/places', baseUrl);
   url.searchParams.set('limit', String(options.limit ?? 12));
   url.searchParams.set('sort', options.sort ?? 'popular');
   if (options.cursor) url.searchParams.set('cursor', options.cursor);
+  if (options.q) url.searchParams.set('q', options.q);
+  if (options.category) url.searchParams.set('category', options.category);
+  if (options.priceMax !== undefined) url.searchParams.set('priceMax', String(options.priceMax));
+  if (options.minRating !== undefined) url.searchParams.set('minRating', String(options.minRating));
+  if (options.indoorOutdoor) url.searchParams.set('indoorOutdoor', options.indoorOutdoor);
 
   const response = await fetcher(url.toString());
   if (!response.ok)

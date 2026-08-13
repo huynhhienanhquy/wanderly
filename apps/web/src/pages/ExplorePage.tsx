@@ -4,6 +4,7 @@ import {
   type PlaceSummary,
 } from '@wanderly/contracts';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router';
 import { Link } from 'react-router';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
@@ -47,6 +48,9 @@ export function ExplorePage() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const q = searchParams.get('q') ?? '';
+  const priceMax = searchParams.get('priceMax') ?? '';
 
   async function load(nextCursor?: string | null) {
     nextCursor ? setLoadingMore(true) : setLoading(true);
@@ -55,6 +59,8 @@ export function ExplorePage() {
       const page = await fetchPlacePage(API_URL, {
         cursor: nextCursor,
         limit: 12,
+        q: q || undefined,
+        priceMax: priceMax ? Number(priceMax) : undefined,
       });
       setPlaces((current) =>
         nextCursor ? [...current, ...page.data] : page.data,
@@ -72,7 +78,7 @@ export function ExplorePage() {
 
   useEffect(() => {
     void load();
-  }, []);
+  }, [q, priceMax]);
 
   return (
     <main className="explore-shell">
@@ -86,6 +92,11 @@ export function ExplorePage() {
           Trang chủ
         </Link>
       </header>
+      <form className="explore-filters" onSubmit={(event) => { event.preventDefault(); const form = new FormData(event.currentTarget); setSearchParams({ ...(String(form.get('q') || '') ? { q: String(form.get('q')) } : {}), ...(String(form.get('priceMax') || '') ? { priceMax: String(form.get('priceMax')) } : {}) }); }}>
+        <input name="q" defaultValue={q} placeholder="Tìm theo tên, quận..." aria-label="Tìm kiếm địa điểm" />
+        <select name="priceMax" defaultValue={priceMax} aria-label="Giá tối đa"><option value="">Mọi mức giá</option><option value="100000">Dưới 100k</option><option value="300000">Dưới 300k</option></select>
+        <button type="submit">Lọc</button>
+      </form>
       {loading && (
         <p className="state-panel" role="status">
           Đang tìm những địa điểm thú vị…

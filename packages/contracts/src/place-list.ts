@@ -11,6 +11,11 @@ export const placeListQuerySchema = z.object({
   cursor: z.string().trim().min(1).max(500).optional(),
   limit: z.coerce.number().int().min(1).max(50).default(20),
   sort: placeSortSchema.default('popular'),
+  q: z.string().trim().max(100).optional(),
+  category: z.string().trim().min(1).max(80).optional(),
+  priceMax: z.coerce.number().int().nonnegative().optional(),
+  minRating: z.coerce.number().min(0).max(5).optional(),
+  indoorOutdoor: z.enum(['INDOOR', 'OUTDOOR', 'MIXED']).optional(),
 });
 
 export const placeSummarySchema = z.object({
