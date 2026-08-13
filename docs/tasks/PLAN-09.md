@@ -18,3 +18,7 @@ Hiển thị thứ tự và giờ bắt đầu dự kiến cho từng địa đi
 ## Giới hạn
 
 Chưa tính thời gian di chuyển; timeline server sẽ được đồng bộ sau PLAN-08.
+
+## Bản sửa
+
+Timeline đã được khôi phục bởi PLAN-02: mỗi mục có giờ bắt đầu chỉnh sửa được và danh sách tự sắp xếp theo thời gian. PLAN-04 bổ sung duration/overlap.
