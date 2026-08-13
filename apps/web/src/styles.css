@@ -192,3 +192,103 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+.detail-shell {
+  margin: 0 auto;
+  max-width: 980px;
+  padding: 32px 24px 72px;
+}
+.detail-back {
+  color: #277253;
+  display: inline-block;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-decoration: none;
+}
+.detail-hero,
+.detail-hero img,
+.detail-image-fallback {
+  border-radius: 24px;
+  height: 380px;
+  overflow: hidden;
+  width: 100%;
+}
+.detail-hero img {
+  object-fit: cover;
+}
+.detail-image-fallback {
+  align-items: center;
+  background: #dcece4;
+  color: #277253;
+  display: flex;
+  font-size: 100px;
+  font-weight: 800;
+  justify-content: center;
+}
+.detail-content {
+  padding: 28px 8px;
+}
+.detail-content h1 {
+  color: #17231f;
+  font-size: clamp(36px, 6vw, 64px);
+  letter-spacing: -2px;
+  margin: 8px 0;
+}
+.detail-kpis {
+  color: #277253;
+  display: flex;
+  font-weight: 700;
+  gap: 24px;
+}
+.detail-address,
+.detail-description {
+  color: #52615b;
+  font-size: 17px;
+  line-height: 1.6;
+}
+.detail-section {
+  border-top: 1px solid #dce5df;
+  margin-top: 28px;
+  padding-top: 20px;
+}
+.detail-section h2 {
+  color: #17231f;
+  font-size: 20px;
+}
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.category-pill {
+  background: #e5f2eb;
+  border-radius: 999px;
+  color: #277253;
+  padding: 8px 12px;
+}
+.hours-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.hours-grid div {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+.hours-grid span {
+  color: #52615b;
+}
+.state-message {
+  color: #52615b;
+  padding: 48px 0;
+}
+@media (max-width: 640px) {
+  .detail-hero,
+  .detail-hero img,
+  .detail-image-fallback {
+    height: 240px;
+  }
+  .hours-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -13,6 +13,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Link } from 'expo-router';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
 
@@ -78,7 +79,16 @@ export default function ExploreScreen() {
         contentContainerStyle={styles.content}
         data={places}
         keyExtractor={({ id }) => id}
-        renderItem={({ item }) => <PlaceCard place={item} />}
+        renderItem={({ item }) => (
+          <Link
+            href={{ pathname: '/places/[slug]', params: { slug: item.slug } }}
+            asChild
+          >
+            <Pressable>
+              <PlaceCard place={item} />
+            </Pressable>
+          </Link>
+        )}
         ListHeaderComponent={
           <View style={styles.header}>
             <Text style={styles.eyebrow}>WANDERLY EXPLORE</Text>

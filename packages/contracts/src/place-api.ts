@@ -3,6 +3,7 @@ import {
   type PlaceListResponse,
   type PlaceSort,
 } from './place-list';
+import { placeDetailSchema, type PlaceDetail } from './place-detail';
 
 export type FetchLike = (
   input: string,
@@ -23,6 +24,20 @@ export async function fetchPlacePage(
   if (!response.ok)
     throw new Error(`Không thể tải địa điểm (${response.status}).`);
   return placeListResponseSchema.parse(await response.json());
+}
+
+export async function fetchPlaceDetail(
+  baseUrl: string,
+  slug: string,
+  fetcher: FetchLike = fetch,
+): Promise<PlaceDetail> {
+  const url = new URL(`/places/${encodeURIComponent(slug)}`, baseUrl);
+  const response = await fetcher(url.toString());
+  if (!response.ok) {
+    if (response.status === 404) throw new Error('Không tìm thấy địa điểm.');
+    throw new Error(`Không thể tải chi tiết địa điểm (${response.status}).`);
+  }
+  return placeDetailSchema.parse(await response.json());
 }
 
 export function formatPlacePrice(
