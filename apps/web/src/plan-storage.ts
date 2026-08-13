@@ -1,5 +1,5 @@
 export type LocalPlanItem = { id: string; slug: string; name: string; startTime: string };
-export type LocalPlanMeta = { title: string; date: string; budget: string; endTime: string };
+export type LocalPlanMeta = { title: string; date: string; budget: string; endTime: string; weather: 'CLEAR' | 'RAIN' | 'HEAT' };
 
 export function parsePlanItems(raw: string | null): LocalPlanItem[] {
   try {

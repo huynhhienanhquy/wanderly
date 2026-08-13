@@ -18,3 +18,8 @@ Giúp người dùng nhận biết địa điểm ngoài trời trong điều ki
 ## Giới hạn
 
 Chưa tích hợp WEATHER API; trạng thái thời tiết hiện do người dùng chọn thủ công.
+
+## Bản sửa
+
+- Khôi phục lựa chọn trời quang, mưa và nắng nóng.
+- Cảnh báo hoạt động ngoài trời, có unit test cho indoor/outdoor.
