@@ -2,24 +2,27 @@
 
 ## Mục tiêu
 
-Kiểm tra tổng hợp các constraint trước khi người dùng sử dụng kế hoạch.
+Đưa ra một kết quả kiểm tra tổng hợp, rõ nguyên nhân trước khi người dùng sử dụng hoặc chia sẻ kế hoạch.
 
-## Phạm vi hoàn thành
+## Phạm vi đã hoàn thành
 
-- Thêm nút kiểm tra kế hoạch.
-- Tổng hợp cảnh báo địa điểm đóng cửa, vượt ngân sách, thiếu thời lượng và ngoài trời khi mưa.
-- Hiển thị kết quả hợp lệ hoặc danh sách vấn đề.
+- Kiểm tra tên, ngày và giờ kết thúc bắt buộc.
+- Từ chối kế hoạch rỗng hoặc chưa tải đủ dữ liệu địa điểm.
+- Tổng hợp lỗi giờ mở cửa, thời lượng/di chuyển, ngân sách và thời tiết.
+- Trả kết quả có cấu trúc gồm `valid` và danh sách lỗi theo category.
+- Loại lỗi trùng trong cùng category và hiển thị nguồn lỗi trên giao diện.
 
-## Kiểm tra
+## Quyết định
 
-- `pnpm typecheck` đạt toàn workspace.
-- Cập nhật `TASK_STATUS.md`.
+Validation thuần được tách khỏi React để có thể tái sử dụng và kiểm thử độc lập. PLAN-08 chịu trách nhiệm xác thực lại dữ liệu khi lưu vào backend; việc đó không làm PLAN-07 phụ thuộc vào trạng thái đăng nhập.
 
-## Giới hạn
+## Kiểm thử
 
-Chưa chặn thao tác lưu backend; khi PLAN-08 có API, validation cần chạy lại ở server.
+- Unit test kế hoạch hợp lệ, metadata thiếu, dữ liệu địa điểm chưa tải đủ và lỗi trùng.
+- `pnpm --filter @wanderly/web test`
+- `pnpm --filter @wanderly/web build`
+- `pnpm typecheck`
 
-## Bản sửa
+## Trạng thái
 
-- Tổng hợp opening hours, duration, budget và weather thành một kết quả cuối.
-- Loại cảnh báo trùng, từ chối kế hoạch rỗng và có unit test.
+Done — validation tổng hợp đã được tích hợp vào Planner và có kết quả phân loại.

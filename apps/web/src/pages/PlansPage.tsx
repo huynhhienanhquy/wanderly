@@ -7,7 +7,7 @@ import { DEFAULT_PLAN_META, parsePlanMeta } from '../plan-meta';
 import { isOpenAt } from '../plan-opening-hours';
 import { decodeSharedPlan, encodeSharedPlan } from '../plan-share';
 import { parsePlanItems, sortPlanItems, type LocalPlanItem, type LocalPlanMeta } from '../plan-storage';
-import { finalPlanIssues } from '../plan-validation';
+import { validateFinalPlan, type PlanValidationResult } from '../plan-validation';
 import { weatherIssues } from '../plan-weather';
 import { fetchWeatherForecast } from '../weather-forecast';
 
@@ -23,7 +23,7 @@ export function PlansPage() {
   const [meta, setMeta] = useState<LocalPlanMeta>(DEFAULT_PLAN_META);
   const [message, setMessage] = useState('');
   const [weatherLoading, setWeatherLoading] = useState(false);
-  const [validation, setValidation] = useState<{ checked: boolean; issues: string[] }>({ checked: false, issues: [] });
+  const [validation, setValidation] = useState<{ checked: boolean; result: PlanValidationResult }>({ checked: false, result: { valid: false, issues: [] } });
 
   useEffect(() => {
     if (sharedPlan) {
@@ -75,7 +75,17 @@ export function PlansPage() {
   function validatePlan() {
     const openingIssues = items.flatMap((item) => details[item.id] && isOpenAt(details[item.id]!.openingHours, meta.date, item.startTime) === false ? [`${item.name} nằm ngoài giờ mở cửa.`] : []);
     const budgetIssues = budgetResult.exceededBy > 0 ? [`Vượt ngân sách ${budgetResult.exceededBy.toLocaleString('vi-VN')}đ.`] : [];
-    setValidation({ checked: true, issues: finalPlanIssues([openingIssues, durationResult.issues, budgetIssues, weatherWarnings], items.length) });
+    setValidation({
+      checked: true,
+      result: validateFinalPlan({
+        title: meta.title,
+        date: meta.date,
+        endTime: meta.endTime,
+        itemCount: items.length,
+        loadedPlaceCount: Object.keys(details).length,
+        groups: { openingHours: openingIssues, duration: durationResult.issues, budget: budgetIssues, weather: weatherWarnings },
+      }),
+    });
   }
 
   async function updateWeatherForecast() {
@@ -140,7 +150,7 @@ export function PlansPage() {
         </form>
       )}
       {readOnly && <p>Đây là bản chụp chỉ đọc của lịch trình tại thời điểm được chia sẻ.</p>}
-      {validation.checked && <section aria-label="Kết quả kiểm tra kế hoạch" role="status">{validation.issues.length === 0 ? <strong>Kế hoạch hợp lệ.</strong> : <><strong>Kế hoạch chưa hợp lệ.</strong><ul>{validation.issues.map((issue) => <li key={issue}>{issue}</li>)}</ul></>}</section>}
+      {validation.checked && <section aria-label="Kết quả kiểm tra kế hoạch" role="status">{validation.result.valid ? <strong>Kế hoạch hợp lệ.</strong> : <><strong>Kế hoạch chưa hợp lệ.</strong><ul>{validation.result.issues.map((issue) => <li key={`${issue.category}:${issue.message}`}><span>{issue.category}</span>: {issue.message}</li>)}</ul></>}</section>}
       {items.length > 0 && <section aria-label="Kiểm tra thời lượng"><p>Tổng thời lượng dự kiến: {Math.floor(durationResult.totalMinutes / 60)} giờ {durationResult.totalMinutes % 60} phút (hoạt động {durationResult.activityMinutes} phút, di chuyển khoảng {durationResult.travelMinutes} phút).</p>{durationResult.issues.length > 0 && <ul>{durationResult.issues.map((issue) => <li key={issue}>{issue}</li>)}</ul>}</section>}
       {items.length > 0 && <section aria-label="Ước tính ngân sách"><p>Chi phí tối thiểu: {budgetResult.total.toLocaleString('vi-VN')}đ.</p>{budgetResult.exceededBy > 0 && <strong>Vượt ngân sách {budgetResult.exceededBy.toLocaleString('vi-VN')}đ.</strong>}{budgetResult.missing.length > 0 && <p>Chưa có giá: {budgetResult.missing.join(', ')}.</p>}</section>}
       {weatherWarnings.length > 0 && <section aria-label="Cảnh báo thời tiết"><ul>{weatherWarnings.map((issue) => <li key={issue}>{issue}</li>)}</ul></section>}
