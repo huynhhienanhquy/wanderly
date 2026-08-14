@@ -2,27 +2,29 @@
 
 ## Mục tiêu
 
-Cho phép người dùng tìm địa điểm theo từ khóa và lọc ngân sách trên Explore. Trạng thái bộ lọc được lưu trong URL.
+Cho phép người dùng tìm địa điểm theo từ khóa, thuộc tính và khoảng cách; URL là nguồn trạng thái duy nhất.
 
-## Phạm vi hoàn thành
+## Phạm vi đã hoàn thành
 
-- Mở rộng contract `GET /places` với `q`, `priceMax`, `minRating`, `category`, `indoorOutdoor`.
-- Bổ sung `latitude`, `longitude`, `radiusMeters` và lọc chính xác theo Haversine.
-- Áp dụng điều kiện an toàn trong Prisma service cho tên/địa chỉ, giá, rating, category và loại không gian.
-- Thêm thanh tìm kiếm và lựa chọn ngân sách trên Web Explore, đồng bộ query string.
-
-## Kiểm tra
-
-- `pnpm typecheck`: đạt cho contracts, API, Web và Mobile.
-- Unit test distance helper đạt.
-- Tham số được parse bởi Zod; sort vẫn dùng allow-list.
+- Contract/API hỗ trợ `q`, `priceMax`, `minRating`, `category`, `indoorOutdoor` và sort allow-list.
+- Hỗ trợ bộ ba `latitude`, `longitude`, `radiusMeters` với validation đồng thời.
+- Lọc bán kính bằng khoảng cách Haversine ở API.
+- UI Explore có từ khóa, ngân sách, category, rating, không gian và bán kính.
+- Tích hợp Geolocation để lấy vị trí hiện tại; có thông báo khi trình duyệt từ chối hoặc không hỗ trợ.
+- Đồng bộ toàn bộ bộ lọc vào query string, reset pagination khi đổi bộ lọc và có thao tác xóa bộ lọc.
 
 ## Quyết định
 
-- Query string là nguồn trạng thái duy nhất; đổi bộ lọc sẽ tải lại trang đầu.
-- `priceMax` so sánh với `priceMin` để lọc theo giá khởi điểm.
+`priceMax` so với giá khởi điểm `priceMin`. Bán kính chỉ được gửi khi đã có đủ tọa độ, tránh request contract không hợp lệ.
 
-## Việc tiếp theo
+## Kiểm thử
 
-- Bổ sung UI cho category/rating/indoor-outdoor và test tích hợp PostgreSQL.
-- EXP-03: collection theo ngữ cảnh.
+- Unit test helper khoảng cách và contract query.
+- `pnpm --filter @wanderly/api test`
+- `pnpm --filter @wanderly/contracts test`
+- `pnpm --filter @wanderly/web build`
+- `pnpm typecheck`
+
+## Trạng thái
+
+Done — bộ lọc API và giao diện Explore đã được tích hợp đầy đủ.
