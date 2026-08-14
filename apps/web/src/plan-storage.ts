@@ -17,3 +17,8 @@ export function parsePlanItems(raw: string | null): LocalPlanItem[] {
 export function sortPlanItems(items: LocalPlanItem[]): LocalPlanItem[] {
   return [...items].sort((a, b) => a.startTime.localeCompare(b.startTime));
 }
+
+export function addPlanItem(items: LocalPlanItem[], item: LocalPlanItem): { items: LocalPlanItem[]; added: boolean } {
+  if (items.some(({ id }) => id === item.id)) return { items, added: false };
+  return { items: sortPlanItems([...items, item]), added: true };
+}

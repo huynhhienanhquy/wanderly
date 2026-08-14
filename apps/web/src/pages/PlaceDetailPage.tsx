@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useParams } from 'react-router';
 import { parseFavorites, toggleFavorite as updateFavorites } from '../favorite-storage';
+import { addPlanItem, parsePlanItems } from '../plan-storage';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 const DAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
@@ -21,6 +22,7 @@ export function PlaceDetailPage() {
   const [error, setError] = useState('');
   const [shareMessage, setShareMessage] = useState('');
   const [planMessage, setPlanMessage] = useState('');
+  const [planStartTime, setPlanStartTime] = useState('08:00');
   const [favorite, setFavorite] = useState(false);
   const [reviewRating, setReviewRating] = useState('5');
   const [reviewContent, setReviewContent] = useState('');
@@ -65,10 +67,10 @@ export function PlaceDetailPage() {
   }
   function addToPlan() {
     if (!place) return;
-    const current = JSON.parse(localStorage.getItem(PLAN_KEY) ?? '[]') as Array<{ id: string; slug: string; name: string }>;
-    if (current.some((item) => item.id === place.id)) { setPlanMessage('Địa điểm đã có trong kế hoạch.'); return; }
-    localStorage.setItem(PLAN_KEY, JSON.stringify([...current, { id: place.id, slug: place.slug, name: place.name }]));
-    setPlanMessage('Đã thêm vào kế hoạch.');
+    const result = addPlanItem(parsePlanItems(localStorage.getItem(PLAN_KEY)), { id: place.id, slug: place.slug, name: place.name, startTime: planStartTime });
+    if (!result.added) { setPlanMessage('Địa điểm đã có trong kế hoạch.'); return; }
+    localStorage.setItem(PLAN_KEY, JSON.stringify(result.items));
+    setPlanMessage(`Đã thêm vào kế hoạch lúc ${planStartTime}.`);
   }
   function openDirections() {
     if (!place) return;
@@ -134,6 +136,7 @@ export function PlaceDetailPage() {
           <button type="button" onClick={openDirections}>Chỉ đường</button>
           <button type="button" onClick={() => void sharePlace()}>Chia sẻ</button>
           {shareMessage && <span role="status">{shareMessage}</span>}
+          <label>Giờ bắt đầu <input type="time" value={planStartTime} onChange={(event) => setPlanStartTime(event.target.value)} /></label>
           <button type="button" onClick={addToPlan}>Thêm vào kế hoạch</button>
           {planMessage && <span role="status">{planMessage}</span>}
           <button type="button" onClick={toggleFavorite} aria-pressed={favorite}>{favorite ? 'Đã lưu' : 'Lưu địa điểm'}</button>
