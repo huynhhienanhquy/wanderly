@@ -9,6 +9,7 @@ import { decodeSharedPlan, encodeSharedPlan } from '../plan-share';
 import { parsePlanItems, sortPlanItems, type LocalPlanItem, type LocalPlanMeta } from '../plan-storage';
 import { finalPlanIssues } from '../plan-validation';
 import { weatherIssues } from '../plan-weather';
+import { fetchWeatherForecast } from '../weather-forecast';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 const PLAN_KEY = 'wanderly:current-plan';
@@ -21,6 +22,7 @@ export function PlansPage() {
   const [details, setDetails] = useState<Record<string, PlaceDetail>>({});
   const [meta, setMeta] = useState<LocalPlanMeta>(DEFAULT_PLAN_META);
   const [message, setMessage] = useState('');
+  const [weatherLoading, setWeatherLoading] = useState(false);
   const [validation, setValidation] = useState<{ checked: boolean; issues: string[] }>({ checked: false, issues: [] });
 
   useEffect(() => {
@@ -76,6 +78,26 @@ export function PlansPage() {
     setValidation({ checked: true, issues: finalPlanIssues([openingIssues, durationResult.issues, budgetIssues, weatherWarnings], items.length) });
   }
 
+  async function updateWeatherForecast() {
+    const places = Object.values(details);
+    if (!meta.date || places.length === 0) {
+      setMessage('Hãy chọn ngày và thêm ít nhất một địa điểm trước khi lấy dự báo.');
+      return;
+    }
+    const latitude = places.reduce((sum, place) => sum + place.latitude, 0) / places.length;
+    const longitude = places.reduce((sum, place) => sum + place.longitude, 0) / places.length;
+    setWeatherLoading(true);
+    try {
+      const forecast = await fetchWeatherForecast(latitude, longitude, meta.date);
+      setMeta((current) => ({ ...current, weather: forecast.weather }));
+      setMessage(`Dự báo: ${forecast.maximumTemperature}°C, khả năng mưa ${forecast.precipitationProbability}%.`);
+    } catch {
+      setMessage('Không lấy được dự báo; bạn vẫn có thể chọn thời tiết thủ công.');
+    } finally {
+      setWeatherLoading(false);
+    }
+  }
+
   async function sharePlan() {
     const url = new URL(window.location.href);
     url.search = '';
@@ -111,6 +133,7 @@ export function PlansPage() {
             <option value="CLEAR">Trời quang</option><option value="RAIN">Mưa</option><option value="HEAT">Nắng nóng</option>
           </select>
           <button type="submit">Lưu</button>
+          <button type="button" disabled={weatherLoading} onClick={() => void updateWeatherForecast()}>{weatherLoading ? 'Đang tải dự báo…' : 'Cập nhật dự báo'}</button>
           <button type="button" onClick={validatePlan}>Kiểm tra cuối cùng</button>
           <button type="button" onClick={() => void sharePlan()}>Chia sẻ</button>
           {message && <span role="status">{message}</span>}

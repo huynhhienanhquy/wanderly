@@ -29,7 +29,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | PLAN-03 — Kiểm tra giờ mở cửa              | Done       | 2026-08-13 | [PLAN-03](./tasks/PLAN-03.md)   |
 | PLAN-04 — Kiểm tra thời lượng              | Done       | 2026-08-14 | [PLAN-04](./tasks/PLAN-04.md)   |
 | PLAN-05 — Tối ưu ngân sách                 | Done       | 2026-08-13 | [PLAN-05](./tasks/PLAN-05.md)   |
-| PLAN-06 — Điều chỉnh theo thời tiết        | Partial    | —          | [PLAN-06](./tasks/PLAN-06.md)   |
+| PLAN-06 — Điều chỉnh theo thời tiết        | Done       | 2026-08-14 | [PLAN-06](./tasks/PLAN-06.md)   |
 | PLAN-07 — Validate kế hoạch cuối cùng      | Partial    | —          | [PLAN-07](./tasks/PLAN-07.md)   |
 | PLAN-09 — Timeline lịch trình              | Done       | 2026-08-13 | [PLAN-09](./tasks/PLAN-09.md)   |
 | PLAN-10 — Bản đồ lịch trình                | Partial    | —          | [PLAN-10](./tasks/PLAN-10.md)   |
@@ -66,7 +66,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 
 - Unit test: 20 test đạt; Web và Mobile chưa có test case.
 - Typecheck đạt, nhưng production build thất bại tại `PlansPage.tsx`.
-- PLAN-02 đã được tích hợp và bổ sung parser/kiểm thử metadata. PLAN-04 dùng khoảng cách tọa độ để ước tính thời gian di chuyển; PLAN-06 và PLAN-07 vẫn cần xử lý các phần phụ thuộc còn lại.
+- PLAN-02 đã được tích hợp và bổ sung parser/kiểm thử metadata. PLAN-04 dùng khoảng cách tọa độ để ước tính thời gian di chuyển. PLAN-06 đã tích hợp dự báo Open-Meteo với lựa chọn thủ công làm fallback; PLAN-07 vẫn cần xử lý phần còn lại.
 - PLAN-08 đã có CRUD API và Prisma persistence; còn `Partial` đến khi thay header user tạm bằng JWT principal từ AUTH-05.
 - PLAN-10 đã có liên kết tuyến Google Maps; marker/polyline và tổng khoảng cách còn chờ MAP-04.
 - PLAN-12 đã được tích hợp lại với Planner hiện tại: liên kết snapshot công khai mở ở chế độ chỉ đọc và không phụ thuộc local storage của người nhận.

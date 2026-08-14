@@ -2,24 +2,28 @@
 
 ## Mục tiêu
 
-Giúp người dùng nhận biết địa điểm ngoài trời trong điều kiện mưa.
+Đưa điều kiện thời tiết của ngày và khu vực lịch trình vào quá trình kiểm tra kế hoạch.
 
-## Phạm vi hoàn thành
+## Phạm vi đã hoàn thành
 
-- Thêm lựa chọn thời tiết thủ công trong kế hoạch.
-- Cảnh báo địa điểm `OUTDOOR` khi trạng thái là mưa.
-- Lưu lựa chọn cùng metadata kế hoạch.
+- Lấy dự báo theo ngày và tọa độ trung tâm các địa điểm từ Open-Meteo.
+- Chuẩn hóa mã thời tiết, xác suất mưa và nhiệt độ tối đa thành `CLEAR`, `RAIN` hoặc `HEAT`.
+- Ưu tiên cảnh báo mưa khi vừa nóng vừa có mưa.
+- Cảnh báo hoạt động ngoài trời khi mưa hoặc nắng nóng.
+- Hiển thị nhiệt độ, xác suất mưa và trạng thái tải/lỗi.
+- Giữ lựa chọn thủ công làm fallback khi provider không khả dụng hoặc ngày nằm ngoài phạm vi dự báo.
 
-## Kiểm tra
+## Quyết định
 
-- `pnpm typecheck` đạt toàn workspace.
-- Cập nhật `TASK_STATUS.md`.
+Open-Meteo được dùng cho MVP vì endpoint forecast không yêu cầu API key. Dự báo chỉ được tải khi người dùng yêu cầu để tránh ghi đè lựa chọn thủ công và hạn chế request không cần thiết.
 
-## Giới hạn
+## Kiểm thử
 
-Chưa tích hợp WEATHER API; trạng thái thời tiết hiện do người dùng chọn thủ công.
+- Unit test phân loại thời tiết, chuẩn hóa response và dữ liệu provider không đầy đủ.
+- `pnpm --filter @wanderly/web test`
+- `pnpm --filter @wanderly/web build`
+- `pnpm typecheck`
 
-## Bản sửa
+## Trạng thái
 
-- Khôi phục lựa chọn trời quang, mưa và nắng nóng.
-- Cảnh báo hoạt động ngoài trời, có unit test cho indoor/outdoor.
+Done — Planner có dự báo tự động, cảnh báo theo điều kiện và fallback thủ công.
