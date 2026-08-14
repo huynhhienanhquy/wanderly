@@ -2,22 +2,27 @@
 
 ## Mục tiêu
 
-Cho phép người dùng thêm địa điểm từ Place Detail vào kế hoạch hiện tại.
+Cho phép người dùng thêm địa điểm từ Place Detail vào bản nháp kế hoạch hiện tại.
 
-## Phạm vi hoàn thành
+## Phạm vi đã hoàn thành
 
-- Thêm lựa chọn giờ bắt đầu và nút “Thêm vào kế hoạch” trên Web Place Detail.
-- Lưu danh sách tối giản `id`, `slug`, `name` trong localStorage để dùng xuyên phiên.
-- Chặn bản ghi trùng và hiển thị trạng thái đã thêm/đã tồn tại.
-- Item mới dùng đúng schema planner và tự sắp xếp theo giờ.
+- Chọn giờ bắt đầu trước khi thêm địa điểm.
+- Lưu `id`, `slug`, `name`, `startTime` đúng schema của Planner.
+- Tự sắp xếp timeline theo giờ bắt đầu.
+- Không thêm trùng cùng một địa điểm và trả thông báo rõ ràng.
+- Parser cũ vẫn migration item chưa có `startTime`, bảo đảm tương thích dữ liệu localStorage trước đó.
 
-## Kiểm tra
+## Quyết định
 
-- `pnpm typecheck` đạt toàn workspace.
-- Unit test add/sort/duplicate đạt.
-- Dữ liệu lưu chỉ chứa định danh cần thiết, không ghi đè các kế hoạch khác ngoài key phiên hiện tại.
+EXP-06 ghi vào bản nháp localStorage hiện tại để hoạt động khi chưa đăng nhập. Đồng bộ backend/tài khoản thuộc PLAN-08 và không thay đổi hành vi Add to Plan cơ bản.
 
-## Việc tiếp theo
+## Kiểm thử
 
-- Xây Plan API và màn hình itinerary để đồng bộ dữ liệu với tài khoản.
-- Thêm trải nghiệm Add to Plan trên Mobile.
+- Unit test migration, sort không mutation, thêm đúng giờ và chống trùng.
+- `pnpm --filter @wanderly/web test`
+- `pnpm --filter @wanderly/web build`
+- `pnpm typecheck`
+
+## Trạng thái
+
+Done — flow Add to Plan tương thích với Planner hiện tại và đã được kiểm thử.
