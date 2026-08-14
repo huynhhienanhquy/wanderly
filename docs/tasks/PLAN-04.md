@@ -2,25 +2,27 @@
 
 ## Mục tiêu
 
-Ước tính tổng thời lượng các địa điểm đã chọn trong kế hoạch.
+Ước tính tổng thời lượng hoạt động và di chuyển, đồng thời phát hiện lịch trình không đủ thời gian.
 
-## Phạm vi hoàn thành
+## Phạm vi đã hoàn thành
 
-- Cộng `typicalDurationMinutes` từ Place Detail.
-- Hiển thị tổng theo giờ/phút.
-- Cảnh báo khi một địa điểm chưa có dữ liệu thời lượng.
+- Cộng `typicalDurationMinutes` của các địa điểm trong timeline.
+- Tính khoảng cách Haversine giữa các địa điểm liên tiếp từ tọa độ.
+- Ước tính thời gian di chuyển nội đô với vận tốc trung bình 25 km/h.
+- Hiển thị riêng thời gian hoạt động, thời gian di chuyển và tổng thời lượng.
+- Phát hiện mục thiếu thời lượng, không đủ thời gian tới điểm kế tiếp và kết thúc quá giờ kế hoạch.
 
-## Kiểm tra
+## Quyết định
 
-- `pnpm typecheck` đạt toàn workspace.
-- `TASK_STATUS.md` cập nhật PLAN-04 là Done.
+Ước tính tọa độ giúp Planner hoạt động độc lập trong MVP. Đây không phải thời gian giao thông theo thời gian thực; khi MAP-03 cung cấp route provider, kết quả có thể được thay bằng duration từ provider mà không đổi giao diện.
 
-## Giới hạn
+## Kiểm thử
 
-Chưa tính thời gian di chuyển giữa các địa điểm; cần MAP-03 cho dữ liệu route.
+- Unit test khoảng cách, thời gian di chuyển, tổng thời lượng và các cảnh báo.
+- `pnpm --filter @wanderly/web test`
+- `pnpm --filter @wanderly/web build`
+- `pnpm typecheck`
 
-## Bản sửa
+## Trạng thái
 
-- Tính tổng thời lượng tại địa điểm.
-- Phát hiện mục chồng giờ và kết thúc quá giờ kế hoạch.
-- Cảnh báo dữ liệu thiếu thời lượng; travel time vẫn chờ MAP-03.
+Done — thời lượng hoạt động và di chuyển đều đã được tính, hiển thị và kiểm thử.

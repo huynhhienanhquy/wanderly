@@ -61,7 +61,12 @@ export function PlansPage() {
     setMessage('');
   }
 
-  const durationResult = validateDurations(items, Object.fromEntries(Object.entries(details).map(([id, place]) => [id, place.typicalDurationMinutes])), meta.endTime);
+  const durationResult = validateDurations(
+    items,
+    Object.fromEntries(Object.entries(details).map(([id, place]) => [id, place.typicalDurationMinutes])),
+    meta.endTime,
+    Object.fromEntries(Object.entries(details).map(([id, place]) => [id, { latitude: place.latitude, longitude: place.longitude }])),
+  );
   const budgetResult = estimatePlanBudget(items, details, meta.budget);
   const weatherWarnings = weatherIssues(items, details, meta.weather);
 
@@ -113,7 +118,7 @@ export function PlansPage() {
       )}
       {readOnly && <p>Đây là bản chụp chỉ đọc của lịch trình tại thời điểm được chia sẻ.</p>}
       {validation.checked && <section aria-label="Kết quả kiểm tra kế hoạch" role="status">{validation.issues.length === 0 ? <strong>Kế hoạch hợp lệ.</strong> : <><strong>Kế hoạch chưa hợp lệ.</strong><ul>{validation.issues.map((issue) => <li key={issue}>{issue}</li>)}</ul></>}</section>}
-      {items.length > 0 && <section aria-label="Kiểm tra thời lượng"><p>Tổng thời lượng tại địa điểm: {Math.floor(durationResult.totalMinutes / 60)} giờ {durationResult.totalMinutes % 60} phút.</p>{durationResult.issues.length > 0 && <ul>{durationResult.issues.map((issue) => <li key={issue}>{issue}</li>)}</ul>}</section>}
+      {items.length > 0 && <section aria-label="Kiểm tra thời lượng"><p>Tổng thời lượng dự kiến: {Math.floor(durationResult.totalMinutes / 60)} giờ {durationResult.totalMinutes % 60} phút (hoạt động {durationResult.activityMinutes} phút, di chuyển khoảng {durationResult.travelMinutes} phút).</p>{durationResult.issues.length > 0 && <ul>{durationResult.issues.map((issue) => <li key={issue}>{issue}</li>)}</ul>}</section>}
       {items.length > 0 && <section aria-label="Ước tính ngân sách"><p>Chi phí tối thiểu: {budgetResult.total.toLocaleString('vi-VN')}đ.</p>{budgetResult.exceededBy > 0 && <strong>Vượt ngân sách {budgetResult.exceededBy.toLocaleString('vi-VN')}đ.</strong>}{budgetResult.missing.length > 0 && <p>Chưa có giá: {budgetResult.missing.join(', ')}.</p>}</section>}
       {weatherWarnings.length > 0 && <section aria-label="Cảnh báo thời tiết"><ul>{weatherWarnings.map((issue) => <li key={issue}>{issue}</li>)}</ul></section>}
       {mapUrl && <p><a className="home-link" href={mapUrl} target="_blank" rel="noreferrer">Mở toàn bộ tuyến đường trên Google Maps</a></p>}
