@@ -25,7 +25,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | PLACE-04 — API danh sách địa điểm          | Done       | 2026-08-12 | [PLACE-04](./tasks/PLACE-04.md) |
 | PLACE-06 — API chi tiết địa điểm           | Done       | 2026-08-12 | [PLACE-06](./tasks/PLACE-06.md) |
 | EXP-01 — Trang Explore                     | Done       | 2026-08-13 | [EXP-01](./tasks/EXP-01.md)     |
-| PLAN-02 — Planner v1                       | Partial    | —          | [PLAN-02](./tasks/PLAN-02.md)   |
+| PLAN-02 — Planner v1                       | Done       | 2026-08-14 | [PLAN-02](./tasks/PLAN-02.md)   |
 | PLAN-03 — Kiểm tra giờ mở cửa              | Done       | 2026-08-13 | [PLAN-03](./tasks/PLAN-03.md)   |
 | PLAN-04 — Kiểm tra thời lượng              | Partial    | —          | [PLAN-04](./tasks/PLAN-04.md)   |
 | PLAN-05 — Tối ưu ngân sách                 | Done       | 2026-08-13 | [PLAN-05](./tasks/PLAN-05.md)   |
@@ -66,7 +66,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 
 - Unit test: 20 test đạt; Web và Mobile chưa có test case.
 - Typecheck đạt, nhưng production build thất bại tại `PlansPage.tsx`.
-- PLAN-02–PLAN-07 và PLAN-09 đã được khôi phục trên chuỗi branch `feature/PLAN-02-*` đến `feature/PLAN-09-*`; các phần phụ thuộc provider giữ trạng thái `Partial`.
+- PLAN-02 đã được tích hợp và bổ sung parser/kiểm thử metadata; PLAN-04, PLAN-06 và PLAN-07 vẫn cần xử lý các phần phụ thuộc còn lại.
 - PLAN-08 đã có CRUD API và Prisma persistence; còn `Partial` đến khi thay header user tạm bằng JWT principal từ AUTH-05.
 - PLAN-10 đã có liên kết tuyến Google Maps; marker/polyline và tổng khoảng cách còn chờ MAP-04.
 - PLAN-12 đã được tích hợp lại với Planner hiện tại: liên kết snapshot công khai mở ở chế độ chỉ đọc và không phụ thuộc local storage của người nhận.

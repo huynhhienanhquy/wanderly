@@ -1,22 +1,28 @@
-# PLAN-02 — Thông tin kế hoạch và lịch
+# PLAN-02 — Planner v1
 
 ## Mục tiêu
 
-Cho phép đặt tên và ngày cho kế hoạch hiện tại.
+Cho phép người dùng quản lý thông tin cơ bản và danh sách địa điểm của kế hoạch hiện tại trên Web.
 
-## Phạm vi hoàn thành
+## Phạm vi đã hoàn thành
 
-- Thêm trường tên kế hoạch và ngày kế hoạch trên `/plans`.
-- Lưu metadata riêng trong localStorage.
-- Giữ danh sách địa điểm và thao tác xóa của PLAN-01.
+- Đặt và lưu tên, ngày, giờ kết thúc, ngân sách và điều kiện thời tiết của kế hoạch.
+- Đọc danh sách địa điểm, giờ bắt đầu và sắp xếp timeline từ localStorage.
+- Cho phép đổi giờ hoặc xóa địa điểm khỏi kế hoạch.
+- Khôi phục metadata bằng parser có kiểm tra kiểu; dữ liệu hỏng hoặc thiếu dùng giá trị mặc định an toàn.
+- Dữ liệu được chia sẻ vẫn có thể mở ở chế độ chỉ đọc qua PLAN-12.
 
-## Kiểm tra
+## Quyết định
 
-- `pnpm typecheck` đạt toàn workspace.
-- `docs/TASK_STATUS.md` được cập nhật trạng thái PLAN-02.
+Planner v1 tiếp tục dùng localStorage cho bản nháp cục bộ. Đồng bộ tài khoản và persistence backend thuộc PLAN-08.
 
-## Giới hạn
+## Kiểm thử
 
-Planner Web đã khôi phục metadata, giờ bắt đầu và sắp xếp theo thời gian. Ranking tự động và travel time còn chờ REC-03/MAP-03.
+- Unit test cho metadata hợp lệ, thiếu trường và JSON không hợp lệ.
+- `pnpm --filter @wanderly/web test`
+- `pnpm --filter @wanderly/web build`
+- `pnpm typecheck`
 
-Chưa có phân bổ giờ hoặc nhiều ngày; dữ liệu vẫn là local MVP.
+## Trạng thái
+
+Done — đầu ra Planner v1 đã tồn tại, build được và có kiểm thử cho quá trình khôi phục dữ liệu.

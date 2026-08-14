@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { estimatePlanBudget } from '../plan-budget';
 import { validateDurations } from '../plan-duration';
+import { DEFAULT_PLAN_META, parsePlanMeta } from '../plan-meta';
 import { isOpenAt } from '../plan-opening-hours';
 import { decodeSharedPlan, encodeSharedPlan } from '../plan-share';
 import { parsePlanItems, sortPlanItems, type LocalPlanItem, type LocalPlanMeta } from '../plan-storage';
@@ -12,21 +13,13 @@ import { weatherIssues } from '../plan-weather';
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 const PLAN_KEY = 'wanderly:current-plan';
 const META_KEY = 'wanderly:plan-meta';
-const DEFAULT_META: LocalPlanMeta = {
-  title: 'Kế hoạch cuối tuần',
-  date: '',
-  budget: '',
-  endTime: '18:00',
-  weather: 'CLEAR',
-};
-
 export function PlansPage() {
   const [searchParams] = useSearchParams();
   const sharedPlan = useMemo(() => decodeSharedPlan(searchParams.get('shared')), [searchParams]);
   const readOnly = sharedPlan !== null;
   const [items, setItems] = useState<LocalPlanItem[]>([]);
   const [details, setDetails] = useState<Record<string, PlaceDetail>>({});
-  const [meta, setMeta] = useState<LocalPlanMeta>(DEFAULT_META);
+  const [meta, setMeta] = useState<LocalPlanMeta>(DEFAULT_PLAN_META);
   const [message, setMessage] = useState('');
   const [validation, setValidation] = useState<{ checked: boolean; issues: string[] }>({ checked: false, issues: [] });
 
@@ -38,11 +31,7 @@ export function PlansPage() {
     }
 
     setItems(sortPlanItems(parsePlanItems(localStorage.getItem(PLAN_KEY))));
-    try {
-      setMeta((current) => ({ ...current, ...JSON.parse(localStorage.getItem(META_KEY) ?? '{}') as Partial<LocalPlanMeta> }));
-    } catch {
-      // Use defaults when saved metadata is invalid.
-    }
+    setMeta(parsePlanMeta(localStorage.getItem(META_KEY)));
   }, [sharedPlan]);
 
   useEffect(() => {
