@@ -8,6 +8,7 @@ import type {
 import type { Prisma } from '@prisma/client';
 import { PrismaService } from '../database/prisma.service';
 import { decodePlaceCursor, encodePlaceCursor } from './place-cursor';
+import { distanceMeters } from './place-distance';
 
 const select = {
   id: true,
@@ -132,17 +133,19 @@ export class PlacesService {
       ...(query.indoorOutdoor ? { indoorOutdoor: query.indoorOutdoor } : {}),
       ...(query.category ? { categories: { some: { category: { slug: query.category, isActive: true } } } } : {}),
     };
+    const distanceFilter = query.latitude !== undefined && query.longitude !== undefined && query.radiusMeters !== undefined;
     const rows = await this.prisma.place.findMany({
       where,
       select,
       orderBy: orderBy(query.sort),
-      take: query.limit + 1,
+      take: distanceFilter ? 500 : query.limit + 1,
       ...(query.cursor
         ? { cursor: { id: decodePlaceCursor(query.cursor) }, skip: 1 }
         : {}),
     });
-    const hasNextPage = rows.length > query.limit;
-    const page = hasNextPage ? rows.slice(0, query.limit) : rows;
+    const filteredRows = distanceFilter ? rows.filter((place) => distanceMeters(query.latitude!, query.longitude!, Number(place.latitude), Number(place.longitude)) <= query.radiusMeters!) : rows;
+    const hasNextPage = filteredRows.length > query.limit;
+    const page = hasNextPage ? filteredRows.slice(0, query.limit) : filteredRows;
     return {
       data: page.map(toSummary),
       nextCursor: hasNextPage ? encodePlaceCursor(page.at(-1)!.id) : null,

@@ -37,7 +37,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | PLAN-12 — Chia sẻ lịch trình               | Partial    | —          | [PLAN-12](./tasks/PLAN-12.md)   |
 | PLAN-08 — API lưu và lấy lịch trình        | Partial    | —          | [PLAN-08](./tasks/PLAN-08.md)   |
 | BUDGET-01 — Mô hình ước tính chi phí       | Done       | 2026-08-13 | [BUDGET-01](./tasks/BUDGET-01.md) |
-| EXP-02 — Thanh tìm kiếm và bộ lọc          | Partial    | —          | [EXP-02](./tasks/EXP-02.md)     |
+| EXP-02 — Thanh tìm kiếm và bộ lọc          | Done       | 2026-08-14 | [EXP-02](./tasks/EXP-02.md)     |
 | EXP-03 — Collection cơ bản                  | Partial    | —          | [EXP-03](./tasks/EXP-03.md)     |
 | EXP-04 — Trang Place Detail                | Done       | 2026-08-13 | [EXP-04](./tasks/EXP-04.md)     |
 | EXP-05 — Directions và Share                | Done       | 2026-08-13 | [EXP-05](./tasks/EXP-05.md)     |

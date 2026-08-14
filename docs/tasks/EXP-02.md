@@ -7,12 +7,14 @@ Cho phép người dùng tìm địa điểm theo từ khóa và lọc ngân sá
 ## Phạm vi hoàn thành
 
 - Mở rộng contract `GET /places` với `q`, `priceMax`, `minRating`, `category`, `indoorOutdoor`.
+- Bổ sung `latitude`, `longitude`, `radiusMeters` và lọc chính xác theo Haversine.
 - Áp dụng điều kiện an toàn trong Prisma service cho tên/địa chỉ, giá, rating, category và loại không gian.
 - Thêm thanh tìm kiếm và lựa chọn ngân sách trên Web Explore, đồng bộ query string.
 
 ## Kiểm tra
 
 - `pnpm typecheck`: đạt cho contracts, API, Web và Mobile.
+- Unit test distance helper đạt.
 - Tham số được parse bởi Zod; sort vẫn dùng allow-list.
 
 ## Quyết định
