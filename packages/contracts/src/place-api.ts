@@ -12,7 +12,7 @@ export type FetchLike = (
 
 export async function fetchPlacePage(
   baseUrl: string,
-  options: { cursor?: string | null; limit?: number; sort?: PlaceSort; q?: string; category?: string; priceMax?: number; minRating?: number; indoorOutdoor?: 'INDOOR' | 'OUTDOOR' | 'MIXED' } = {},
+  options: { cursor?: string | null; limit?: number; sort?: PlaceSort; q?: string; category?: string; priceMax?: number; minRating?: number; indoorOutdoor?: 'INDOOR' | 'OUTDOOR' | 'MIXED'; latitude?: number; longitude?: number; radiusMeters?: number } = {},
   fetcher: FetchLike = fetch,
 ): Promise<PlaceListResponse> {
   const url = new URL('/places', baseUrl);
@@ -24,6 +24,9 @@ export async function fetchPlacePage(
   if (options.priceMax !== undefined) url.searchParams.set('priceMax', String(options.priceMax));
   if (options.minRating !== undefined) url.searchParams.set('minRating', String(options.minRating));
   if (options.indoorOutdoor) url.searchParams.set('indoorOutdoor', options.indoorOutdoor);
+  if (options.latitude !== undefined) url.searchParams.set('latitude', String(options.latitude));
+  if (options.longitude !== undefined) url.searchParams.set('longitude', String(options.longitude));
+  if (options.radiusMeters !== undefined) url.searchParams.set('radiusMeters', String(options.radiusMeters));
 
   const response = await fetcher(url.toString());
   if (!response.ok)

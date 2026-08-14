@@ -16,6 +16,12 @@ export const placeListQuerySchema = z.object({
   priceMax: z.coerce.number().int().nonnegative().optional(),
   minRating: z.coerce.number().min(0).max(5).optional(),
   indoorOutdoor: z.enum(['INDOOR', 'OUTDOOR', 'MIXED']).optional(),
+  latitude: z.coerce.number().min(-90).max(90).optional(),
+  longitude: z.coerce.number().min(-180).max(180).optional(),
+  radiusMeters: z.coerce.number().int().min(100).max(50000).optional(),
+}).superRefine((value, context) => {
+  const locationFields = [value.latitude, value.longitude, value.radiusMeters];
+  if (locationFields.some((field) => field !== undefined) && locationFields.some((field) => field === undefined)) context.addIssue({ code: 'custom', message: 'latitude, longitude và radiusMeters phải được cung cấp cùng nhau', path: ['radiusMeters'] });
 });
 
 export const placeSummarySchema = z.object({
