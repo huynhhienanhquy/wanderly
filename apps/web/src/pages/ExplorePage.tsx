@@ -117,9 +117,7 @@ export function ExplorePage() {
           <h1>Đi đâu hôm nay?</h1>
           <p>Khám phá những nơi phù hợp với nhịp điệu và ngân sách của bạn.</p>
         </div>
-        <Link className="home-link" to="/">
-          Trang chủ
-        </Link>
+        <nav aria-label="Điều hướng Explore"><Link className="home-link" to="/">Trang chủ</Link> <Link className="home-link" to="/favorites">Đã lưu</Link> <Link className="home-link" to="/collections">Bộ sưu tập</Link></nav>
       </header>
       <form className="explore-filters" onSubmit={(event) => { event.preventDefault(); const form = new FormData(event.currentTarget); const next = new URLSearchParams(); ['q', 'priceMax', 'category', 'minRating', 'indoorOutdoor', 'radiusMeters'].forEach((key) => { const value = String(form.get(key) ?? ''); if (value) next.set(key, value); }); if (latitude && longitude && next.has('radiusMeters')) { next.set('latitude', latitude); next.set('longitude', longitude); } setSearchParams(next); }}>
         <input name="q" defaultValue={q} placeholder="Tìm theo tên, quận..." aria-label="Tìm kiếm địa điểm" />

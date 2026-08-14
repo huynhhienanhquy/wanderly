@@ -2,25 +2,27 @@
 
 ## Mục tiêu
 
-Cho phép người dùng xem lại các địa điểm đã lưu.
+Cho phép người dùng xem và quản lý các địa điểm đã lưu trong phạm vi local MVP.
 
-## Phạm vi hoàn thành
+## Phạm vi đã hoàn thành
 
-- Tạo route Web `/favorites`.
-- Đọc danh sách `{id, slug}` từ `wanderly:favorites` và gọi đúng endpoint chi tiết theo slug.
-- Có loading, empty state và liên kết tới Place Detail.
-- Bỏ qua mục đã bị xóa hoặc không còn khả dụng thay vì làm hỏng toàn trang.
+- Route Web `/favorites` đọc danh sách `{id, slug}` từ localStorage.
+- Tải Place Detail theo slug, có loading và empty state.
+- Bỏ qua từng địa điểm đã xóa/không khả dụng mà không làm hỏng toàn trang, đồng thời báo số lượng bị bỏ qua.
+- Card liên kết tới Place Detail và cho phép bỏ lưu ngay tại danh sách.
+- Thêm lối vào Favorites và Collections từ điều hướng Explore.
 
-## Kiểm tra
+## Quyết định
 
-- `pnpm typecheck` đạt toàn workspace.
-- Unit test storage/migration đạt.
+FAV-02 hoàn thành danh sách local MVP. Đồng bộ đa thiết bị theo người dùng cần principal JWT thật từ AUTH-05/FAV-01; không dùng header user giả để né authentication.
 
-## Tương thích dữ liệu
+## Kiểm thử
 
-Dữ liệu cũ chỉ chứa ID không thể chuyển thành slug nếu không gọi thêm API, vì vậy được bỏ qua an toàn. Favorite mới luôn lưu cả ID và slug.
+- Unit test parser/migration và toggle idempotent của favorite storage.
+- `pnpm --filter @wanderly/web test`
+- `pnpm --filter @wanderly/web build`
+- `pnpm typecheck`
 
-## Việc tiếp theo
+## Trạng thái
 
-- Đồng bộ danh sách favorite với backend theo user.
-- Thêm nút truy cập Favorites ở navigation và Mobile.
+Done — danh sách favorite cục bộ có đầy đủ trạng thái, điều hướng và thao tác bỏ lưu.
