@@ -32,7 +32,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | PLAN-06 — Điều chỉnh theo thời tiết        | Done       | 2026-08-14 | [PLAN-06](./tasks/PLAN-06.md)   |
 | PLAN-07 — Validate kế hoạch cuối cùng      | Done       | 2026-08-14 | [PLAN-07](./tasks/PLAN-07.md)   |
 | PLAN-09 — Timeline lịch trình              | Done       | 2026-08-13 | [PLAN-09](./tasks/PLAN-09.md)   |
-| PLAN-10 — Bản đồ lịch trình                | Partial    | —          | [PLAN-10](./tasks/PLAN-10.md)   |
+| PLAN-10 — Bản đồ lịch trình                | Done       | 2026-08-14 | [PLAN-10](./tasks/PLAN-10.md)   |
 | PLAN-11 — Chỉnh sửa thủ công               | Done       | 2026-08-13 | [PLAN-11](./tasks/PLAN-11.md)   |
 | PLAN-12 — Chia sẻ lịch trình               | Done       | 2026-08-14 | [PLAN-12](./tasks/PLAN-12.md)   |
 | PLAN-08 — API lưu và lấy lịch trình        | Partial    | —          | [PLAN-08](./tasks/PLAN-08.md)   |
@@ -68,7 +68,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 - Typecheck đạt, nhưng production build thất bại tại `PlansPage.tsx`.
 - PLAN-02 đã được tích hợp và bổ sung parser/kiểm thử metadata. PLAN-04 dùng khoảng cách tọa độ để ước tính thời gian di chuyển. PLAN-06 đã tích hợp dự báo Open-Meteo với lựa chọn thủ công làm fallback. PLAN-07 đã tổng hợp validation thành kết quả có category và kiểm tra dữ liệu chưa tải đủ.
 - PLAN-08 đã có CRUD API và Prisma persistence; còn `Partial` đến khi thay header user tạm bằng JWT principal từ AUTH-05.
-- PLAN-10 đã có liên kết tuyến Google Maps; marker/polyline và tổng khoảng cách còn chờ MAP-04.
+- PLAN-10 đã có sơ đồ SVG marker/polyline, tổng khoảng cách Haversine và liên kết tuyến Google Maps.
 - PLAN-12 đã được tích hợp lại với Planner hiện tại: liên kết snapshot công khai mở ở chế độ chỉ đọc và không phụ thuộc local storage của người nhận.
 - Favorites, Reviews và Admin hiện chủ yếu dùng localStorage, chưa đạt yêu cầu backend/auth.
 - Chi tiết xem [TASK-AUDIT-2026-08-13](./tasks/TASK-AUDIT-2026-08-13.md).

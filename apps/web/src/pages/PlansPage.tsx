@@ -6,6 +6,7 @@ import { validateDurations } from '../plan-duration';
 import { DEFAULT_PLAN_META, parsePlanMeta } from '../plan-meta';
 import { isOpenAt } from '../plan-opening-hours';
 import { decodeSharedPlan, encodeSharedPlan } from '../plan-share';
+import { buildRouteSummary } from '../plan-route';
 import { parsePlanItems, sortPlanItems, type LocalPlanItem, type LocalPlanMeta } from '../plan-storage';
 import { validateFinalPlan, type PlanValidationResult } from '../plan-validation';
 import { weatherIssues } from '../plan-weather';
@@ -124,6 +125,12 @@ export function PlansPage() {
   }
 
   const routePlaces = items.map((item) => details[item.id]).filter((place): place is PlaceDetail => Boolean(place));
+  const routeSummary = buildRouteSummary(routePlaces.map((place) => ({
+    id: place.id,
+    name: place.name,
+    latitude: place.latitude,
+    longitude: place.longitude,
+  })));
   const mapUrl = routePlaces.length > 0
     ? `https://www.google.com/maps/dir/${routePlaces.map((place) => `${place.latitude},${place.longitude}`).join('/')}`
     : null;
@@ -154,6 +161,16 @@ export function PlansPage() {
       {items.length > 0 && <section aria-label="Kiểm tra thời lượng"><p>Tổng thời lượng dự kiến: {Math.floor(durationResult.totalMinutes / 60)} giờ {durationResult.totalMinutes % 60} phút (hoạt động {durationResult.activityMinutes} phút, di chuyển khoảng {durationResult.travelMinutes} phút).</p>{durationResult.issues.length > 0 && <ul>{durationResult.issues.map((issue) => <li key={issue}>{issue}</li>)}</ul>}</section>}
       {items.length > 0 && <section aria-label="Ước tính ngân sách"><p>Chi phí tối thiểu: {budgetResult.total.toLocaleString('vi-VN')}đ.</p>{budgetResult.exceededBy > 0 && <strong>Vượt ngân sách {budgetResult.exceededBy.toLocaleString('vi-VN')}đ.</strong>}{budgetResult.missing.length > 0 && <p>Chưa có giá: {budgetResult.missing.join(', ')}.</p>}</section>}
       {weatherWarnings.length > 0 && <section aria-label="Cảnh báo thời tiết"><ul>{weatherWarnings.map((issue) => <li key={issue}>{issue}</li>)}</ul></section>}
+      {routeSummary.points.length > 0 && (
+        <section aria-label="Sơ đồ tuyến lịch trình">
+          <h2>Tuyến lịch trình</h2>
+          <p>Tổng khoảng cách đường chim bay: {routeSummary.totalDistanceKilometers.toFixed(1)} km.</p>
+          <svg viewBox="0 0 640 280" role="img" aria-label="Các điểm và đường nối theo thứ tự timeline" style={{ width: '100%', maxWidth: 640, background: '#eef6f1', borderRadius: 16 }}>
+            {routeSummary.points.length > 1 && <polyline points={routeSummary.points.map(({ x, y }) => `${x},${y}`).join(' ')} fill="none" stroke="currentColor" strokeWidth="4" />}
+            {routeSummary.points.map((point, index) => <g key={point.id}><circle cx={point.x} cy={point.y} r="12" fill="#176b4d" /><text x={point.x} y={point.y + 4} textAnchor="middle" fill="white" fontSize="11">{index + 1}</text><text x={point.x} y={point.y - 18} textAnchor="middle" fontSize="12">{point.name}</text></g>)}
+          </svg>
+        </section>
+      )}
       {mapUrl && <p><a className="home-link" href={mapUrl} target="_blank" rel="noreferrer">Mở toàn bộ tuyến đường trên Google Maps</a></p>}
       {items.length === 0 ? <p>Chưa có địa điểm trong kế hoạch.</p> : (
         <ol>{items.map((item) => {
