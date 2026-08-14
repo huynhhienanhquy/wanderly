@@ -34,7 +34,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | PLAN-09 — Timeline lịch trình              | Done       | 2026-08-13 | [PLAN-09](./tasks/PLAN-09.md)   |
 | PLAN-10 — Bản đồ lịch trình                | Partial    | —          | [PLAN-10](./tasks/PLAN-10.md)   |
 | PLAN-11 — Chỉnh sửa thủ công               | Done       | 2026-08-13 | [PLAN-11](./tasks/PLAN-11.md)   |
-| PLAN-12 — Chia sẻ lịch trình               | Partial    | —          | [PLAN-12](./tasks/PLAN-12.md)   |
+| PLAN-12 — Chia sẻ lịch trình               | Done       | 2026-08-14 | [PLAN-12](./tasks/PLAN-12.md)   |
 | PLAN-08 — API lưu và lấy lịch trình        | Partial    | —          | [PLAN-08](./tasks/PLAN-08.md)   |
 | BUDGET-01 — Mô hình ước tính chi phí       | Done       | 2026-08-13 | [BUDGET-01](./tasks/BUDGET-01.md) |
 | EXP-02 — Thanh tìm kiếm và bộ lọc          | Partial    | —          | [EXP-02](./tasks/EXP-02.md)     |
@@ -69,6 +69,6 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 - PLAN-02–PLAN-07 và PLAN-09 đã được khôi phục trên chuỗi branch `feature/PLAN-02-*` đến `feature/PLAN-09-*`; các phần phụ thuộc provider giữ trạng thái `Partial`.
 - PLAN-08 đã có CRUD API và Prisma persistence; còn `Partial` đến khi thay header user tạm bằng JWT principal từ AUTH-05.
 - PLAN-10 đã có liên kết tuyến Google Maps; marker/polyline và tổng khoảng cách còn chờ MAP-04.
-- PLAN-12 đã hoàn thiện public read-only snapshot trên branch `feature/PLAN-12-share-plan`; cần merge branch đó để trạng thái `Done` xuất hiện trên nhánh tích hợp.
+- PLAN-12 đã được tích hợp lại với Planner hiện tại: liên kết snapshot công khai mở ở chế độ chỉ đọc và không phụ thuộc local storage của người nhận.
 - Favorites, Reviews và Admin hiện chủ yếu dùng localStorage, chưa đạt yêu cầu backend/auth.
 - Chi tiết xem [TASK-AUDIT-2026-08-13](./tasks/TASK-AUDIT-2026-08-13.md).
