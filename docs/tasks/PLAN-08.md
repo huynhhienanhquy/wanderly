@@ -1,16 +1,20 @@
 # PLAN-08 — API lưu và lấy lịch trình
 
-## Phạm vi hoàn thành
+## Phạm vi đã hoàn thành
 
-- Thêm contract Zod cho Plan, PlanItem và CreatePlan.
-- Chuẩn hóa các trường title, ngày, ngân sách, vị trí, giờ bắt đầu và thời lượng.
-- Export contract từ package dùng chung cho API/Web/Mobile.
+- Contract Zod cho Plan, PlanItem và CreatePlan.
+- CRUD create/list/get/delete với Prisma persistence.
+- Mọi endpoint `/plans` được bảo vệ bằng bearer `AuthGuard`.
+- Owner luôn lấy từ JWT claim `sub`; không còn chấp nhận `x-user-id` từ client.
+- Query đọc/xóa đều giới hạn theo `ownerUserId` để chống truy cập chéo tài khoản.
 
-## Kiểm tra
+## Kiểm thử
 
-- `pnpm typecheck` đạt toàn workspace.
-- Cập nhật `TASK_STATUS.md`.
+- Controller test xác nhận JWT subject được truyền vào list/remove.
+- Service test và API test toàn package.
+- `pnpm --filter @wanderly/api test`
+- `pnpm typecheck`
 
-## Giới hạn
+## Trạng thái
 
-CRUD create/list/get/delete và Prisma persistence đã có. Header `x-user-id` hiện là adapter tạm; cần thay bằng JWT principal từ AUTH-05 trước production.
+Done — persistence owner-scoped đã dùng principal xác thực thật.
