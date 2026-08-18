@@ -47,8 +47,8 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | REVIEW-01 — Tạo và cập nhật đánh giá        | Done       | 2026-08-18 | [REVIEW-01](./tasks/REVIEW-01.md) |
 | REVIEW-02 — Danh sách đánh giá              | Done       | 2026-08-18 | [REVIEW-02](./tasks/REVIEW-02.md) |
 | REVIEW-03 — Báo cáo review                  | Done       | 2026-08-18 | [REVIEW-03](./tasks/REVIEW-03.md) |
-| ADMIN-01 — Admin layout và route guard      | Partial    | —          | [ADMIN-01](./tasks/ADMIN-01.md) |
-| ADMIN-04 — Quản lý review/report            | Partial    | —          | [ADMIN-04](./tasks/ADMIN-04.md) |
+| ADMIN-01 — Admin layout và route guard      | Done       | 2026-08-18 | [ADMIN-01](./tasks/ADMIN-01.md) |
+| ADMIN-04 — Quản lý review/report            | Done       | 2026-08-18 | [ADMIN-04](./tasks/ADMIN-04.md) |
 | PLAN-01 — Kế hoạch cơ bản                   | Done       | 2026-08-13 | [PLAN-01](./tasks/PLAN-01.md)   |
 
 ## Quy tắc cập nhật

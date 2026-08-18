@@ -1,25 +1,17 @@
-# ADMIN-01 — Admin guard và RBAC nền tảng
+# ADMIN-01 — Admin layout và route guard
 
-## Mục tiêu
+## Trạng thái
 
-Không cho người dùng thường truy cập route quản trị.
+Done — 2026-08-18.
 
-## Phạm vi hoàn thành
+## Kết quả
 
-- Tạo `AdminGuard` cho Web route.
-- Chỉ render nội dung khi role hiện tại là `ADMIN`.
-- Redirect về trang chủ nếu thiếu quyền.
-- Bọc route `/admin/reports` bằng guard.
+- Route `/admin/reports` được bọc bởi `AdminGuard`.
+- Guard lấy access token từ session và gọi `GET /auth/admin-check`.
+- Trong lúc xác minh, giao diện hiển thị trạng thái tải; tài khoản thiếu token hoặc không có quyền được chuyển tới `/login`.
+- Quyền truy cập không còn phụ thuộc vào role do trình duyệt tự lưu. Backend vẫn là nơi quyết định quyền bằng `AuthGuard` và `RolesGuard`.
 
-## Kiểm tra
+## Kiểm thử
 
-- `pnpm typecheck` đạt toàn workspace.
-
-## Giới hạn
-
-Role hiện đọc từ `localStorage` để phù hợp MVP local. Không xem đây là cơ chế bảo mật production; backend phải xác thực JWT/session và kiểm tra role độc lập.
-
-## Việc tiếp theo
-
-- Kết nối guard với auth context và endpoint `/me`.
-- Bổ sung server-side RBAC cho toàn bộ admin API.
+- Unit test xác nhận guard API gửi Bearer token.
+- API, Web, Web build và typecheck toàn workspace đạt.

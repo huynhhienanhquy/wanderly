@@ -19,6 +19,12 @@ export const reportReviewRequestSchema = z.object({
   reason: z.string().trim().min(3).max(500),
 });
 
+export const moderateReviewReportRequestSchema = z.object({
+  status: z.enum(['RESOLVED', 'DISMISSED']),
+  hideReview: z.boolean().default(false),
+});
+
 export type UpsertReviewRequest = z.infer<typeof upsertReviewRequestSchema>;
 export type Review = z.infer<typeof reviewSchema>;
 export type ReportReviewRequest = z.infer<typeof reportReviewRequestSchema>;
+export type ModerateReviewReportRequest = z.infer<typeof moderateReviewReportRequestSchema>;
