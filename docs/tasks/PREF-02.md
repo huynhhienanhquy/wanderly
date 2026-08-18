@@ -9,7 +9,7 @@ Done — 2026-08-18.
 - Sau đăng ký, Web chuyển người dùng tới `/onboarding/preferences`.
 - Trang lấy catalog động từ API, yêu cầu ít nhất 3 lựa chọn duy nhất và có trạng thái lỗi/thành công.
 - Route yêu cầu access token; người chưa đăng nhập được chuyển tới `/login`.
-- Lựa chọn được giữ tạm trong session để PREF-03 đồng bộ vào database.
+- Form dùng preference API client chung; PREF-03 đã nối thao tác lưu vào database.
 
 ## Kiểm thử
 

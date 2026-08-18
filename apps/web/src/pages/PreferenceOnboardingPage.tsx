@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router';
 import type { InterestCategory } from '@wanderly/contracts';
-import { fetchInterestCategories, validateInterestSelection } from '../preference-api';
+import { fetchInterestCategories, saveUserPreferences, validateInterestSelection } from '../preference-api';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 
 export function PreferenceOnboardingPage() {
-  const token = sessionStorage.getItem('wanderlyAccessToken');
+  const token = sessionStorage.getItem('wanderlyAccessToken') ?? '';
   const [categories, setCategories] = useState<InterestCategory[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
   const [message, setMessage] = useState('');
@@ -21,13 +21,18 @@ export function PreferenceOnboardingPage() {
     setSelected((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
   }
 
-  function submit() {
+  async function submit() {
     if (!validateInterestSelection(selected)) {
       setMessage('Hãy chọn ít nhất 3 sở thích.');
       return;
     }
-    sessionStorage.setItem('wanderlyPendingPreferences', JSON.stringify(selected));
-    setMessage('Đã ghi nhận lựa chọn. Bạn có thể tiếp tục khám phá Wanderly.');
+    try {
+      await saveUserPreferences(API_URL, token, selected);
+      sessionStorage.removeItem('wanderlyPendingPreferences');
+      setMessage('Đã lưu sở thích. Bạn có thể tiếp tục khám phá Wanderly.');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Không thể lưu sở thích.');
+    }
   }
 
   return <main className="page-shell">
@@ -40,7 +45,7 @@ export function PreferenceOnboardingPage() {
         {category.icon ?? '✦'} {category.name}
       </label>)}
     </section>
-    <button type="button" onClick={submit}>Lưu sở thích</button>
+    <button type="button" onClick={() => void submit()}>Lưu sở thích</button>
     {message && <p role="status">{message}</p>}
     <Link className="home-link" to="/explore">Bỏ qua và khám phá</Link>
   </main>;
