@@ -2,6 +2,7 @@ import { fetchPlaceDetail, type PlaceDetail } from '@wanderly/contracts';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { estimatePlanBudget } from '../plan-budget';
+import { buildBudgetWarning } from '../budget-warning';
 import { validateDurations } from '../plan-duration';
 import { DEFAULT_PLAN_META, parsePlanMeta } from '../plan-meta';
 import { isOpenAt } from '../plan-opening-hours';
@@ -71,6 +72,7 @@ export function PlansPage() {
     Object.fromEntries(Object.entries(details).map(([id, place]) => [id, { latitude: place.latitude, longitude: place.longitude }])),
   );
   const budgetResult = estimatePlanBudget(items, details, meta.budget);
+  const budgetWarning = buildBudgetWarning(budgetResult, budgetResult.limit, budgetResult.missing);
   const weatherWarnings = weatherIssues(items, details, meta.weather);
 
   function validatePlan() {
@@ -159,7 +161,7 @@ export function PlansPage() {
       {readOnly && <p>Đây là bản chụp chỉ đọc của lịch trình tại thời điểm được chia sẻ.</p>}
       {validation.checked && <section aria-label="Kết quả kiểm tra kế hoạch" role="status">{validation.result.valid ? <strong>Kế hoạch hợp lệ.</strong> : <><strong>Kế hoạch chưa hợp lệ.</strong><ul>{validation.result.issues.map((issue) => <li key={`${issue.category}:${issue.message}`}><span>{issue.category}</span>: {issue.message}</li>)}</ul></>}</section>}
       {items.length > 0 && <section aria-label="Kiểm tra thời lượng"><p>Tổng thời lượng dự kiến: {Math.floor(durationResult.totalMinutes / 60)} giờ {durationResult.totalMinutes % 60} phút (hoạt động {durationResult.activityMinutes} phút, di chuyển khoảng {durationResult.travelMinutes} phút).</p>{durationResult.issues.length > 0 && <ul>{durationResult.issues.map((issue) => <li key={issue}>{issue}</li>)}</ul>}</section>}
-      {items.length > 0 && <section aria-label="Ước tính ngân sách"><h2>Chi tiết ngân sách</h2><ul>{budgetResult.lines.map((line) => <li key={`${line.type}:${line.label}`}>{line.label}: {line.amount.toLocaleString('vi-VN')}đ ({line.type})</li>)}</ul><p>Địa điểm: {budgetResult.byType.PLACE.toLocaleString('vi-VN')}đ · Ăn uống: {budgetResult.byType.FOOD.toLocaleString('vi-VN')}đ · Di chuyển: {budgetResult.byType.TRANSPORT.toLocaleString('vi-VN')}đ</p><p><strong>Tổng: {budgetResult.total.toLocaleString('vi-VN')}đ.</strong></p>{budgetResult.exceededBy > 0 && <strong>Vượt ngân sách {budgetResult.exceededBy.toLocaleString('vi-VN')}đ.</strong>}{budgetResult.missing.length > 0 && <p>Chưa có giá: {budgetResult.missing.join(', ')}.</p>}</section>}
+      {items.length > 0 && <section aria-label="Ước tính ngân sách"><h2>Chi tiết ngân sách</h2><ul>{budgetResult.lines.map((line) => <li key={`${line.type}:${line.label}`}>{line.label}: {line.amount.toLocaleString('vi-VN')}đ ({line.type})</li>)}</ul><p>Địa điểm: {budgetResult.byType.PLACE.toLocaleString('vi-VN')}đ · Ăn uống: {budgetResult.byType.FOOD.toLocaleString('vi-VN')}đ · Di chuyển: {budgetResult.byType.TRANSPORT.toLocaleString('vi-VN')}đ</p><p><strong>Tổng: {budgetResult.total.toLocaleString('vi-VN')}đ.</strong></p>{budgetWarning && <p role="alert" data-severity={budgetWarning.severity}><strong>{budgetWarning.message}</strong></p>}{budgetResult.missing.length > 0 && <p>Chưa có giá: {budgetResult.missing.join(', ')}.</p>}</section>}
       {weatherWarnings.length > 0 && <section aria-label="Cảnh báo thời tiết"><ul>{weatherWarnings.map((issue) => <li key={issue}>{issue}</li>)}</ul></section>}
       {routeSummary.points.length > 0 && (
         <section aria-label="Sơ đồ tuyến lịch trình">

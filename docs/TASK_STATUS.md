@@ -53,6 +53,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | PLAN-08 — API lưu và lấy lịch trình        | Done       | 2026-08-14 | [PLAN-08](./tasks/PLAN-08.md)   |
 | BUDGET-01 — Mô hình ước tính chi phí       | Done       | 2026-08-13 | [BUDGET-01](./tasks/BUDGET-01.md) |
 | BUDGET-02 — Budget breakdown               | Done       | 2026-08-18 | [BUDGET-02](./tasks/BUDGET-02.md) |
+| BUDGET-03 — Cảnh báo vượt ngân sách        | Done       | 2026-08-18 | [BUDGET-03](./tasks/BUDGET-03.md) |
 | EXP-02 — Thanh tìm kiếm và bộ lọc          | Done       | 2026-08-14 | [EXP-02](./tasks/EXP-02.md)     |
 | EXP-03 — Collection cơ bản                  | Done       | 2026-08-14 | [EXP-03](./tasks/EXP-03.md)     |
 | EXP-04 — Trang Place Detail                | Done       | 2026-08-13 | [EXP-04](./tasks/EXP-04.md)     |
