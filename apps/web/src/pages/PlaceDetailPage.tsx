@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useParams } from 'react-router';
 import { parseFavorites, toggleFavorite as updateFavorites } from '../favorite-storage';
+import { addRemoteFavorite, fetchRemoteFavorites, removeRemoteFavorite } from '../favorite-api';
 import { addPlanItem, parsePlanItems } from '../plan-storage';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
@@ -33,6 +34,12 @@ export function PlaceDetailPage() {
     if (place) {
       const favorites = parseFavorites(localStorage.getItem(FAVORITES_KEY));
       setFavorite(favorites.some(({ id }) => id === place.id));
+      const accessToken = sessionStorage.getItem('wanderlyAccessToken');
+      if (accessToken) {
+        void fetchRemoteFavorites(API_URL, accessToken)
+          .then((remoteFavorites) => setFavorite(remoteFavorites.some(({ id }) => id === place.id)))
+          .catch(() => undefined);
+      }
     }
   }, [place]);
   useEffect(() => {
@@ -49,12 +56,21 @@ export function PlaceDetailPage() {
     localStorage.setItem(REPORTS_KEY, JSON.stringify(next));
     setReportedReviews(next);
   }
-  function toggleFavorite() {
+  async function toggleFavorite() {
     if (!place) return;
     const favorites = parseFavorites(localStorage.getItem(FAVORITES_KEY));
     const next = updateFavorites(favorites, { id: place.id, slug: place.slug });
     localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
-    setFavorite(next.some(({ id }) => id === place.id));
+    const nextFavorite = next.some(({ id }) => id === place.id);
+    setFavorite(nextFavorite);
+    const accessToken = sessionStorage.getItem('wanderlyAccessToken');
+    if (!accessToken) return;
+    try {
+      if (nextFavorite) await addRemoteFavorite(API_URL, accessToken, place.id);
+      else await removeRemoteFavorite(API_URL, accessToken, place.id);
+    } catch {
+      setFavorite(!nextFavorite);
+    }
   }
   function submitReview(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -139,7 +155,7 @@ export function PlaceDetailPage() {
           <label>Giờ bắt đầu <input type="time" value={planStartTime} onChange={(event) => setPlanStartTime(event.target.value)} /></label>
           <button type="button" onClick={addToPlan}>Thêm vào kế hoạch</button>
           {planMessage && <span role="status">{planMessage}</span>}
-          <button type="button" onClick={toggleFavorite} aria-pressed={favorite}>{favorite ? 'Đã lưu' : 'Lưu địa điểm'}</button>
+          <button type="button" onClick={() => void toggleFavorite()} aria-pressed={favorite}>{favorite ? 'Đã lưu' : 'Lưu địa điểm'}</button>
         </div>
         {place.description && (
           <p className="detail-description">{place.description}</p>

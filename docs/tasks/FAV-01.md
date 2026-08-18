@@ -1,25 +1,12 @@
 # FAV-01 — Lưu/bỏ lưu địa điểm
 
-## Mục tiêu
+## Phạm vi đã hoàn thành
 
-Cho phép người dùng lưu hoặc bỏ lưu địa điểm ngay trên Place Detail.
+- API `/favorites` list/add/remove được bảo vệ bằng bearer JWT.
+- Bản ghi favorite được owner-scoped theo JWT `sub` và idempotent khi thêm lại.
+- Place Detail vẫn hỗ trợ localStorage cho khách chưa đăng nhập.
+- Khi đã đăng nhập, trạng thái và thao tác toggle được đồng bộ với API.
 
-## Phạm vi hoàn thành
+## Trạng thái
 
-- Thêm nút lưu với trạng thái `aria-pressed`.
-- Lưu danh sách ID địa điểm trong localStorage và khôi phục khi tải lại trang.
-- Toggle idempotent: bật/tắt không tạo bản ghi trùng.
-
-## Kiểm tra
-
-- `pnpm typecheck` đạt toàn workspace.
-- Dữ liệu favorite tách riêng ở key `wanderly:favorites`.
-
-## Giới hạn
-
-Đây là persistence phía Web cho MVP chưa có session user/favorite API. Khi auth context và API sẵn sàng, thay adapter localStorage bằng API mà không đổi UI contract.
-
-## Việc tiếp theo
-
-- FAV-02: danh sách địa điểm đã lưu.
-- Đồng bộ favorite với backend theo user đã đăng nhập.
+Done — không dùng `x-user-id` hay định danh giả; dữ liệu đã gắn với principal xác thực.

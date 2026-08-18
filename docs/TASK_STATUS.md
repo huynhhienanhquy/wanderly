@@ -42,7 +42,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | EXP-04 — Trang Place Detail                | Done       | 2026-08-13 | [EXP-04](./tasks/EXP-04.md)     |
 | EXP-05 — Directions và Share                | Done       | 2026-08-13 | [EXP-05](./tasks/EXP-05.md)     |
 | EXP-06 — Add to Plan                        | Done       | 2026-08-14 | [EXP-06](./tasks/EXP-06.md)     |
-| FAV-01 — Lưu/bỏ lưu địa điểm                | Partial    | —          | [FAV-01](./tasks/FAV-01.md)     |
+| FAV-01 — Lưu/bỏ lưu địa điểm                | Done       | 2026-08-16 | [FAV-01](./tasks/FAV-01.md)     |
 | FAV-02 — Danh sách địa điểm đã lưu          | Done       | 2026-08-14 | [FAV-02](./tasks/FAV-02.md)     |
 | REVIEW-01 — Tạo và cập nhật đánh giá        | Partial    | —          | [REVIEW-01](./tasks/REVIEW-01.md) |
 | REVIEW-02 — Danh sách đánh giá              | Partial    | —          | [REVIEW-02](./tasks/REVIEW-02.md) |
