@@ -31,14 +31,21 @@ export class OpenAiConstraintsProvider {
   async extract(request: ExtractConstraintsRequest): Promise<ExtractConstraintsResponse> {
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) throw new ServiceUnavailableException('AI provider chưa được cấu hình.');
-    const response = await this.fetcher('https://api.openai.com/v1/responses', {
-      method: 'POST', headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: process.env.OPENAI_MODEL ?? 'gpt-5.6-terra', store: false, input: [{ role: 'system', content: CONSTRAINT_SYSTEM_PROMPT }, { role: 'user', content: buildConstraintPrompt(request) }], text: { format: { type: 'json_schema', name: 'planning_constraints', strict: true, schema: responseSchema } } }),
-    });
-    if (!response.ok) throw new ServiceUnavailableException('AI provider không phản hồi thành công.');
-    const body = await response.json() as { output?: Array<{ content?: Array<{ type?: string; text?: string }> }> };
-    const text = body.output?.flatMap(({ content }) => content ?? []).find((content) => content.type === 'output_text')?.text;
-    if (!text) throw new ServiceUnavailableException('AI provider không trả dữ liệu.');
-    return normalizeConstraints(JSON.parse(text) as Record<string, unknown>, request);
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const response = await this.fetcher('https://api.openai.com/v1/responses', {
+          method: 'POST', signal: AbortSignal.timeout(8_000), headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: process.env.OPENAI_MODEL ?? 'gpt-5.6-terra', store: false, input: [{ role: 'system', content: CONSTRAINT_SYSTEM_PROMPT }, { role: 'user', content: buildConstraintPrompt(request) }], text: { format: { type: 'json_schema', name: 'planning_constraints', strict: true, schema: responseSchema } } }),
+        });
+        if (!response.ok) throw new Error(`provider status ${response.status}`);
+        const body = await response.json() as { output?: Array<{ content?: Array<{ type?: string; text?: string }> }> };
+        const text = body.output?.flatMap(({ content }) => content ?? []).find((content) => content.type === 'output_text')?.text;
+        if (!text) throw new Error('missing output');
+        return normalizeConstraints(JSON.parse(text) as Record<string, unknown>, request);
+      } catch (error) {
+        if (attempt === 1) throw new ServiceUnavailableException('AI provider không phản hồi thành công.', { cause: error });
+      }
+    }
+    throw new ServiceUnavailableException('AI provider không phản hồi thành công.');
   }
 }
