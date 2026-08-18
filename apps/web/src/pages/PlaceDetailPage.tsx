@@ -9,7 +9,7 @@ import { Link, useParams } from 'react-router';
 import { parseFavorites, toggleFavorite as updateFavorites } from '../favorite-storage';
 import { addRemoteFavorite, fetchRemoteFavorites, removeRemoteFavorite } from '../favorite-api';
 import { addPlanItem, parsePlanItems } from '../plan-storage';
-import { fetchReviews, upsertReview } from '../review-api';
+import { fetchReviews, reportRemoteReview, upsertReview } from '../review-api';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 const DAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
@@ -50,7 +50,17 @@ export function PlaceDetailPage() {
     if (!sessionStorage.getItem('wanderlyAccessToken')) setReviews(all.filter((review) => review.placeId === place.id).slice(-20).reverse());
     setReportedReviews(JSON.parse(localStorage.getItem(REPORTS_KEY) ?? '[]') as string[]);
   }, [place, reviewMessage]);
-  function reportReview(review: { createdAt: string }) {
+  async function reportReview(review: { id?: string; createdAt: string }) {
+    const accessToken = sessionStorage.getItem('wanderlyAccessToken');
+    if (accessToken && review.id) {
+      try {
+        await reportRemoteReview(API_URL, accessToken, review.id, 'Nội dung không phù hợp');
+        setReportedReviews((current) => [...new Set([...current, review.id!])]);
+      } catch {
+        setReviewMessage('Không thể báo cáo đánh giá.');
+      }
+      return;
+    }
     const key = `${place?.id}:${review.createdAt}`;
     const reports = JSON.parse(localStorage.getItem(REPORTS_KEY) ?? '[]') as string[];
     if (reports.includes(key)) return;
@@ -184,7 +194,7 @@ export function PlaceDetailPage() {
           </div>
         </div>
         <div className="detail-section"><h2>Đánh giá của bạn</h2><form onSubmit={submitReview}><label>Điểm <select value={reviewRating} onChange={(event) => setReviewRating(event.target.value)}>{[5, 4, 3, 2, 1].map((value) => <option key={value} value={value}>{value}/5</option>)}</select></label><textarea value={reviewContent} onChange={(event) => setReviewContent(event.target.value)} maxLength={1000} placeholder="Chia sẻ trải nghiệm của bạn" /><button type="submit">Gửi đánh giá</button>{reviewMessage && <span role="status">{reviewMessage}</span>}</form></div>
-        <div className="detail-section"><h2>Đánh giá gần đây ({reviews.length})</h2>{reviews.length === 0 ? <p>Chưa có đánh giá nào.</p> : reviews.map((review, index) => { const key = `${place.id}:${review.createdAt}`; return <article key={`${review.createdAt}-${index}`}><b>{'★'.repeat(review.rating)}</b><p>{review.content || 'Không có nội dung.'}</p><small>{new Date(review.createdAt).toLocaleDateString('vi-VN')}</small><button type="button" onClick={() => reportReview(review)} disabled={reportedReviews.includes(key)}>{reportedReviews.includes(key) ? 'Đã báo cáo' : 'Báo cáo'}</button></article>; })}</div>
+        <div className="detail-section"><h2>Đánh giá gần đây ({reviews.length})</h2>{reviews.length === 0 ? <p>Chưa có đánh giá nào.</p> : reviews.map((review, index) => { const key = review.id ?? `${place.id}:${review.createdAt}`; return <article key={`${review.createdAt}-${index}`}><b>{'★'.repeat(review.rating)}</b><p>{review.content || 'Không có nội dung.'}</p><small>{new Date(review.createdAt).toLocaleDateString('vi-VN')}</small><button type="button" onClick={() => void reportReview(review)} disabled={reportedReviews.includes(key)}>{reportedReviews.includes(key) ? 'Đã báo cáo' : 'Báo cáo'}</button></article>; })}</div>
         <div className="detail-section">
           <h2>Giờ mở cửa</h2>
           <div className="hours-grid">

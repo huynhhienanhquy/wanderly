@@ -1,24 +1,12 @@
-# REVIEW-03 — Báo cáo nội dung vi phạm
+# REVIEW-03 — Báo cáo review
 
-## Mục tiêu
+## Phạm vi đã hoàn thành
 
-Cho phép người dùng đánh dấu review có nội dung vi phạm để chuyển cho bước xử lý quản trị.
+- Thêm bảng `review_reports` và migration với trạng thái `OPEN`, `RESOLVED`, `DISMISSED`.
+- API báo cáo review được bảo vệ bằng JWT và gắn reporter từ claim `sub`.
+- Unique `(reviewId, reporterUserId)` chống tạo báo cáo trùng; gửi lại sẽ cập nhật report hiện có.
+- Place Detail gọi API khi đăng nhập và giữ fallback local cho khách.
 
-## Phạm vi hoàn thành
+## Trạng thái
 
-- Thêm nút “Báo cáo” cho từng review.
-- Dùng khóa kết hợp `placeId` và thời điểm tạo để tránh báo cáo trùng.
-- Hiển thị trạng thái “Đã báo cáo” sau thao tác.
-
-## Kiểm tra
-
-- `pnpm typecheck` đạt toàn workspace.
-
-## Giới hạn
-
-Báo cáo hiện lưu localStorage do chưa có API moderation và user session. Backend sau này cần nhận reason, userId, reviewId và tạo audit record.
-
-## Việc tiếp theo
-
-- ADMIN-04: màn hình quản lý review/report.
-- Thay local adapter bằng endpoint moderation.
+Done — report đã có persistence, ownership và nền tảng moderation cho ADMIN-04.

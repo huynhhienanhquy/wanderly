@@ -15,3 +15,12 @@ export async function upsertReview(baseUrl: string, accessToken: string, placeId
   if (!response.ok) throw new Error('Không thể lưu đánh giá.');
   return response.json() as Promise<Review>;
 }
+
+export async function reportRemoteReview(baseUrl: string, accessToken: string, reviewId: string, reason: string): Promise<void> {
+  const response = await fetch(`${baseUrl}/reviews/${reviewId}/reports`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ reason }),
+  });
+  if (!response.ok) throw new Error('Không thể báo cáo đánh giá.');
+}

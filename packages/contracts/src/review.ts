@@ -15,5 +15,10 @@ export const reviewSchema = z.object({
   updatedAt: z.iso.datetime(),
 });
 
+export const reportReviewRequestSchema = z.object({
+  reason: z.string().trim().min(3).max(500),
+});
+
 export type UpsertReviewRequest = z.infer<typeof upsertReviewRequestSchema>;
 export type Review = z.infer<typeof reviewSchema>;
+export type ReportReviewRequest = z.infer<typeof reportReviewRequestSchema>;
