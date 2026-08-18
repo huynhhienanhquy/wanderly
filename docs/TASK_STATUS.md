@@ -20,6 +20,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | AUTH-05 — Phân quyền User/Admin            | Done       | 2026-08-14 | [AUTH-05](./tasks/AUTH-05.md)   |
 | AUTH-06 — Trang hồ sơ cá nhân              | Done       | 2026-08-14 | [AUTH-06](./tasks/AUTH-06.md)   |
 | PREF-01 — Khai báo danh mục sở thích       | Done       | 2026-08-18 | [PREF-01](./tasks/PREF-01.md)   |
+| PREF-02 — Onboarding chọn sở thích         | Done       | 2026-08-18 | [PREF-02](./tasks/PREF-02.md)   |
 | PLACE-01 — Thiết kế bảng Place và Category | Done       | 2026-08-10 | [PLACE-01](./tasks/PLACE-01.md) |
 | PLACE-02 — Import/seed dữ liệu địa điểm    | Done       | 2026-08-11 | [PLACE-02](./tasks/PLACE-02.md) |
 | PLACE-03 — Chuẩn hóa thông tin địa điểm    | Done       | 2026-08-12 | [PLACE-03](./tasks/PLACE-03.md) |

@@ -1,10 +1,11 @@
 import { registerRequestSchema, type AuthResponse } from '@wanderly/contracts';
 import { FormEvent, useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 
 export function RegisterPage() {
+  const navigate = useNavigate();
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -36,6 +37,7 @@ export function RegisterPage() {
       sessionStorage.setItem('wanderlyRefreshToken', auth.tokens.refreshToken);
       setSuccess(`Chào mừng ${auth.user.displayName} đến với Wanderly!`);
       event.currentTarget.reset();
+      navigate('/onboarding/preferences');
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Không thể đăng ký.');
     } finally {
