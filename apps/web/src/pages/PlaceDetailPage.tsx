@@ -9,6 +9,7 @@ import { Link, useParams } from 'react-router';
 import { parseFavorites, toggleFavorite as updateFavorites } from '../favorite-storage';
 import { addRemoteFavorite, fetchRemoteFavorites, removeRemoteFavorite } from '../favorite-api';
 import { addPlanItem, parsePlanItems } from '../plan-storage';
+import { fetchReviews, upsertReview } from '../review-api';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 const DAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
@@ -28,7 +29,7 @@ export function PlaceDetailPage() {
   const [reviewRating, setReviewRating] = useState('5');
   const [reviewContent, setReviewContent] = useState('');
   const [reviewMessage, setReviewMessage] = useState('');
-  const [reviews, setReviews] = useState<Array<{ rating: number; content: string; createdAt: string }>>([]);
+  const [reviews, setReviews] = useState<Array<{ id?: string; rating: number; content: string | null; createdAt: string }>>([]);
   const [reportedReviews, setReportedReviews] = useState<string[]>([]);
   useEffect(() => {
     if (place) {
@@ -44,8 +45,9 @@ export function PlaceDetailPage() {
   }, [place]);
   useEffect(() => {
     if (!place) return;
+    void fetchReviews(API_URL, place.id).then(setReviews).catch(() => undefined);
     const all = JSON.parse(localStorage.getItem(REVIEWS_KEY) ?? '[]') as Array<{ placeId: string; rating: number; content: string; createdAt: string }>;
-    setReviews(all.filter((review) => review.placeId === place.id).slice(-20).reverse());
+    if (!sessionStorage.getItem('wanderlyAccessToken')) setReviews(all.filter((review) => review.placeId === place.id).slice(-20).reverse());
     setReportedReviews(JSON.parse(localStorage.getItem(REPORTS_KEY) ?? '[]') as string[]);
   }, [place, reviewMessage]);
   function reportReview(review: { createdAt: string }) {
@@ -72,12 +74,23 @@ export function PlaceDetailPage() {
       setFavorite(!nextFavorite);
     }
   }
-  function submitReview(event: FormEvent<HTMLFormElement>) {
+  async function submitReview(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!place) return;
-    const reviews = JSON.parse(localStorage.getItem(REVIEWS_KEY) ?? '[]') as unknown[];
-    reviews.push({ placeId: place.id, rating: Number(reviewRating), content: reviewContent.trim(), createdAt: new Date().toISOString() });
-    localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
+    const accessToken = sessionStorage.getItem('wanderlyAccessToken');
+    if (accessToken) {
+      try {
+        await upsertReview(API_URL, accessToken, place.id, Number(reviewRating), reviewContent.trim());
+        setReviews(await fetchReviews(API_URL, place.id));
+      } catch {
+        setReviewMessage('Không thể lưu đánh giá.');
+        return;
+      }
+    } else {
+      const localReviews = JSON.parse(localStorage.getItem(REVIEWS_KEY) ?? '[]') as unknown[];
+      localReviews.push({ placeId: place.id, rating: Number(reviewRating), content: reviewContent.trim(), createdAt: new Date().toISOString() });
+      localStorage.setItem(REVIEWS_KEY, JSON.stringify(localReviews));
+    }
     setReviewContent('');
     setReviewMessage('Đã lưu đánh giá nháp.');
   }

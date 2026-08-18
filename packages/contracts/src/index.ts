@@ -18,3 +18,4 @@ export * from './auth';
 export * from './common';
 export * from './planner';
 export * from './profile';
+export * from './review';

@@ -1,24 +1,12 @@
 # REVIEW-01 — Tạo và cập nhật đánh giá
 
-## Mục tiêu
+## Phạm vi đã hoàn thành
 
-Cho phép người dùng nhập rating và nội dung đánh giá từ Place Detail.
+- API `PATCH /places/:placeId/reviews/me` bảo vệ bằng JWT.
+- Mỗi user có một review cho mỗi place qua unique `(userId, placeId)` và upsert.
+- Validate rating 1–5, nội dung tối đa 1.000 ký tự.
+- Place Detail dùng API khi đã đăng nhập; localStorage chỉ là fallback cho khách.
 
-## Phạm vi hoàn thành
+## Trạng thái
 
-- Thêm form chọn điểm 1–5 và nội dung tối đa 1.000 ký tự.
-- Validate tự nhiên qua giới hạn UI, lưu bản nháp theo `placeId` trong localStorage.
-- Hiển thị trạng thái sau khi gửi.
-
-## Kiểm tra
-
-- `pnpm typecheck` đạt toàn workspace.
-
-## Giới hạn
-
-Do auth context và Review API chưa có, bản hiện tại lưu bản nháp phía Web. Khi backend sẵn sàng, thay handler bằng mutation có user ownership và unique `(userId, placeId)`.
-
-## Việc tiếp theo
-
-- REVIEW-02: danh sách review và pagination.
-- Đồng bộ form với Review API sau AUTH-02.
+Done — review có ownership xác thực và cập nhật idempotent.
