@@ -25,6 +25,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | AI-01 — PlanningConstraints schema         | Done       | 2026-08-18 | [AI-01](./tasks/AI-01.md)       |
 | AI-02 — Prompt trích xuất yêu cầu          | Done       | 2026-08-18 | [AI-02](./tasks/AI-02.md)       |
 | AI-03 — Structured output                  | Done       | 2026-08-18 | [AI-03](./tasks/AI-03.md)       |
+| AI-04 — Chuẩn hóa constraint               | Done       | 2026-08-18 | [AI-04](./tasks/AI-04.md)       |
 | PLACE-01 — Thiết kế bảng Place và Category | Done       | 2026-08-10 | [PLACE-01](./tasks/PLACE-01.md) |
 | PLACE-02 — Import/seed dữ liệu địa điểm    | Done       | 2026-08-11 | [PLACE-02](./tasks/PLACE-02.md) |
 | PLACE-03 — Chuẩn hóa thông tin địa điểm    | Done       | 2026-08-12 | [PLACE-03](./tasks/PLACE-03.md) |

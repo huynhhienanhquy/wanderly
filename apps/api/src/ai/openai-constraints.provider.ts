@@ -1,18 +1,21 @@
 import { Inject, Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { extractConstraintsResponseSchema, type ExtractConstraintsRequest, type ExtractConstraintsResponse } from '@wanderly/contracts';
 import { buildConstraintPrompt, CONSTRAINT_SYSTEM_PROMPT } from './constraint-prompt';
+import { normalizeConstraints } from './constraint-normalizer';
 
 const responseSchema = {
   type: 'object', additionalProperties: false, required: ['constraints', 'missingFields', 'warnings'],
   properties: {
     constraints: {
       type: 'object', additionalProperties: false,
-      required: ['peopleCount', 'budget', 'currency', 'interests', 'excludedCategories', 'travelMode', 'notes'],
+      required: ['date', 'startTime', 'endTime', 'peopleCount', 'budget', 'currency', 'interests', 'excludedCategories', 'startLocation', 'maxTravelRadiusMeters', 'travelMode', 'notes'],
       properties: {
-        peopleCount: { type: 'integer', minimum: 1 }, budget: { type: ['integer', 'null'], minimum: 0 },
+        date: { type: ['string', 'null'] }, startTime: { type: ['string', 'null'] }, endTime: { type: ['string', 'null'] },
+        peopleCount: { type: ['integer', 'null'], minimum: 1 }, budget: { type: ['integer', 'null'], minimum: 0 },
         currency: { type: 'string' }, interests: { type: 'array', items: { type: 'string' } },
         excludedCategories: { type: 'array', items: { type: 'string' } },
-        travelMode: { type: 'string', enum: ['WALK', 'BIKE', 'DRIVE', 'TRANSIT'] }, notes: { type: ['string', 'null'] },
+        startLocation: { type: ['object', 'null'], additionalProperties: false, required: ['latitude', 'longitude', 'label'], properties: { latitude: { type: 'number' }, longitude: { type: 'number' }, label: { type: ['string', 'null'] } } },
+        maxTravelRadiusMeters: { type: ['integer', 'null'] }, travelMode: { type: 'string', enum: ['WALK', 'BIKE', 'DRIVE', 'TRANSIT'] }, notes: { type: ['string', 'null'] },
       },
     },
     missingFields: { type: 'array', items: { type: 'string' } }, warnings: { type: 'array', items: { type: 'string' } },
@@ -36,6 +39,6 @@ export class OpenAiConstraintsProvider {
     const body = await response.json() as { output?: Array<{ content?: Array<{ type?: string; text?: string }> }> };
     const text = body.output?.flatMap(({ content }) => content ?? []).find((content) => content.type === 'output_text')?.text;
     if (!text) throw new ServiceUnavailableException('AI provider không trả dữ liệu.');
-    return extractConstraintsResponseSchema.parse(JSON.parse(text));
+    return normalizeConstraints(JSON.parse(text) as Record<string, unknown>, request);
   }
 }
