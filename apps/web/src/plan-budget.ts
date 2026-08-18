@@ -1,13 +1,15 @@
-import type { PlaceDetail } from '@wanderly/contracts';
+import { estimateBudget, type PlaceDetail } from '@wanderly/contracts';
 import type { LocalPlanItem } from './plan-storage';
 
 export function estimatePlanBudget(items: LocalPlanItem[], places: Record<string, PlaceDetail>, budget: string) {
   const missing: string[] = [];
-  const total = items.reduce((sum, item) => {
+  const lines = items.flatMap((item) => {
     const price = places[item.id]?.priceMin;
-    if (price === null || price === undefined) { missing.push(item.name); return sum; }
-    return sum + price;
-  }, 0);
+    if (price === null || price === undefined) { missing.push(item.name); return []; }
+    const food = places[item.id]?.categories?.some(({ slug }) => ['food', 'restaurant'].includes(slug));
+    return [{ type: food ? 'FOOD' as const : 'PLACE' as const, label: item.name, unitAmount: price, quantity: 1 }];
+  });
+  const estimate = estimateBudget(lines);
   const limit = budget === '' ? null : Number(budget);
-  return { total, limit, exceededBy: limit !== null && total > limit ? total - limit : 0, missing };
+  return { ...estimate, limit, exceededBy: limit !== null && estimate.total > limit ? estimate.total - limit : 0, missing };
 }
