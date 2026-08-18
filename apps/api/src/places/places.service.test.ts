@@ -69,6 +69,63 @@ describe('PlacesService', () => {
     );
   });
 
+  it('translates search and catalog filters into the database query', async () => {
+    const findMany = vi.fn().mockResolvedValue([]);
+    const service = new PlacesService({
+      place: { findMany },
+    } as unknown as PrismaService);
+
+    await service.list({
+      limit: 20,
+      sort: 'rating',
+      q: 'coffee',
+      category: 'cafe',
+      priceMax: 150000,
+      minRating: 4,
+      indoorOutdoor: 'INDOOR',
+    });
+
+    expect(findMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: {
+        status: 'ACTIVE',
+        deletedAt: null,
+        OR: [
+          { name: { contains: 'coffee', mode: 'insensitive' } },
+          { address: { contains: 'coffee', mode: 'insensitive' } },
+          { district: { contains: 'coffee', mode: 'insensitive' } },
+        ],
+        priceMin: { lte: 150000 },
+        rating: { gte: 4 },
+        indoorOutdoor: 'INDOOR',
+        categories: { some: { category: { slug: 'cafe', isActive: true } } },
+      },
+    }));
+  });
+
+  it('filters places outside the requested radius', async () => {
+    const near = row('3307daba-1408-4f44-b361-800e6b8d22ac', 'Near');
+    const far = {
+      ...row('b841a593-0cc8-4ee7-bef6-bace4b547917', 'Far'),
+      latitude: 10.77,
+      longitude: 106.69,
+    };
+    const findMany = vi.fn().mockResolvedValue([near, far]);
+    const service = new PlacesService({
+      place: { findMany },
+    } as unknown as PrismaService);
+
+    const result = await service.list({
+      limit: 20,
+      sort: 'popular',
+      latitude: 21.02,
+      longitude: 105.85,
+      radiusMeters: 5000,
+    });
+
+    expect(result.data.map(({ name }) => name)).toEqual(['Near']);
+    expect(findMany).toHaveBeenCalledWith(expect.objectContaining({ take: 500 }));
+  });
+
   it('maps full detail including ordered images and opening hours', async () => {
     const place = {
       ...row('3307daba-1408-4f44-b361-800e6b8d22ac', 'Detail'),
