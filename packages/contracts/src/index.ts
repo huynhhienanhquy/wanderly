@@ -19,3 +19,4 @@ export * from './common';
 export * from './planner';
 export * from './profile';
 export * from './review';
+export * from './preference';

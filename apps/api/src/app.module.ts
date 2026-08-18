@@ -8,9 +8,10 @@ import { PlacesModule } from './places/places.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { PlansModule } from './plans/plans.module';
 import { ProfileModule } from './profile/profile.module';
+import { PreferencesModule } from './preferences/preferences.module';
 
 @Module({
-  imports: [DatabaseModule, AuthModule, AdminModule, ProfileModule, FavoritesModule, PlacesModule, ReviewsModule, PlansModule],
+  imports: [DatabaseModule, AuthModule, AdminModule, ProfileModule, PreferencesModule, FavoritesModule, PlacesModule, ReviewsModule, PlansModule],
   controllers: [HealthController],
 })
 export class AppModule {}
