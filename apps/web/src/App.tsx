@@ -14,6 +14,7 @@ import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { RegisterPage } from './pages/RegisterPage';
 import { PreferenceOnboardingPage } from './pages/PreferenceOnboardingPage';
+import { ConstraintConfirmationPage } from './pages/ConstraintConfirmationPage';
 
 export function App() {
   return (
@@ -32,6 +33,7 @@ export function App() {
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/onboarding/preferences" element={<PreferenceOnboardingPage />} />
+      <Route path="/plan/new" element={<ConstraintConfirmationPage />} />
     </Routes>
   );
 }

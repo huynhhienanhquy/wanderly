@@ -27,6 +27,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | AI-03 — Structured output                  | Done       | 2026-08-18 | [AI-03](./tasks/AI-03.md)       |
 | AI-04 — Chuẩn hóa constraint               | Done       | 2026-08-18 | [AI-04](./tasks/AI-04.md)       |
 | AI-05 — Retry và fallback                  | Done       | 2026-08-18 | [AI-05](./tasks/AI-05.md)       |
+| AI-06 — Form xác nhận constraint           | Done       | 2026-08-18 | [AI-06](./tasks/AI-06.md)       |
 | PLACE-01 — Thiết kế bảng Place và Category | Done       | 2026-08-10 | [PLACE-01](./tasks/PLACE-01.md) |
 | PLACE-02 — Import/seed dữ liệu địa điểm    | Done       | 2026-08-11 | [PLACE-02](./tasks/PLACE-02.md) |
 | PLACE-03 — Chuẩn hóa thông tin địa điểm    | Done       | 2026-08-12 | [PLACE-03](./tasks/PLACE-03.md) |
