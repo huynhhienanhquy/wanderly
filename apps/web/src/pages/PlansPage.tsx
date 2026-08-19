@@ -101,7 +101,7 @@ export function PlansPage() {
     const longitude = places.reduce((sum, place) => sum + place.longitude, 0) / places.length;
     setWeatherLoading(true);
     try {
-      const forecast = await fetchWeatherForecast(latitude, longitude, meta.date);
+      const forecast = await fetchWeatherForecast(API_URL, latitude, longitude, meta.date);
       setMeta((current) => ({ ...current, weather: forecast.weather }));
       setMessage(`Dự báo: ${forecast.maximumTemperature}°C, khả năng mưa ${forecast.precipitationProbability}%.`);
     } catch {

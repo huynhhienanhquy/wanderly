@@ -12,9 +12,10 @@ import { PreferencesModule } from './preferences/preferences.module';
 import { AiModule } from './ai/ai.module';
 import { RecommendationsModule } from './recommendations/recommendations.module';
 import { MapsModule } from './maps/maps.module';
+import { WeatherModule } from './weather/weather.module';
 
 @Module({
-  imports: [DatabaseModule, AuthModule, AdminModule, ProfileModule, PreferencesModule, AiModule, MapsModule, RecommendationsModule, FavoritesModule, PlacesModule, ReviewsModule, PlansModule],
+  imports: [DatabaseModule, AuthModule, AdminModule, ProfileModule, PreferencesModule, AiModule, MapsModule, WeatherModule, RecommendationsModule, FavoritesModule, PlacesModule, ReviewsModule, PlansModule],
   controllers: [HealthController],
 })
 export class AppModule {}
