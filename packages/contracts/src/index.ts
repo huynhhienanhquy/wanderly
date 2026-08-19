@@ -21,3 +21,4 @@ export * from './profile';
 export * from './review';
 export * from './preference';
 export * from './recommendation';
+export * from './map-provider';

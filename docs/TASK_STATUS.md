@@ -33,6 +33,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | REC-02 — Recommendation scoring model      | Done       | 2026-08-18 | [REC-02](./tasks/REC-02.md)     |
 | REC-03 — Candidate ranking                 | Done       | 2026-08-18 | [REC-03](./tasks/REC-03.md)     |
 | REC-04 — Lý do đề xuất                     | Done       | 2026-08-18 | [REC-04](./tasks/REC-04.md)     |
+| EXT-01 — Chọn Places/Maps provider         | Done       | 2026-08-19 | [EXT-01](./tasks/EXT-01.md)     |
 | PLACE-01 — Thiết kế bảng Place và Category | Done       | 2026-08-10 | [PLACE-01](./tasks/PLACE-01.md) |
 | PLACE-02 — Import/seed dữ liệu địa điểm    | Done       | 2026-08-11 | [PLACE-02](./tasks/PLACE-02.md) |
 | PLACE-03 — Chuẩn hóa thông tin địa điểm    | Done       | 2026-08-12 | [PLACE-03](./tasks/PLACE-03.md) |
