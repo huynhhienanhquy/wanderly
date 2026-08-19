@@ -4,6 +4,11 @@ export const mapCoordinateSchema = z.object({ latitude: z.number().min(-90).max(
 export type MapCoordinate = z.infer<typeof mapCoordinateSchema>;
 export const geocodedLocationSchema = mapCoordinateSchema.extend({ label: z.string().min(1).max(255) });
 export type GeocodedLocation = z.infer<typeof geocodedLocationSchema>;
+export const travelModeSchema = z.enum(['WALK', 'BIKE', 'DRIVE', 'TRANSIT']);
+export const travelEstimateRequestSchema = z.object({ origin: mapCoordinateSchema, destination: mapCoordinateSchema, mode: travelModeSchema.default('DRIVE') });
+export const travelEstimateSchema = z.object({ distanceMeters: z.number().int().nonnegative(), durationSeconds: z.number().int().nonnegative(), source: z.enum(['GOOGLE_ROUTES', 'HAVERSINE']) });
+export type TravelEstimateRequest = z.infer<typeof travelEstimateRequestSchema>;
+export type TravelEstimate = z.infer<typeof travelEstimateSchema>;
 
 export function googleMapsDirectionsUrl(destination: MapCoordinate, origin?: MapCoordinate) {
   const url = new URL('https://www.google.com/maps/dir/');
