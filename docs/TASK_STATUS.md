@@ -42,6 +42,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MAP-06 — Fallback khi provider lỗi          | Done       | 2026-08-19 | [MAP-06](./tasks/MAP-06.md)     |
 | EXT-02 — Chọn Weather provider              | Done       | 2026-08-19 | [EXT-02](./tasks/EXT-02.md)     |
 | WEATHER-01 — Tích hợp Weather API           | Done       | 2026-08-19 | [WEATHER-01](./tasks/WEATHER-01.md) |
+| WEATHER-02 — Phân loại indoor/outdoor       | Done       | 2026-08-19 | [WEATHER-02](./tasks/WEATHER-02.md) |
 | PLACE-01 — Thiết kế bảng Place và Category | Done       | 2026-08-10 | [PLACE-01](./tasks/PLACE-01.md) |
 | PLACE-02 — Import/seed dữ liệu địa điểm    | Done       | 2026-08-11 | [PLACE-02](./tasks/PLACE-02.md) |
 | PLACE-03 — Chuẩn hóa thông tin địa điểm    | Done       | 2026-08-12 | [PLACE-03](./tasks/PLACE-03.md) |

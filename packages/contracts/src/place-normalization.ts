@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { activityEnvironmentSchema } from './weather-provider';
 
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const timePattern = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
@@ -70,7 +71,7 @@ export const rawPlaceInputSchema = z
       .pipe(z.number().int().positive())
       .nullable()
       .default(null),
-    indoorOutdoor: z.enum(['INDOOR', 'OUTDOOR', 'MIXED']),
+    indoorOutdoor: activityEnvironmentSchema,
     categorySlugs: z
       .array(z.string().trim().toLowerCase().regex(slugPattern))
       .min(1)

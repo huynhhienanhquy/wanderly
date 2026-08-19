@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { activityEnvironmentSchema } from './weather-provider';
 
 export const placeSortSchema = z.enum([
   'popular',
@@ -15,7 +16,7 @@ export const placeListQuerySchema = z.object({
   category: z.string().trim().min(1).max(80).optional(),
   priceMax: z.coerce.number().int().nonnegative().optional(),
   minRating: z.coerce.number().min(0).max(5).optional(),
-  indoorOutdoor: z.enum(['INDOOR', 'OUTDOOR', 'MIXED']).optional(),
+  indoorOutdoor: activityEnvironmentSchema.optional(),
   latitude: z.coerce.number().min(-90).max(90).optional(),
   longitude: z.coerce.number().min(-180).max(180).optional(),
   radiusMeters: z.coerce.number().int().min(100).max(50000).optional(),
@@ -39,7 +40,7 @@ export const placeSummarySchema = z.object({
   priceMin: z.number().int().nonnegative().nullable(),
   priceMax: z.number().int().nonnegative().nullable(),
   typicalDurationMinutes: z.number().int().positive().nullable(),
-  indoorOutdoor: z.enum(['INDOOR', 'OUTDOOR', 'MIXED']),
+  indoorOutdoor: activityEnvironmentSchema,
   categories: z.array(z.object({ slug: z.string(), name: z.string() })),
   coverImageUrl: z.string().nullable(),
 });
