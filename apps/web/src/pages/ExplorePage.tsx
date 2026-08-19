@@ -6,6 +6,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { Link } from 'react-router';
+import { currentBrowserLocation, reverseGeocode } from '../location-api';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 
@@ -48,6 +49,7 @@ export function ExplorePage() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState('');
+  const [locationLabel, setLocationLabel] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
   const q = searchParams.get('q') ?? '';
   const priceMax = searchParams.get('priceMax') ?? '';
@@ -97,16 +99,17 @@ export function ExplorePage() {
       setError('Trình duyệt không hỗ trợ định vị.');
       return;
     }
-    navigator.geolocation.getCurrentPosition(
-      ({ coords }) => setSearchParams((current) => {
+    void currentBrowserLocation().then(async ({ coords }) => {
+      const location = await reverseGeocode(API_URL, coords.latitude, coords.longitude);
+      setLocationLabel(location.label);
+      setSearchParams((current) => {
         const next = new URLSearchParams(current);
         next.set('latitude', String(coords.latitude));
         next.set('longitude', String(coords.longitude));
         next.set('radiusMeters', next.get('radiusMeters') ?? '5000');
         return next;
-      }),
-      () => setError('Không thể lấy vị trí hiện tại.'),
-    );
+      });
+    }).catch(() => setError('Không thể lấy vị trí hiện tại. Hãy kiểm tra quyền định vị.'));
   }
 
   return (
@@ -126,7 +129,7 @@ export function ExplorePage() {
         <select name="minRating" defaultValue={minRating} aria-label="Đánh giá tối thiểu"><option value="">Mọi đánh giá</option><option value="4">Từ 4 sao</option><option value="4.5">Từ 4.5 sao</option></select>
         <select name="indoorOutdoor" defaultValue={indoorOutdoor} aria-label="Không gian"><option value="">Mọi không gian</option><option value="INDOOR">Trong nhà</option><option value="OUTDOOR">Ngoài trời</option><option value="MIXED">Kết hợp</option></select>
         <select name="radiusMeters" defaultValue={radiusMeters} aria-label="Bán kính"><option value="">Không giới hạn khoảng cách</option><option value="2000">Trong 2 km</option><option value="5000">Trong 5 km</option><option value="10000">Trong 10 km</option></select>
-        <button type="button" onClick={useCurrentLocation}>{latitude && longitude ? 'Đã dùng vị trí hiện tại' : 'Dùng vị trí hiện tại'}</button>
+        <button type="button" onClick={useCurrentLocation}>{locationLabel ? `Quanh ${locationLabel}` : latitude && longitude ? 'Đã dùng vị trí hiện tại' : 'Dùng vị trí hiện tại'}</button>
         <button type="submit">Lọc</button>
         <button type="button" onClick={() => setSearchParams({})}>Xóa bộ lọc</button>
       </form>

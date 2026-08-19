@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 export const mapCoordinateSchema = z.object({ latitude: z.number().min(-90).max(90), longitude: z.number().min(-180).max(180) });
 export type MapCoordinate = z.infer<typeof mapCoordinateSchema>;
+export const geocodedLocationSchema = mapCoordinateSchema.extend({ label: z.string().min(1).max(255) });
+export type GeocodedLocation = z.infer<typeof geocodedLocationSchema>;
 
 export function googleMapsDirectionsUrl(destination: MapCoordinate, origin?: MapCoordinate) {
   const url = new URL('https://www.google.com/maps/dir/');
