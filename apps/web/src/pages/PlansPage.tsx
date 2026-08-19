@@ -1,4 +1,4 @@
-import { fetchPlaceDetail, googleMapsItineraryUrl, type PlaceDetail } from '@wanderly/contracts';
+import { fetchPlaceDetail, googleMapsItineraryUrl, type PlaceDetail, type RankedCandidate } from '@wanderly/contracts';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { estimatePlanBudget } from '../plan-budget';
@@ -12,6 +12,10 @@ import { parsePlanItems, sortPlanItems, type LocalPlanItem, type LocalPlanMeta }
 import { validateFinalPlan, type PlanValidationResult } from '../plan-validation';
 import { weatherIssues } from '../plan-weather';
 import { fetchWeatherForecast } from '../weather-forecast';
+import { SmartReplacePanel } from '../components/SmartReplacePanel';
+import { fetchReplacementCandidates } from '../replacement-candidates';
+import { getReplacementSlotConstraints } from '../replacement-constraints';
+import { previewReplacement, type ReplacementPreview } from '../replacement-preview';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 const PLAN_KEY = 'wanderly:current-plan';
@@ -25,6 +29,7 @@ export function PlansPage() {
   const [meta, setMeta] = useState<LocalPlanMeta>(DEFAULT_PLAN_META);
   const [message, setMessage] = useState('');
   const [weatherLoading, setWeatherLoading] = useState(false);
+  const [replacement, setReplacement] = useState<{ item: LocalPlanItem; candidates: RankedCandidate[]; loading: boolean; error: string } | null>(null);
   const [validation, setValidation] = useState<{ checked: boolean; result: PlanValidationResult }>({ checked: false, result: { valid: false, issues: [] } });
 
   useEffect(() => {
@@ -63,6 +68,31 @@ export function PlansPage() {
     }
     persistItems(items.map((current) => current.id === item.id ? { ...current, startTime } : current));
     setMessage('');
+  }
+
+  async function openSmartReplace(item: LocalPlanItem) {
+    const slot = getReplacementSlotConstraints(item.id, items, details, meta.endTime, meta.budget);
+    if (!slot) {
+      setMessage('Không thể xác định ràng buộc cho slot này.');
+      return;
+    }
+    setReplacement({ item, candidates: [], loading: true, error: '' });
+    try {
+      const candidates = await fetchReplacementCandidates(API_URL, slot, meta.date, items.map(({ id }) => id));
+      setReplacement({ item, candidates, loading: false, error: '' });
+    } catch (error) {
+      setReplacement({ item, candidates: [], loading: false, error: error instanceof Error ? error.message : 'Không thể tải địa điểm thay thế.' });
+    }
+  }
+
+  function replacementPreview(candidate: RankedCandidate): ReplacementPreview | null {
+    return replacement ? previewReplacement(replacement.item.id, candidate, items, details, meta.endTime, meta.budget) : null;
+  }
+
+  function confirmReplacement(preview: ReplacementPreview) {
+    persistItems(preview.items);
+    setReplacement(null);
+    setMessage('Đã cập nhật địa điểm thay thế.');
   }
 
   const durationResult = validateDurations(
@@ -157,6 +187,7 @@ export function PlansPage() {
         </form>
       )}
       {readOnly && <p>Đây là bản chụp chỉ đọc của lịch trình tại thời điểm được chia sẻ.</p>}
+      {replacement && <SmartReplacePanel itemName={replacement.item.name} candidates={replacement.candidates} loading={replacement.loading} error={replacement.error} previewCandidate={replacementPreview} onConfirm={confirmReplacement} onClose={() => setReplacement(null)} />}
       {validation.checked && <section aria-label="Kết quả kiểm tra kế hoạch" role="status">{validation.result.valid ? <strong>Kế hoạch hợp lệ.</strong> : <><strong>Kế hoạch chưa hợp lệ.</strong><ul>{validation.result.issues.map((issue) => <li key={`${issue.category}:${issue.message}`}><span>{issue.category}</span>: {issue.message}</li>)}</ul></>}</section>}
       {items.length > 0 && <section aria-label="Kiểm tra thời lượng"><p>Tổng thời lượng dự kiến: {Math.floor(durationResult.totalMinutes / 60)} giờ {durationResult.totalMinutes % 60} phút (hoạt động {durationResult.activityMinutes} phút, di chuyển khoảng {durationResult.travelMinutes} phút).</p>{durationResult.issues.length > 0 && <ul>{durationResult.issues.map((issue) => <li key={issue}>{issue}</li>)}</ul>}</section>}
       {items.length > 0 && <section aria-label="Ước tính ngân sách"><h2>Chi tiết ngân sách</h2><ul>{budgetResult.lines.map((line) => <li key={`${line.type}:${line.label}`}>{line.label}: {line.amount.toLocaleString('vi-VN')}đ ({line.type})</li>)}</ul><p>Địa điểm: {budgetResult.byType.PLACE.toLocaleString('vi-VN')}đ · Ăn uống: {budgetResult.byType.FOOD.toLocaleString('vi-VN')}đ · Di chuyển: {budgetResult.byType.TRANSPORT.toLocaleString('vi-VN')}đ</p><p><strong>Tổng: {budgetResult.total.toLocaleString('vi-VN')}đ.</strong></p>{budgetWarning && <p role="alert" data-severity={budgetWarning.severity}><strong>{budgetWarning.message}</strong></p>}{budgetResult.missing.length > 0 && <p>Chưa có giá: {budgetResult.missing.join(', ')}.</p>}</section>}
@@ -175,7 +206,7 @@ export function PlansPage() {
       {items.length === 0 ? <p>Chưa có địa điểm trong kế hoạch.</p> : (
         <ol>{items.map((item) => {
           const open = details[item.id] ? isOpenAt(details[item.id]!.openingHours, meta.date, item.startTime) : null;
-          return <li key={item.id}>{readOnly ? <time>{item.startTime}</time> : <input type="time" value={item.startTime} onChange={(event) => updateTime(item, event.target.value)} aria-label={`Giờ bắt đầu ${item.name}`} />} <Link to={`/places/${item.slug}`}>{item.name}</Link>{open === false && <strong> — Ngoài giờ mở cửa</strong>} {!readOnly && <button type="button" onClick={() => persistItems(items.filter(({ id }) => id !== item.id))}>Xóa</button>}</li>;
+          return <li key={item.id}>{readOnly ? <time>{item.startTime}</time> : <input type="time" value={item.startTime} onChange={(event) => updateTime(item, event.target.value)} aria-label={`Giờ bắt đầu ${item.name}`} />} <Link to={`/places/${item.slug}`}>{item.name}</Link>{open === false && <strong> — Ngoài giờ mở cửa</strong>} {!readOnly && <><button type="button" onClick={() => void openSmartReplace(item)}>Thay thế</button><button type="button" onClick={() => persistItems(items.filter(({ id }) => id !== item.id))}>Xóa</button></>}</li>;
         })}</ol>
       )}
     </main>
