@@ -1,4 +1,4 @@
-import { fetchPlaceDetail, type PlaceDetail } from '@wanderly/contracts';
+import { fetchPlaceDetail, googleMapsItineraryUrl, type PlaceDetail } from '@wanderly/contracts';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { estimatePlanBudget } from '../plan-budget';
@@ -133,9 +133,7 @@ export function PlansPage() {
     latitude: place.latitude,
     longitude: place.longitude,
   })));
-  const mapUrl = routePlaces.length > 0
-    ? `https://www.google.com/maps/dir/${routePlaces.map((place) => `${place.latitude},${place.longitude}`).join('/')}`
-    : null;
+  const mapUrl = googleMapsItineraryUrl(routePlaces.map(({ latitude, longitude }) => ({ latitude, longitude })));
 
   return (
     <main className="page-shell">

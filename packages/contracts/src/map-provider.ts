@@ -18,4 +18,15 @@ export function googleMapsDirectionsUrl(destination: MapCoordinate, origin?: Map
   return url.toString();
 }
 
+export function googleMapsItineraryUrl(points: MapCoordinate[]) {
+  if (points.length === 0) return null;
+  if (points.length === 1) return googleMapsDirectionsUrl(points[0]!);
+  const url = new URL('https://www.google.com/maps/dir/');
+  url.searchParams.set('api', '1');
+  url.searchParams.set('origin', `${points[0]!.latitude},${points[0]!.longitude}`);
+  url.searchParams.set('destination', `${points.at(-1)!.latitude},${points.at(-1)!.longitude}`);
+  if (points.length > 2) url.searchParams.set('waypoints', points.slice(1, -1).map(({ latitude, longitude }) => `${latitude},${longitude}`).join('|'));
+  return url.toString();
+}
+
 export const MAP_PROVIDER = { places: 'GOOGLE_PLACES', maps: 'GOOGLE_MAPS', webFallback: 'GOOGLE_MAPS_URL', mobile: 'REACT_NATIVE_MAPS' } as const;
