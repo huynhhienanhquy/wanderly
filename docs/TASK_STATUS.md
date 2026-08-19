@@ -45,6 +45,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | WEATHER-02 — Phân loại indoor/outdoor       | Done       | 2026-08-19 | [WEATHER-02](./tasks/WEATHER-02.md) |
 | WEATHER-03 — Phát hiện xung đột thời tiết   | Done       | 2026-08-19 | [WEATHER-03](./tasks/WEATHER-03.md) |
 | REPLACE-01 — Xác định constraint của slot   | Done       | 2026-08-19 | [REPLACE-01](./tasks/REPLACE-01.md) |
+| REPLACE-02 — Tìm candidate thay thế         | Done       | 2026-08-19 | [REPLACE-02](./tasks/REPLACE-02.md) |
 | PLACE-01 — Thiết kế bảng Place và Category | Done       | 2026-08-10 | [PLACE-01](./tasks/PLACE-01.md) |
 | PLACE-02 — Import/seed dữ liệu địa điểm    | Done       | 2026-08-11 | [PLACE-02](./tasks/PLACE-02.md) |
 | PLACE-03 — Chuẩn hóa thông tin địa điểm    | Done       | 2026-08-12 | [PLACE-03](./tasks/PLACE-03.md) |
