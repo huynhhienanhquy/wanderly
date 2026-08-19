@@ -55,6 +55,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | PLACE-04 — API danh sách địa điểm          | Done       | 2026-08-12 | [PLACE-04](./tasks/PLACE-04.md) |
 | PLACE-05 — API tìm kiếm và bộ lọc          | Done       | 2026-08-18 | [PLACE-05](./tasks/PLACE-05.md) |
 | PLACE-06 — API chi tiết địa điểm           | Done       | 2026-08-12 | [PLACE-06](./tasks/PLACE-06.md) |
+| PLACE-07 — Đồng bộ Places provider         | Done       | 2026-08-19 | [PLACE-07](./tasks/PLACE-07.md) |
 | EXP-01 — Trang Explore                     | Done       | 2026-08-13 | [EXP-01](./tasks/EXP-01.md)     |
 | PLAN-02 — Planner v1                       | Done       | 2026-08-14 | [PLAN-02](./tasks/PLAN-02.md)   |
 | PLAN-03 — Kiểm tra giờ mở cửa              | Done       | 2026-08-13 | [PLAN-03](./tasks/PLAN-03.md)   |
