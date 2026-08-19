@@ -47,6 +47,7 @@ export default function PlaceDetailScreen() {
               <Text style={styles.address}>
                 {place.address} · {place.city}
               </Text>
+              <Pressable onPress={() => router.push({ pathname: '/map', params: { latitude: String(place.latitude), longitude: String(place.longitude), name: place.name } })}><Text style={styles.mapLink}>Xem trên bản đồ</Text></Pressable>
               {place.description && (
                 <Text style={styles.description}>{place.description}</Text>
               )}
@@ -100,5 +101,6 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   row: { color: '#52615b', paddingTop: 8 },
+  mapLink: { color: '#277253', fontWeight: '700', marginTop: 16 },
   state: { color: '#52615b', paddingVertical: 48, textAlign: 'center' },
 });

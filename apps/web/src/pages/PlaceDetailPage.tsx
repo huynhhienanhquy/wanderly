@@ -10,6 +10,7 @@ import { parseFavorites, toggleFavorite as updateFavorites } from '../favorite-s
 import { addRemoteFavorite, fetchRemoteFavorites, removeRemoteFavorite } from '../favorite-api';
 import { addPlanItem, parsePlanItems } from '../plan-storage';
 import { fetchReviews, reportRemoteReview, upsertReview } from '../review-api';
+import { PlaceMap } from '../components/PlaceMap';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 const DAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
@@ -193,6 +194,7 @@ export function PlaceDetailPage() {
             ))}
           </div>
         </div>
+        <PlaceMap latitude={place.latitude} longitude={place.longitude} name={place.name} />
         <div className="detail-section"><h2>Đánh giá của bạn</h2><form onSubmit={submitReview}><label>Điểm <select value={reviewRating} onChange={(event) => setReviewRating(event.target.value)}>{[5, 4, 3, 2, 1].map((value) => <option key={value} value={value}>{value}/5</option>)}</select></label><textarea value={reviewContent} onChange={(event) => setReviewContent(event.target.value)} maxLength={1000} placeholder="Chia sẻ trải nghiệm của bạn" /><button type="submit">Gửi đánh giá</button>{reviewMessage && <span role="status">{reviewMessage}</span>}</form></div>
         <div className="detail-section"><h2>Đánh giá gần đây ({reviews.length})</h2>{reviews.length === 0 ? <p>Chưa có đánh giá nào.</p> : reviews.map((review, index) => { const key = review.id ?? `${place.id}:${review.createdAt}`; return <article key={`${review.createdAt}-${index}`}><b>{'★'.repeat(review.rating)}</b><p>{review.content || 'Không có nội dung.'}</p><small>{new Date(review.createdAt).toLocaleDateString('vi-VN')}</small><button type="button" onClick={() => void reportReview(review)} disabled={reportedReviews.includes(key)}>{reportedReviews.includes(key) ? 'Đã báo cáo' : 'Báo cáo'}</button></article>; })}</div>
         <div className="detail-section">
