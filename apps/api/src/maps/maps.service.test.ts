@@ -12,3 +12,9 @@ it('estimates travel using a bounded Haversine fallback', async () => {
   expect(result.distanceMeters).toBeGreaterThan(1000);
   expect(result.durationSeconds).toBeGreaterThan(0);
 });
+it('falls back when the routes provider returns an error', async () => {
+  process.env.GOOGLE_ROUTES_API_KEY = 'test-key';
+  const service = new MapsService(async () => new Response('{}', { status: 503 }));
+  await expect(service.travelEstimate({ origin: { latitude: 21, longitude: 105 }, destination: { latitude: 21.01, longitude: 105.01 }, mode: 'DRIVE' })).resolves.toMatchObject({ source: 'HAVERSINE' });
+  delete process.env.GOOGLE_ROUTES_API_KEY;
+});

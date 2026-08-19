@@ -39,6 +39,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MAP-03 — Distance/travel-time adapter       | Done       | 2026-08-19 | [MAP-03](./tasks/MAP-03.md)     |
 | MAP-04 — Marker và route                    | Done       | 2026-08-19 | [MAP-04](./tasks/MAP-04.md)     |
 | MAP-05 — Cache kết quả tuyến đường          | Done       | 2026-08-19 | [MAP-05](./tasks/MAP-05.md)     |
+| MAP-06 — Fallback khi provider lỗi          | Done       | 2026-08-19 | [MAP-06](./tasks/MAP-06.md)     |
 | PLACE-01 — Thiết kế bảng Place và Category | Done       | 2026-08-10 | [PLACE-01](./tasks/PLACE-01.md) |
 | PLACE-02 — Import/seed dữ liệu địa điểm    | Done       | 2026-08-11 | [PLACE-02](./tasks/PLACE-02.md) |
 | PLACE-03 — Chuẩn hóa thông tin địa điểm    | Done       | 2026-08-12 | [PLACE-03](./tasks/PLACE-03.md) |
