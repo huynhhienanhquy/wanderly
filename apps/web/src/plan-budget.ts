@@ -1,7 +1,9 @@
 import { estimateBudget, type PlaceDetail } from '@wanderly/contracts';
 import type { LocalPlanItem } from './plan-storage';
 
-export function estimatePlanBudget(items: LocalPlanItem[], places: Record<string, PlaceDetail>, budget: string) {
+type BudgetPlace = Pick<PlaceDetail, 'priceMin' | 'categories'>;
+
+export function estimatePlanBudget(items: LocalPlanItem[], places: Record<string, BudgetPlace>, budget: string) {
   const missing: string[] = [];
   const lines = items.flatMap((item) => {
     const price = places[item.id]?.priceMin;
