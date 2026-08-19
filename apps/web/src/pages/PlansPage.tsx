@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { estimatePlanBudget } from '../plan-budget';
 import { buildBudgetWarning } from '../budget-warning';
+import { cheaperReplacementCandidates } from '../budget-replacements';
 import { validateDurations } from '../plan-duration';
 import { DEFAULT_PLAN_META, parsePlanMeta } from '../plan-meta';
 import { isOpenAt } from '../plan-opening-hours';
@@ -81,7 +82,11 @@ export function PlansPage() {
     try {
       const rankedCandidates = await fetchReplacementCandidates(API_URL, slot, meta.date, items.map(({ id }) => id));
       const hasWeatherConflict = detectWeatherConflicts(items, details, meta.weather).some(({ itemId }) => itemId === item.id);
-      const candidates = hasWeatherConflict ? weatherSuitableReplacements(rankedCandidates, meta.weather) : rankedCandidates;
+      const weatherCandidates = hasWeatherConflict ? weatherSuitableReplacements(rankedCandidates, meta.weather) : rankedCandidates;
+      const currentBudget = estimatePlanBudget(items, details, meta.budget);
+      const candidates = currentBudget.exceededBy > 0
+        ? cheaperReplacementCandidates(weatherCandidates, details[item.id]?.priceMin)
+        : weatherCandidates;
       setReplacement({ item, candidates, loading: false, error: '' });
     } catch (error) {
       setReplacement({ item, candidates: [], loading: false, error: error instanceof Error ? error.message : 'Không thể tải địa điểm thay thế.' });
