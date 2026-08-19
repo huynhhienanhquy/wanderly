@@ -10,8 +10,9 @@ import { decodeSharedPlan, encodeSharedPlan } from '../plan-share';
 import { buildRouteSummary } from '../plan-route';
 import { parsePlanItems, sortPlanItems, type LocalPlanItem, type LocalPlanMeta } from '../plan-storage';
 import { validateFinalPlan, type PlanValidationResult } from '../plan-validation';
-import { weatherIssues } from '../plan-weather';
+import { detectWeatherConflicts, weatherIssues } from '../plan-weather';
 import { fetchWeatherForecast } from '../weather-forecast';
+import { weatherSuitableReplacements } from '../weather-replacements';
 import { SmartReplacePanel } from '../components/SmartReplacePanel';
 import { fetchReplacementCandidates } from '../replacement-candidates';
 import { getReplacementSlotConstraints } from '../replacement-constraints';
@@ -78,7 +79,9 @@ export function PlansPage() {
     }
     setReplacement({ item, candidates: [], loading: true, error: '' });
     try {
-      const candidates = await fetchReplacementCandidates(API_URL, slot, meta.date, items.map(({ id }) => id));
+      const rankedCandidates = await fetchReplacementCandidates(API_URL, slot, meta.date, items.map(({ id }) => id));
+      const hasWeatherConflict = detectWeatherConflicts(items, details, meta.weather).some(({ itemId }) => itemId === item.id);
+      const candidates = hasWeatherConflict ? weatherSuitableReplacements(rankedCandidates, meta.weather) : rankedCandidates;
       setReplacement({ item, candidates, loading: false, error: '' });
     } catch (error) {
       setReplacement({ item, candidates: [], loading: false, error: error instanceof Error ? error.message : 'Không thể tải địa điểm thay thế.' });
