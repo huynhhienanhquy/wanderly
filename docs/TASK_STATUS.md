@@ -111,6 +111,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | CLIENT-04 — Thiết kế query key convention     | Done       | 2026-08-20 | [CLIENT-04](./tasks/CLIENT-04.md) |
 | CLIENT-05 — Thiết kế deep link contract       | Done       | 2026-08-20 | [CLIENT-05](./tasks/CLIENT-05.md) |
 | WEB-01 — Khởi tạo React + Vite                 | Done       | 2026-08-20 | [WEB-01](./tasks/WEB-01.md) |
+| WEB-02 — Thiết lập React Router                | Done       | 2026-08-20 | [WEB-02](./tasks/WEB-02.md) |
 
 ## Quy tắc cập nhật
 
