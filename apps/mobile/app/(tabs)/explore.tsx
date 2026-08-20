@@ -18,6 +18,7 @@ import { Link } from 'expo-router';
 import { mobileConfig } from '../../src/app-config';
 import { readCache, writeCache } from '../../src/offline-cache';
 import { isFreshCache } from '../../src/mobile-hardening';
+import { pageSizeHint } from '../../src/mobile-hardening';
 
 const EXPLORE_CACHE_KEY = 'explore:first-page';
 
@@ -62,7 +63,7 @@ export default function ExploreScreen() {
     try {
       const page = await fetchPlacePage(mobileConfig.apiUrl, {
         cursor: nextCursor,
-        limit: 10,
+        limit: pageSizeHint(10),
         q: query.trim() || undefined,
         category: category.trim() || undefined,
       });

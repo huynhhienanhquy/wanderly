@@ -2,8 +2,12 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import '../global.css';
 import { MobileErrorBoundary } from '../src/error-boundary';
+import { flushMobileTelemetry } from '../src/telemetry';
+import { mobileConfig } from '../src/app-config';
+import { useEffect } from 'react';
 
 export default function RootLayout() {
+  useEffect(() => { void flushMobileTelemetry(mobileConfig.apiUrl); }, []);
   return (
     <MobileErrorBoundary><>
       <Stack screenOptions={{ headerShown: false }}>

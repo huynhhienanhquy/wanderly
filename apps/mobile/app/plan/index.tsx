@@ -6,6 +6,7 @@ import { getMobilePlan, saveMobilePlan, type MobilePlan } from '../../src/plan-s
 import { Card } from '../../src/ui';
 import { SmartReplaceSheet } from '../../src/smart-replace-sheet';
 import { schedulePlanReminder } from '../../src/notifications';
+import { formatMobileMoney } from '../../src/i18n';
 
 const formatMoney = (value: number) => `${value.toLocaleString('vi-VN')}đ`;
 
@@ -60,7 +61,7 @@ export default function PlanScreen() {
   const estimatedCost = plan.items.reduce((total, item) => total + (item.priceMin ?? 0), 0) * plan.peopleCount;
   return <SafeAreaView style={styles.safe}><FlatList data={plan.items} keyExtractor={(item) => item.id} contentContainerStyle={styles.container}
     ListHeaderComponent={<View style={styles.header}><Text style={styles.eyebrow}>{plan.date} · {plan.peopleCount} người</Text><Text style={styles.title}>{plan.title}</Text>
-      <Card className="mt-4"><Text style={styles.budgetLabel}>Chi phí dự kiến</Text><Text style={styles.budget}>{formatMoney(estimatedCost)}</Text><Text style={styles.body}>Ngân sách: {plan.budget === null ? 'không giới hạn' : formatMoney(plan.budget)}</Text></Card></View>}
+      <Card className="mt-4"><Text style={styles.budgetLabel}>Chi phí dự kiến</Text><Text style={styles.budget}>{formatMobileMoney(estimatedCost)}</Text><Text style={styles.body}>Ngân sách: {formatMobileMoney(plan.budget)}</Text></Card></View>}
     renderItem={({ item, index }) => <View style={styles.row}><View style={styles.rail}><View style={styles.dot} />{index < plan.items.length - 1 && <View style={styles.line} />}</View>
       <View style={styles.item}><Text style={styles.time}>{item.startTime}</Text><Text style={styles.place}>{item.name}</Text><View style={styles.actions}><Link href={`/places/${item.slug}`} style={styles.link}>Chi tiết</Link><Pressable onPress={() => setReplacingId(item.id)}><Text style={styles.replace}>Thay thế</Text></Pressable><Pressable onPress={() => removeItem(item.id)}><Text style={styles.remove}>Xóa</Text></Pressable></View></View></View>}
     ListFooterComponent={<View style={styles.footer}><Pressable onPress={openMap} style={styles.mapButton}><Text style={styles.mapText}>Xem toàn bộ tuyến đường</Text></Pressable><Pressable onPress={remindMe} style={styles.mapButton}><Text style={styles.mapText}>Nhắc tôi trước chuyến đi</Text></Pressable>{!!reminderMessage && <Text style={styles.reminder}>{reminderMessage}</Text>}<Pressable onPress={sharePlan} style={styles.share}><Text style={styles.shareText}>Chia sẻ lịch trình</Text></Pressable><Link href="/planner" style={styles.link}>Tạo lịch trình mới</Link></View>} />
