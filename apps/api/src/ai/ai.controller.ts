@@ -1,8 +1,9 @@
-import { Body, Controller, Post, UnprocessableEntityException } from '@nestjs/common';
+import { Body, Controller, Post, UnprocessableEntityException, UseGuards } from '@nestjs/common';
 import { extractConstraintsRequestSchema, type ExtractConstraintsResponse } from '@wanderly/contracts';
 import { ConstraintExtractionService } from './constraint-extraction.service';
+import { RateLimit, RateLimitGuard } from '../security/rate-limit.guard';
 
-@Controller('ai')
+@RateLimit(10) @UseGuards(RateLimitGuard) @Controller('ai')
 export class AiController {
   constructor(private readonly provider: ConstraintExtractionService) {}
   @Post('constraints') extract(@Body() body: unknown): Promise<ExtractConstraintsResponse> {

@@ -9,6 +9,7 @@ import {
   UnprocessableEntityException,
   UseGuards,
 } from '@nestjs/common';
+import { RateLimit, RateLimitGuard } from '../security/rate-limit.guard';
 import {
   ApiConflictResponse,
   ApiBearerAuth,
@@ -30,7 +31,7 @@ import { AuthGuard, type AuthenticatedRequest } from './auth.guard';
 import { Roles, RolesGuard } from './roles.guard';
 
 @ApiTags('Auth')
-@Controller('auth')
+@RateLimit(30) @UseGuards(RateLimitGuard) @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
