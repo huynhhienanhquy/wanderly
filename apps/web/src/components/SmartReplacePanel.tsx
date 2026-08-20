@@ -12,15 +12,23 @@ type Props = {
   onClose: () => void;
 };
 
+export const isDialogDismissKey = (key: string) => key === 'Escape';
+
 export function SmartReplacePanel({ itemName, candidates, loading, error, previewCandidate, onConfirm, onClose }: Props) {
   const [selected, setSelected] = useState<RankedCandidate | null>(null);
   const preview = selected ? previewCandidate(selected) : null;
 
   return (
-    <section role="dialog" aria-modal="true" aria-labelledby="smart-replace-title">
+    <section
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="smart-replace-title"
+      tabIndex={-1}
+      onKeyDown={(event) => { if (isDialogDismissKey(event.key)) onClose(); }}
+    >
       <h2 id="smart-replace-title">Thay thế {itemName}</h2>
       <button type="button" onClick={onClose} aria-label="Đóng Smart Replace">Đóng</button>
-      {loading && <p role="status">Đang tìm địa điểm phù hợp…</p>}
+      {loading && <p role="status" aria-live="polite">Đang tìm địa điểm phù hợp…</p>}
       {error && <p role="alert">{error}</p>}
       {!loading && !error && candidates.length === 0 && <p>Không có địa điểm thay thế phù hợp.</p>}
       {candidates.length > 0 && (

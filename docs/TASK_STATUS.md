@@ -117,6 +117,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | WEB-05 — Explore và Place Detail               | Done       | 2026-08-20 | [WEB-05](./tasks/WEB-05.md) |
 | WEB-06 — AI Planner                             | Done       | 2026-08-20 | [WEB-06](./tasks/WEB-06.md) |
 | WEB-07 — Itinerary experience                   | Done       | 2026-08-20 | [WEB-07](./tasks/WEB-07.md) |
+| WEB-08 — Smart Replace                          | Done       | 2026-08-20 | [WEB-08](./tasks/WEB-08.md) |
 
 ## Quy tắc cập nhật
 
