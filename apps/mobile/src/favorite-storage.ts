@@ -1,6 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 
 const KEY = 'wanderlyFavoritePlaceIds';
+export async function syncFavoritePlaceIds(ids: string[]): Promise<void> { await SecureStore.setItemAsync(KEY, JSON.stringify([...new Set(ids)])); }
 
 export async function getFavoritePlaceIds(): Promise<string[]> {
   try {
