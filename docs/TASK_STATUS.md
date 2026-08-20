@@ -128,6 +128,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-06 — Explore và Place Detail                | Done       | 2026-08-20 | [MOB-06](./tasks/MOB-06.md) |
 | MOB-07 — AI Planner native                      | Done       | 2026-08-20 | [MOB-07](./tasks/MOB-07.md) |
 | MOB-08 — Itinerary native                       | Done       | 2026-08-20 | [MOB-08](./tasks/MOB-08.md) |
+| MOB-09 — Map và route native                    | Done       | 2026-08-20 | [MOB-09](./tasks/MOB-09.md) |
 
 ## Quy tắc cập nhật
 

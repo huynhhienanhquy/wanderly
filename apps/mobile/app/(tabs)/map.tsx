@@ -34,10 +34,12 @@ export default function MapScreen() {
     }
   }
   const markers = route.length > 0 ? route : [{ latitude, longitude, name: params.name }];
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${markers.at(-1)!.latitude},${markers.at(-1)!.longitude}&waypoints=${markers.slice(0, -1).map((point) => `${point.latitude},${point.longitude}`).join('|')}`;
   return <View style={styles.container}><MapCanvas markers={markers} current={current} />
     <Pressable accessibilityRole="button" disabled={locating} onPress={() => void locate()} style={styles.button}><Text style={styles.buttonText}>{locating ? 'Đang xác định vị trí…' : 'Dùng vị trí của tôi'}</Text></Pressable>
+    <Pressable accessibilityRole="link" onPress={() => void Linking.openURL(directionsUrl)} style={styles.directions}><Text style={styles.directionsText}>Dẫn đường bằng Google Maps</Text></Pressable>
     {openSettings && <Pressable accessibilityRole="button" onPress={() => void Linking.openSettings()} style={styles.settings}><Text style={styles.settingsText}>Mở Cài đặt</Text></Pressable>}
     <Text accessibilityLiveRegion="polite" style={styles.caption}>{message || current?.label || params.name || 'Bản đồ Wanderly'}</Text>
   </View>;
 }
-const styles = StyleSheet.create({ container: { flex: 1 }, button: { backgroundColor: '#277253', padding: 14, alignItems: 'center' }, buttonText: { color: 'white', fontWeight: '700' }, settings: { backgroundColor: '#e6f2ec', padding: 12, alignItems: 'center' }, settingsText: { color: '#18563d', fontWeight: '700' }, caption: { backgroundColor: 'white', padding: 16, fontSize: 16, fontWeight: '600' } });
+const styles = StyleSheet.create({ container: { flex: 1 }, button: { backgroundColor: '#277253', padding: 14, alignItems: 'center' }, buttonText: { color: 'white', fontWeight: '700' }, directions: { backgroundColor: '#e6f2ec', padding: 12, alignItems: 'center' }, directionsText: { color: '#18563d', fontWeight: '700' }, settings: { backgroundColor: '#fff3db', padding: 12, alignItems: 'center' }, settingsText: { color: '#7a4b00', fontWeight: '700' }, caption: { backgroundColor: 'white', padding: 16, fontSize: 16, fontWeight: '600' } });
