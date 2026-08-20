@@ -3,9 +3,17 @@
   "compilerOptions": {
     "baseUrl": "../..",
     "paths": {
-      "@wanderly/contracts": ["packages/contracts/src/index.ts"]
+      "@wanderly/contracts": [
+        "packages/contracts/src/index.ts"
+      ]
     },
     "strict": true
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "nativewind-env.d.ts"
+  ]
 }
