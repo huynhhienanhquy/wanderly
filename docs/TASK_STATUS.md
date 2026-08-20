@@ -119,6 +119,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | WEB-07 — Itinerary experience                   | Done       | 2026-08-20 | [WEB-07](./tasks/WEB-07.md) |
 | WEB-08 — Smart Replace                          | Done       | 2026-08-20 | [WEB-08](./tasks/WEB-08.md) |
 | WEB-09 — Admin Web                              | Done       | 2026-08-20 | [WEB-09](./tasks/WEB-09.md) |
+| WEB-10 — Web test                               | Done       | 2026-08-20 | [WEB-10](./tasks/WEB-10.md) |
 
 ## Quy tắc cập nhật
 
