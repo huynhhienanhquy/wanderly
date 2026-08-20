@@ -1,0 +1,2 @@
+import { expect, it, vi } from 'vitest'; import { securityHeaders } from './security-headers';
+it('adds output hardening headers', () => { const setHeader = vi.fn(); const next = vi.fn(); securityHeaders({} as never, { setHeader } as never, next); expect(setHeader).toHaveBeenCalledWith('X-Content-Type-Options', 'nosniff'); expect(setHeader).toHaveBeenCalledWith('X-Frame-Options', 'DENY'); expect(next).toHaveBeenCalledOnce(); });

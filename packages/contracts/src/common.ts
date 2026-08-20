@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+export const normalizeSafeText = (value: string) => value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim();
+export const safeTextSchema = (maxLength: number) => z.string().transform(normalizeSafeText).pipe(z.string().max(maxLength));
+
 export const uuidSchema = z.uuid();
 export const isoDateTimeSchema = z.iso.datetime({ offset: true });
 

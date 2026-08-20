@@ -98,6 +98,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | OPS-01 — Docker Compose local                | Done       | 2026-08-20 | [OPS-01](./tasks/OPS-01.md)     |
 | OPS-02 — CI lint, test và build              | Done       | 2026-08-20 | [OPS-02](./tasks/OPS-02.md)     |
 | OPS-03 — Quản lý environment và secret       | Done       | 2026-08-20 | [OPS-03](./tasks/OPS-03.md)     |
+| SEC-01 — Input validation/output encoding    | Done       | 2026-08-20 | [SEC-01](./tasks/SEC-01.md)     |
 | PLAN-01 — Kế hoạch cơ bản                   | Done       | 2026-08-13 | [PLAN-01](./tasks/PLAN-01.md)   |
 | EVENT-01 — Thiết kế và quản lý sự kiện      | Done       | 2026-08-20 | [EVENT-01](./tasks/EVENT-01.md) |
 | EVENT-02 — Đưa sự kiện vào recommendation   | Done       | 2026-08-20 | [EVENT-02](./tasks/EVENT-02.md) |

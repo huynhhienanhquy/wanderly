@@ -2,10 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { validateEnvironment } from './config/environment';
+import { securityHeaders } from './security/security-headers';
 
 async function bootstrap() {
   const environment = validateEnvironment();
   const app = await NestFactory.create(AppModule);
+  app.use(securityHeaders);
   app.enableCors({
     origin: environment.webUrl,
   });

@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import { uuidSchema } from './common';
+import { safeTextSchema, uuidSchema } from './common';
 
 export const upsertReviewRequestSchema = z.object({
   rating: z.coerce.number().int().min(1).max(5),
-  content: z.string().trim().max(1000).nullable().optional(),
+  content: safeTextSchema(1000).nullable().optional(),
 });
 
 export const reviewSchema = z.object({
@@ -16,7 +16,7 @@ export const reviewSchema = z.object({
 });
 
 export const reportReviewRequestSchema = z.object({
-  reason: z.string().trim().min(3).max(500),
+  reason: safeTextSchema(500).pipe(z.string().min(3)),
 });
 
 export const moderateReviewReportRequestSchema = z.object({
