@@ -11,6 +11,7 @@ import { mobileConfig } from '../src/app-config';
 import { saveMobilePlan } from '../src/plan-storage';
 import { Button, Card } from '../src/ui';
 import { trackMobileEvent } from '../src/telemetry';
+import { createLoadingState } from '../src/mobile-hardening';
 
 function scheduleTime(index: number, startTime = '09:00') {
   const [hour = 9] = startTime.split(':').map(Number);
@@ -26,6 +27,7 @@ export default function PlannerScreen() {
   const [warnings, setWarnings] = useState<string[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const requestState = createLoadingState(loading, error);
 
   async function analyze() {
     setLoading(true);
@@ -106,7 +108,7 @@ export default function PlannerScreen() {
       <Button onPress={generate} disabled={loading}>Tạo lịch trình</Button>
       <Text onPress={() => setConstraints(null)} style={styles.reset}>Nhập lại mô tả</Text>
     </Card>}
-    {loading && <ActivityIndicator color="#277253" style={styles.feedback} />}
+    {requestState.loading && <ActivityIndicator color="#277253" style={styles.feedback} />}
     {warnings.map((warning) => <Text key={warning} style={styles.warning}>{warning}</Text>)}
     {!!error && <Text style={styles.error}>{error}</Text>}
   </ScrollView></SafeAreaView>;
