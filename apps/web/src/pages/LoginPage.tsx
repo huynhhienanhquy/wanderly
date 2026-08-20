@@ -1,8 +1,8 @@
 import { loginRequestSchema, type AuthResponse } from '@wanderly/contracts';
 import { FormEvent, useState } from 'react';
 import { Link } from 'react-router';
-
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
+import { saveAuthSession } from '../auth-session';
+import { webConfig } from '../app-config';
 
 export function LoginPage() {
   const [error, setError] = useState('');
@@ -21,7 +21,7 @@ export function LoginPage() {
 
     setSubmitting(true);
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const response = await fetch(`${webConfig.apiUrl}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(parsed.data),
@@ -34,8 +34,7 @@ export function LoginPage() {
           'message' in body ? body.message : 'Không thể đăng nhập.',
         );
       }
-      sessionStorage.setItem('wanderlyAccessToken', body.tokens.accessToken);
-      sessionStorage.setItem('wanderlyRefreshToken', body.tokens.refreshToken);
+      saveAuthSession(sessionStorage, body);
       window.location.assign('/');
     } catch (caught) {
       setError(

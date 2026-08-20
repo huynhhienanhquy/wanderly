@@ -1,8 +1,9 @@
 import { registerRequestSchema, type AuthResponse } from '@wanderly/contracts';
 import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
-
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
+import { saveAuthSession } from '../auth-session';
+import { webConfig } from '../app-config';
+import { routes } from '../routes';
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export function RegisterPage() {
 
     setSubmitting(true);
     try {
-      const response = await fetch(`${API_URL}/auth/register`, {
+      const response = await fetch(`${webConfig.apiUrl}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(parsed.data),
@@ -33,11 +34,10 @@ export function RegisterPage() {
         throw new Error(body.message ?? 'Không thể đăng ký.');
       }
       const auth = (await response.json()) as AuthResponse;
-      sessionStorage.setItem('wanderlyAccessToken', auth.tokens.accessToken);
-      sessionStorage.setItem('wanderlyRefreshToken', auth.tokens.refreshToken);
+      saveAuthSession(sessionStorage, auth);
       setSuccess(`Chào mừng ${auth.user.displayName} đến với Wanderly!`);
       event.currentTarget.reset();
-      navigate('/onboarding/preferences');
+      navigate(routes.preferences);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Không thể đăng ký.');
     } finally {

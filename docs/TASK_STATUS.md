@@ -113,6 +113,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | WEB-01 — Khởi tạo React + Vite                 | Done       | 2026-08-20 | [WEB-01](./tasks/WEB-01.md) |
 | WEB-02 — Thiết lập React Router                | Done       | 2026-08-20 | [WEB-02](./tasks/WEB-02.md) |
 | WEB-03 — Tạo Web design system                 | Done       | 2026-08-20 | [WEB-03](./tasks/WEB-03.md) |
+| WEB-04 — Auth và onboarding                    | Done       | 2026-08-20 | [WEB-04](./tasks/WEB-04.md) |
 
 ## Quy tắc cập nhật
 
