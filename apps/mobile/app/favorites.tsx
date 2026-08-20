@@ -2,11 +2,12 @@ import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { getFavoritePlaceIds, toggleFavoritePlace } from '../src/favorite-storage';
+import { getFavoritePlaceIds, syncFavoritesToApi, toggleFavoritePlace } from '../src/favorite-storage';
+import { mobileConfig } from '../src/app-config';
 
 export default function FavoritesScreen() {
   const [ids, setIds] = useState<string[]>([]);
-  useFocusEffect(useCallback(() => { getFavoritePlaceIds().then(setIds); }, []));
+  useFocusEffect(useCallback(() => { getFavoritePlaceIds().then(setIds); void syncFavoritesToApi(mobileConfig.apiUrl); }, []));
   async function remove(id: string) { await toggleFavoritePlace(id); setIds((current) => current.filter((value) => value !== id)); }
   return <SafeAreaView style={styles.safe}><View style={styles.container}><Text style={styles.title}>Địa điểm đã lưu</Text>{ids.length === 0 ? <Text style={styles.body}>Bạn chưa lưu địa điểm nào. Hãy nhấn biểu tượng yêu thích ở trang chi tiết.</Text> : ids.map((id) => <View key={id} style={styles.row}><Text style={styles.id}>{id}</Text><Pressable onPress={() => void remove(id)}><Text style={styles.remove}>Bỏ lưu</Text></Pressable></View>)}</View></SafeAreaView>;
 }

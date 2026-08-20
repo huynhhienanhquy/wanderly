@@ -4,4 +4,4 @@ Chuẩn hóa thao tác ghi danh sách favorites với deduplicate để sẵn s�
 
 ## Trạng thái
 
-Partial — chưa nối thao tác sync với endpoint favorites backend.
+Đã nối màn hình Favorites với endpoint favorites backend sau khi hydrate local storage.
