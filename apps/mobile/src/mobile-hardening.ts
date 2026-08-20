@@ -2,3 +2,4 @@ export const withRetry = async <T>(task: () => Promise<T>, attempts = 2): Promis
 export const isFreshCache = (savedAt: string, maxAgeMs: number) => Date.now() - Date.parse(savedAt) <= maxAgeMs;
 export const createLoadingState = (loading: boolean, error = '') => ({ loading, error, ready: !loading && !error });
 export const emptyStateMessage = (count: number, label: string) => count === 0 ? `Chưa có ${label}.` : '';
+export const isSafeDeepLinkToken = (token: string) => /^[A-Za-z0-9_-]{3,200}$/.test(token);
