@@ -2,7 +2,7 @@ import { registerRequestSchema, type AuthResponse } from '@wanderly/contracts';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { saveAuthTokens } from '../src/auth-storage';
+import { saveAuthTokens } from '../../src/auth-storage';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
 

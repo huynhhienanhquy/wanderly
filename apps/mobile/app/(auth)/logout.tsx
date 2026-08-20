@@ -2,7 +2,7 @@ import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { clearAuthTokens, getRefreshToken } from '../src/auth-storage';
+import { clearAuthTokens, getRefreshToken } from '../../src/auth-storage';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
 

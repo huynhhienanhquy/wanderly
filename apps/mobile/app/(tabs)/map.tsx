@@ -2,7 +2,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 import * as Location from 'expo-location';
 import { useState } from 'react';
-import { MapCanvas } from '../src/map-canvas';
+import { MapCanvas } from '../../src/map-canvas';
 
 export default function MapScreen() {
   const params = useLocalSearchParams<{ latitude?: string; longitude?: string; name?: string; points?: string }>();

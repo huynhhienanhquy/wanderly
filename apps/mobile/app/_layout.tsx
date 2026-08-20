@@ -4,7 +4,12 @@ import { StatusBar } from 'expo-status-bar';
 export default function RootLayout() {
   return (
     <>
-      <Stack screenOptions={{ headerShown: false }} />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(auth)" />
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="plan" />
+        <Stack.Screen name="places/[slug]" />
+      </Stack>
       <StatusBar style="dark" />
     </>
   );
