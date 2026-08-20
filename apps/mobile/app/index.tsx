@@ -30,6 +30,9 @@ export default function HomeScreen() {
         <Link href="/explore" style={styles.exploreLink}>
           Khám phá địa điểm
         </Link>
+        <Link href="/planner" style={styles.plannerLink}>
+          Tạo lịch trình bằng AI
+        </Link>
         <Link href="/register" style={styles.registerLink}>
           Tạo tài khoản
         </Link>
@@ -86,6 +89,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginTop: 24,
   },
+  plannerLink: { color: '#17231f', fontSize: 17, fontWeight: '700', marginTop: 12 },
   loginLink: {
     color: '#52615b',
     fontSize: 17,

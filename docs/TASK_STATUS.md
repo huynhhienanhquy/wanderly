@@ -126,6 +126,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-04 — Auth và secure session                 | Done       | 2026-08-20 | [MOB-04](./tasks/MOB-04.md) |
 | MOB-05 — Quyền vị trí                           | Done       | 2026-08-20 | [MOB-05](./tasks/MOB-05.md) |
 | MOB-06 — Explore và Place Detail                | Done       | 2026-08-20 | [MOB-06](./tasks/MOB-06.md) |
+| MOB-07 — AI Planner native                      | Done       | 2026-08-20 | [MOB-07](./tasks/MOB-07.md) |
 
 ## Quy tắc cập nhật
 

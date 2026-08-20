@@ -9,6 +9,7 @@ export default function RootLayout() {
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="plan" />
+        <Stack.Screen name="planner" />
         <Stack.Screen name="places/[slug]" />
       </Stack>
       <StatusBar style="dark" />
