@@ -18,6 +18,7 @@ import { SmartReplacePanel } from '../components/SmartReplacePanel';
 import { fetchReplacementCandidates } from '../replacement-candidates';
 import { getReplacementSlotConstraints } from '../replacement-constraints';
 import { previewReplacement, type ReplacementPreview } from '../replacement-preview';
+import { recordBehaviorSignal } from '../preference-api';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 const PLAN_KEY = 'wanderly:current-plan';
@@ -98,9 +99,17 @@ export function PlansPage() {
   }
 
   function confirmReplacement(preview: ReplacementPreview) {
+    const token = sessionStorage.getItem('wanderlyAccessToken');
+    if (token && replacement) void recordBehaviorSignal(API_URL, token, { type: 'REPLACE', placeId: replacement.item.id }).catch(() => undefined);
     persistItems(preview.items);
     setReplacement(null);
     setMessage('Đã cập nhật địa điểm thay thế.');
+  }
+
+  function closeReplacement() {
+    const token = sessionStorage.getItem('wanderlyAccessToken');
+    if (token && replacement) void recordBehaviorSignal(API_URL, token, { type: 'SKIP', placeId: replacement.item.id }).catch(() => undefined);
+    setReplacement(null);
   }
 
   const durationResult = validateDurations(
@@ -195,7 +204,7 @@ export function PlansPage() {
         </form>
       )}
       {readOnly && <p>Đây là bản chụp chỉ đọc của lịch trình tại thời điểm được chia sẻ.</p>}
-      {replacement && <SmartReplacePanel itemName={replacement.item.name} candidates={replacement.candidates} loading={replacement.loading} error={replacement.error} previewCandidate={replacementPreview} onConfirm={confirmReplacement} onClose={() => setReplacement(null)} />}
+      {replacement && <SmartReplacePanel itemName={replacement.item.name} candidates={replacement.candidates} loading={replacement.loading} error={replacement.error} previewCandidate={replacementPreview} onConfirm={confirmReplacement} onClose={closeReplacement} />}
       {validation.checked && <section aria-label="Kết quả kiểm tra kế hoạch" role="status">{validation.result.valid ? <strong>Kế hoạch hợp lệ.</strong> : <><strong>Kế hoạch chưa hợp lệ.</strong><ul>{validation.result.issues.map((issue) => <li key={`${issue.category}:${issue.message}`}><span>{issue.category}</span>: {issue.message}</li>)}</ul></>}</section>}
       {items.length > 0 && <section aria-label="Kiểm tra thời lượng"><p>Tổng thời lượng dự kiến: {Math.floor(durationResult.totalMinutes / 60)} giờ {durationResult.totalMinutes % 60} phút (hoạt động {durationResult.activityMinutes} phút, di chuyển khoảng {durationResult.travelMinutes} phút).</p>{durationResult.issues.length > 0 && <ul>{durationResult.issues.map((issue) => <li key={issue}>{issue}</li>)}</ul>}</section>}
       {items.length > 0 && <section aria-label="Ước tính ngân sách"><h2>Chi tiết ngân sách</h2><ul>{budgetResult.lines.map((line) => <li key={`${line.type}:${line.label}`}>{line.label}: {line.amount.toLocaleString('vi-VN')}đ ({line.type})</li>)}</ul><p>Địa điểm: {budgetResult.byType.PLACE.toLocaleString('vi-VN')}đ · Ăn uống: {budgetResult.byType.FOOD.toLocaleString('vi-VN')}đ · Di chuyển: {budgetResult.byType.TRANSPORT.toLocaleString('vi-VN')}đ</p><p><strong>Tổng: {budgetResult.total.toLocaleString('vi-VN')}đ.</strong></p>{budgetWarning && <p role="alert" data-severity={budgetWarning.severity}><strong>{budgetWarning.message}</strong></p>}{budgetResult.missing.length > 0 && <p>Chưa có giá: {budgetResult.missing.join(', ')}.</p>}</section>}

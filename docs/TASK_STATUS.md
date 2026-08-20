@@ -51,6 +51,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | REPLACE-02 — Tìm candidate thay thế         | Done       | 2026-08-19 | [REPLACE-02](./tasks/REPLACE-02.md) |
 | REPLACE-03 — Tính lại route, time, budget   | Done       | 2026-08-19 | [REPLACE-03](./tasks/REPLACE-03.md) |
 | REPLACE-04 — Giao diện Smart Replace        | Done       | 2026-08-19 | [REPLACE-04](./tasks/REPLACE-04.md) |
+| REPLACE-05 — Lưu hành vi replace/skip       | Done       | 2026-08-20 | [REPLACE-05](./tasks/REPLACE-05.md) |
 | PLACE-01 — Thiết kế bảng Place và Category | Done       | 2026-08-10 | [PLACE-01](./tasks/PLACE-01.md) |
 | PLACE-02 — Import/seed dữ liệu địa điểm    | Done       | 2026-08-11 | [PLACE-02](./tasks/PLACE-02.md) |
 | PLACE-03 — Chuẩn hóa thông tin địa điểm    | Done       | 2026-08-12 | [PLACE-03](./tasks/PLACE-03.md) |
