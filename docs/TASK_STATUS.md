@@ -106,6 +106,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | EVENT-02 — Đưa sự kiện vào recommendation   | Done       | 2026-08-20 | [EVENT-02](./tasks/EVENT-02.md) |
 | EVENT-03 — Hiển thị sự kiện trên Explore    | Done       | 2026-08-20 | [EVENT-03](./tasks/EVENT-03.md) |
 | CLIENT-01 — Tạo package contracts            | Done       | 2026-08-20 | [CLIENT-01](./tasks/CLIENT-01.md) |
+| CLIENT-02 — Tạo typed API client              | Done       | 2026-08-20 | [CLIENT-02](./tasks/CLIENT-02.md) |
 
 ## Quy tắc cập nhật
 

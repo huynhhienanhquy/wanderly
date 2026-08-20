@@ -24,3 +24,4 @@ export * from './recommendation';
 export * from './map-provider';
 export * from './weather-provider';
 export * from './event';
+export * from './api-client';
