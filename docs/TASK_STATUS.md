@@ -140,14 +140,14 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-18 — Profile native                         | Done       | 2026-08-20 | [MOB-18](./tasks/MOB-18.md) |
 | MOB-19 — Reviews native                         | Done       | 2026-08-20 | [MOB-19](./tasks/MOB-19.md) |
 | MOB-20 — Mobile telemetry queue                 | Done       | 2026-08-20 | [MOB-20](./tasks/MOB-20.md) |
-| MOB-21 — Favorites sync foundation              | Done       | 2026-08-20 | [MOB-21](./tasks/MOB-21.md) |
-| MOB-22 — Preferences native                     | Done       | 2026-08-20 | [MOB-22](./tasks/MOB-22.md) |
+| MOB-21 — Favorites sync foundation              | Partial    | 2026-08-20 | [MOB-21](./tasks/MOB-21.md) |
+| MOB-22 — Preferences native                     | Partial    | 2026-08-20 | [MOB-22](./tasks/MOB-22.md) |
 | MOB-23 — Review submit native                   | Done       | 2026-08-20 | [MOB-23](./tasks/MOB-23.md) |
 | MOB-24 — Review report native                   | Done       | 2026-08-20 | [MOB-24](./tasks/MOB-24.md) |
 | MOB-25 — Notification inbox native              | Done       | 2026-08-20 | [MOB-25](./tasks/MOB-25.md) |
-| MOB-26 — Telemetry flush                        | Done       | 2026-08-20 | [MOB-26](./tasks/MOB-26.md) |
+| MOB-26 — Telemetry flush                        | Partial    | 2026-08-20 | [MOB-26](./tasks/MOB-26.md) |
 | MOB-27 — Accessibility pass                     | Done       | 2026-08-20 | [MOB-27](./tasks/MOB-27.md) |
-| MOB-28 — Localization foundation                | Done       | 2026-08-20 | [MOB-28](./tasks/MOB-28.md) |
+| MOB-28 — Localization foundation                | Partial    | 2026-08-20 | [MOB-28](./tasks/MOB-28.md) |
 | MOB-29 — Mobile error boundary                  | Done       | 2026-08-20 | [MOB-29](./tasks/MOB-29.md) |
 | MOB-30 — Mobile release smoke check             | Done       | 2026-08-20 | [MOB-30](./tasks/MOB-30.md) |
 | MOB-31 — API retry helper                       | Done       | 2026-08-20 | [MOB-31](./tasks/MOB-31.md) |
@@ -155,11 +155,11 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-33 — Loading state model                    | Done       | 2026-08-20 | [MOB-33](./tasks/MOB-33.md) |
 | MOB-34 — Empty state helper                     | Done       | 2026-08-20 | [MOB-34](./tasks/MOB-34.md) |
 | MOB-35 — Deep-link validation                   | Done       | 2026-08-20 | [MOB-35](./tasks/MOB-35.md) |
-| MOB-36 — Notification cleanup                  | Done       | 2026-08-20 | [MOB-36](./tasks/MOB-36.md) |
-| MOB-37 — Telemetry privacy                     | Done       | 2026-08-20 | [MOB-37](./tasks/MOB-37.md) |
-| MOB-38 — Form validation helper                | Done       | 2026-08-20 | [MOB-38](./tasks/MOB-38.md) |
-| MOB-39 — Performance hints                     | Done       | 2026-08-20 | [MOB-39](./tasks/MOB-39.md) |
-| MOB-40 — CI smoke metadata                      | Done       | 2026-08-20 | [MOB-40](./tasks/MOB-40.md) |
+| MOB-36 — Notification cleanup                  | Partial    | 2026-08-20 | [MOB-36](./tasks/MOB-36.md) |
+| MOB-37 — Telemetry privacy                     | Partial    | 2026-08-20 | [MOB-37](./tasks/MOB-37.md) |
+| MOB-38 — Form validation helper                | Partial    | 2026-08-20 | [MOB-38](./tasks/MOB-38.md) |
+| MOB-39 — Performance hints                     | Partial    | 2026-08-20 | [MOB-39](./tasks/MOB-39.md) |
+| MOB-40 — CI smoke metadata                      | Partial    | 2026-08-20 | [MOB-40](./tasks/MOB-40.md) |
 
 ## Quy tắc cập nhật
 
