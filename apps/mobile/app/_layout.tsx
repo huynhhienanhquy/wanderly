@@ -13,6 +13,7 @@ export default function RootLayout() {
         <Stack.Screen name="places/[slug]" />
         <Stack.Screen name="plans/shared/[shareToken]" />
         <Stack.Screen name="favorites" />
+        <Stack.Screen name="events" />
       </Stack>
       <StatusBar style="dark" />
     </>
