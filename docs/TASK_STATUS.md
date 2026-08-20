@@ -145,6 +145,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-23 — Review submit native                   | Done       | 2026-08-20 | [MOB-23](./tasks/MOB-23.md) |
 | MOB-24 — Review report native                   | Done       | 2026-08-20 | [MOB-24](./tasks/MOB-24.md) |
 | MOB-25 — Notification inbox native              | Done       | 2026-08-20 | [MOB-25](./tasks/MOB-25.md) |
+| MOB-26 — Telemetry flush                        | Done       | 2026-08-20 | [MOB-26](./tasks/MOB-26.md) |
 
 ## Quy tắc cập nhật
 

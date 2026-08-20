@@ -17,3 +17,4 @@ export async function readMobileTelemetry(): Promise<MobileTelemetryEvent[]> {
   const raw = Platform.OS === 'web' ? localStorage.getItem(KEY) : await SecureStore.getItemAsync(KEY);
   try { return raw ? JSON.parse(raw) as MobileTelemetryEvent[] : []; } catch { return []; }
 }
+export async function flushMobileTelemetry(baseUrl: string, fetcher: typeof fetch = fetch): Promise<boolean> { const events = await readMobileTelemetry(); if (!events.length) return true; const response = await fetcher(`${baseUrl}/analytics/events`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ events }) }); if (!response.ok) return false; if (Platform.OS === 'web') localStorage.removeItem(KEY); else await SecureStore.deleteItemAsync(KEY); return true; }
