@@ -14,6 +14,7 @@ export default function RootLayout() {
         <Stack.Screen name="plans/shared/[shareToken]" />
         <Stack.Screen name="favorites" />
         <Stack.Screen name="events" />
+        <Stack.Screen name="profile" />
       </Stack>
       <StatusBar style="dark" />
     </>

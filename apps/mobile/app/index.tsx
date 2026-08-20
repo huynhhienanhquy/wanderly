@@ -35,6 +35,7 @@ export default function HomeScreen() {
         </Link>
         <Link href="/favorites" style={styles.plannerLink}>Địa điểm đã lưu</Link>
         <Link href="/events" style={styles.plannerLink}>Xem sự kiện</Link>
+        <Link href="/profile" style={styles.plannerLink}>Hồ sơ cá nhân</Link>
         <Link href="/register" style={styles.registerLink}>
           Tạo tài khoản
         </Link>
