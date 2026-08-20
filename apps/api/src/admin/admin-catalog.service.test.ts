@@ -1,0 +1,2 @@
+import { expect, it, vi } from 'vitest'; import type { PrismaService } from '../database/prisma.service'; import { AdminCatalogService } from './admin-catalog.service';
+it('soft deletes a place from the admin catalog', async () => { const updateMany = vi.fn().mockResolvedValue({ count: 1 }); const service = new AdminCatalogService({ place: { updateMany } } as unknown as PrismaService); await service.removePlace('id'); expect(updateMany).toHaveBeenCalledWith({ where: { id: 'id', deletedAt: null }, data: { deletedAt: expect.any(Date), status: 'INACTIVE' } }); });
