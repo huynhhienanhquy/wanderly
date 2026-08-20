@@ -1,4 +1,14 @@
+@import "tailwindcss";
+
 :root {
+  --color-background: #f4f7f2;
+  --color-foreground: #17231f;
+  --color-primary: #277253;
+  --color-primary-foreground: #ffffff;
+  --color-muted: #52615b;
+  --color-card: #ffffff;
+  --color-border: #e0e7e3;
+  --radius-control: 0.75rem;
   color: #17231f;
   background: #f4f7f2;
   font-family:
@@ -316,6 +326,22 @@ h1 {
   display: grid;
   place-items: center;
   padding: 2rem 1rem;
+}
+
+[data-theme='dark'] {
+  --color-background: #101713;
+  --color-foreground: #eef5f0;
+  --color-primary: #63c99b;
+  --color-primary-foreground: #0b2117;
+  --color-muted: #a8b8b0;
+  --color-card: #18221d;
+  --color-border: #34453d;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
 }
 
 .auth-card {

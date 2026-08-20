@@ -11,18 +11,20 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@wanderly/contracts": "workspace:*",
     "@tanstack/react-query": "5.85.5",
+    "@wanderly/contracts": "workspace:*",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-router": "7.8.2",
     "zustand": "5.0.8"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
     "@types/node": "22.18.0",
     "@types/react": "19.1.10",
     "@types/react-dom": "19.1.7",
     "@vitejs/plugin-react": "5.0.2",
+    "tailwindcss": "^4.3.3",
     "vite": "7.1.3",
     "vitest": "3.2.4"
   }
