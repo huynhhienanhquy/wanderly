@@ -5,6 +5,7 @@
   "main": "expo-router/entry",
   "scripts": {
     "build": "cross-env EXPO_NO_TELEMETRY=1 expo export --platform web",
+    "config:check": "cross-env EXPO_NO_TELEMETRY=1 expo config --type public",
     "dev": "expo start",
     "lint": "tsc --noEmit",
     "start": "expo start",
