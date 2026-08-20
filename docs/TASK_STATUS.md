@@ -129,6 +129,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-07 — AI Planner native                      | Done       | 2026-08-20 | [MOB-07](./tasks/MOB-07.md) |
 | MOB-08 — Itinerary native                       | Done       | 2026-08-20 | [MOB-08](./tasks/MOB-08.md) |
 | MOB-09 — Map và route native                    | Done       | 2026-08-20 | [MOB-09](./tasks/MOB-09.md) |
+| MOB-10 — Smart Replace native                   | Done       | 2026-08-20 | [MOB-10](./tasks/MOB-10.md) |
 
 ## Quy tắc cập nhật
 
