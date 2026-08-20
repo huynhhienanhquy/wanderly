@@ -1,0 +1,6 @@
+import * as SecureStore from 'expo-secure-store';
+const KEY = 'wanderlyOfflineMutations';
+export type OfflineMutation = { method: 'POST' | 'PUT' | 'PATCH' | 'DELETE'; path: string; body?: unknown };
+export async function enqueueMutation(mutation: OfflineMutation): Promise<void> { const queue = await readMutations(); queue.push(mutation); await SecureStore.setItemAsync(KEY, JSON.stringify(queue.slice(-50))); }
+export async function readMutations(): Promise<OfflineMutation[]> { try { const value = JSON.parse(await SecureStore.getItemAsync(KEY) ?? '[]'); return Array.isArray(value) ? value as OfflineMutation[] : []; } catch { return []; } }
+export async function flushMutations(baseUrl: string, fetcher: typeof fetch = fetch): Promise<number> { const queue = await readMutations(); let flushed = 0; for (const mutation of queue) { const response = await fetcher(`${baseUrl}/${mutation.path}`, { method: mutation.method, headers: { 'Content-Type': 'application/json' }, body: mutation.body === undefined ? undefined : JSON.stringify(mutation.body) }); if (!response.ok) break; flushed += 1; } if (flushed) await SecureStore.setItemAsync(KEY, JSON.stringify(queue.slice(flushed))); return flushed; }
