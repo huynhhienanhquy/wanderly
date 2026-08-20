@@ -148,6 +148,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-26 — Telemetry flush                        | Done       | 2026-08-20 | [MOB-26](./tasks/MOB-26.md) |
 | MOB-27 — Accessibility pass                     | Done       | 2026-08-20 | [MOB-27](./tasks/MOB-27.md) |
 | MOB-28 — Localization foundation                | Done       | 2026-08-20 | [MOB-28](./tasks/MOB-28.md) |
+| MOB-29 — Mobile error boundary                  | Done       | 2026-08-20 | [MOB-29](./tasks/MOB-29.md) |
 
 ## Quy tắc cập nhật
 

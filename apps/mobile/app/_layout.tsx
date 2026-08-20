@@ -1,10 +1,11 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import '../global.css';
+import { MobileErrorBoundary } from '../src/error-boundary';
 
 export default function RootLayout() {
   return (
-    <>
+    <MobileErrorBoundary><>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(tabs)" />
@@ -22,6 +23,6 @@ export default function RootLayout() {
         <Stack.Screen name="notifications" />
       </Stack>
       <StatusBar style="dark" />
-    </>
+    </></MobileErrorBoundary>
   );
 }
