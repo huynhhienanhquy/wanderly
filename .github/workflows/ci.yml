@@ -21,6 +21,8 @@ jobs:
       - run: pnpm db:validate
         env: { DATABASE_URL: postgresql://user:password@localhost:5432/wanderly }
       - run: pnpm api:validate
+      - run: pnpm security:secrets
+      - run: pnpm audit --audit-level high
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm build

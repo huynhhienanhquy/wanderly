@@ -1,8 +1,8 @@
 import { useLocalSearchParams } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { useState } from 'react';
+import { MapCanvas } from '../src/map-canvas';
 
 export default function MapScreen() {
   const params = useLocalSearchParams<{ latitude?: string; longitude?: string; name?: string; points?: string }>();
@@ -21,6 +21,6 @@ export default function MapScreen() {
     setCurrent({ latitude: position.coords.latitude, longitude: position.coords.longitude, label: [address?.name, address?.district, address?.city].filter(Boolean).join(', ') || 'Vị trí hiện tại' });
   }
   const markers = route.length > 0 ? route : [{ latitude, longitude, name: params.name }];
-  return <View style={styles.container}><MapView provider={PROVIDER_GOOGLE} style={styles.map} initialRegion={{ latitude: markers[0]!.latitude, longitude: markers[0]!.longitude, latitudeDelta: 0.04, longitudeDelta: 0.04 }}>{markers.map((point, index) => <Marker key={`${point.latitude}:${point.longitude}:${index}`} coordinate={point} title={`${index + 1}. ${point.name ?? 'Điểm dừng'}`} />)}{markers.length > 1 && <Polyline coordinates={markers} strokeColor="#277253" strokeWidth={4} />}{current && <Marker coordinate={current} title={current.label} pinColor="#277253" />}</MapView><Text onPress={() => void locate()} style={styles.button}>Dùng vị trí của tôi</Text><Text style={styles.caption}>{message || current?.label || params.name || 'Bản đồ Wanderly'}</Text></View>;
+  return <View style={styles.container}><MapCanvas markers={markers} current={current} /><Text onPress={() => void locate()} style={styles.button}>Dùng vị trí của tôi</Text><Text style={styles.caption}>{message || current?.label || params.name || 'Bản đồ Wanderly'}</Text></View>;
 }
-const styles = StyleSheet.create({ container: { flex: 1 }, map: { flex: 1 }, button: { backgroundColor: '#277253', color: 'white', padding: 14, textAlign: 'center', fontWeight: '700' }, caption: { backgroundColor: 'white', padding: 16, fontSize: 16, fontWeight: '600' } });
+const styles = StyleSheet.create({ container: { flex: 1 }, button: { backgroundColor: '#277253', color: 'white', padding: 14, textAlign: 'center', fontWeight: '700' }, caption: { backgroundColor: 'white', padding: 16, fontSize: 16, fontWeight: '600' } });

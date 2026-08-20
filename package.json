@@ -23,7 +23,8 @@
     "db:migrate": "prisma migrate dev --schema prisma/schema.prisma",
     "db:seed": "tsx prisma/seed.ts",
     "db:seed:test": "tsx --test prisma/seed-data/places.test.ts",
-    "api:validate": "node scripts/validate-openapi.mjs"
+    "api:validate": "node scripts/validate-openapi.mjs",
+    "security:secrets": "node scripts/check-secrets.mjs"
   },
   "devDependencies": {
     "@types/node": "22.18.0",
