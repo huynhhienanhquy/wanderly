@@ -4,3 +4,4 @@ export const createLoadingState = (loading: boolean, error = '') => ({ loading, 
 export const emptyStateMessage = (count: number, label: string) => count === 0 ? `Chưa có ${label}.` : '';
 export const isSafeDeepLinkToken = (token: string) => /^[A-Za-z0-9_-]{3,200}$/.test(token);
 export const shouldClearNotification = (scheduledAt: number, now = Date.now()) => scheduledAt < now;
+export const redactTelemetry = (value: string) => value.replace(/[\w.+-]+@[\w.-]+/g, '[redacted-email]');
