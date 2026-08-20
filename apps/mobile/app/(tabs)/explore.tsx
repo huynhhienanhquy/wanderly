@@ -11,11 +11,11 @@ import {
   StyleSheet,
   Text,
   View,
+  TextInput,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
+import { mobileConfig } from '../../src/app-config';
 
 function PlaceCard({ place }: { place: PlaceSummary }) {
   return (
@@ -48,14 +48,18 @@ export default function ExploreScreen() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState('');
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState('');
   async function load(nextCursor?: string | null) {
     if (nextCursor) setLoadingMore(true);
     else setLoading(true);
     setError('');
     try {
-      const page = await fetchPlacePage(API_URL, {
+      const page = await fetchPlacePage(mobileConfig.apiUrl, {
         cursor: nextCursor,
         limit: 10,
+        q: query.trim() || undefined,
+        category: category.trim() || undefined,
       });
       setPlaces((current) =>
         nextCursor ? [...current, ...page.data] : page.data,
@@ -94,6 +98,9 @@ export default function ExploreScreen() {
             <Text style={styles.eyebrow}>WANDERLY EXPLORE</Text>
             <Text style={styles.title}>Đi đâu hôm nay?</Text>
             <Text style={styles.subtitle}>Những gợi ý vừa vặn với bạn.</Text>
+            <TextInput accessibilityLabel="Tìm kiếm địa điểm" style={styles.input} value={query} onChangeText={setQuery} placeholder="Tên hoặc khu vực" returnKeyType="search" onSubmitEditing={() => void load()} />
+            <TextInput accessibilityLabel="Lọc theo danh mục" style={styles.input} value={category} onChangeText={setCategory} placeholder="Danh mục: cafe, food…" returnKeyType="search" onSubmitEditing={() => void load()} />
+            <Pressable style={styles.filterButton} onPress={() => void load()}><Text style={styles.buttonText}>Tìm và lọc</Text></Pressable>
           </View>
         }
         ListEmptyComponent={
@@ -139,6 +146,8 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   subtitle: { color: '#52615b', fontSize: 17, marginTop: 10 },
+  input: { backgroundColor: 'white', borderColor: '#dce5df', borderWidth: 1, borderRadius: 12, marginTop: 12, padding: 13 },
+  filterButton: { alignItems: 'center', backgroundColor: '#277253', borderRadius: 12, marginTop: 10, padding: 12 },
   card: {
     backgroundColor: 'white',
     borderRadius: 18,

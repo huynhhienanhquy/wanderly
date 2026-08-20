@@ -13,15 +13,17 @@ import {
   Pressable,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
+import { mobileConfig } from '../../src/app-config';
+import { getFavoritePlaceIds, toggleFavoritePlace } from '../../src/favorite-storage';
 export default function PlaceDetailScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const [place, setPlace] = useState<PlaceDetail | null>(null);
   const [error, setError] = useState('');
+  const [favorite, setFavorite] = useState(false);
   useEffect(() => {
     if (slug)
-      void fetchPlaceDetail(API_URL, slug)
-        .then(setPlace)
+      void fetchPlaceDetail(mobileConfig.apiUrl, slug)
+        .then(async (data) => { setPlace(data); setFavorite((await getFavoritePlaceIds()).includes(data.id)); })
         .catch((e) =>
           setError(e instanceof Error ? e.message : 'Không thể tải địa điểm.'),
         );
@@ -47,6 +49,7 @@ export default function PlaceDetailScreen() {
               <Text style={styles.address}>
                 {place.address} · {place.city}
               </Text>
+              <Pressable accessibilityRole="button" style={styles.favorite} onPress={() => void toggleFavoritePlace(place.id).then(setFavorite)}><Text style={styles.favoriteText}>{favorite ? '♥ Đã lưu' : '♡ Lưu địa điểm'}</Text></Pressable>
               <Pressable onPress={() => router.push({ pathname: '/map', params: { latitude: String(place.latitude), longitude: String(place.longitude), name: place.name } })}><Text style={styles.mapLink}>Xem trên bản đồ</Text></Pressable>
               {place.description && (
                 <Text style={styles.description}>{place.description}</Text>
@@ -102,5 +105,7 @@ const styles = StyleSheet.create({
   },
   row: { color: '#52615b', paddingTop: 8 },
   mapLink: { color: '#277253', fontWeight: '700', marginTop: 16 },
+  favorite: { borderColor: '#277253', borderWidth: 1, borderRadius: 12, marginTop: 16, padding: 12, alignItems: 'center' },
+  favoriteText: { color: '#277253', fontWeight: '700' },
   state: { color: '#52615b', paddingVertical: 48, textAlign: 'center' },
 });

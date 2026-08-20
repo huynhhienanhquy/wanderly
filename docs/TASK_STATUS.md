@@ -125,6 +125,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-03 — Tạo Mobile design system               | Done       | 2026-08-20 | [MOB-03](./tasks/MOB-03.md) |
 | MOB-04 — Auth và secure session                 | Done       | 2026-08-20 | [MOB-04](./tasks/MOB-04.md) |
 | MOB-05 — Quyền vị trí                           | Done       | 2026-08-20 | [MOB-05](./tasks/MOB-05.md) |
+| MOB-06 — Explore và Place Detail                | Done       | 2026-08-20 | [MOB-06](./tasks/MOB-06.md) |
 
 ## Quy tắc cập nhật
 
