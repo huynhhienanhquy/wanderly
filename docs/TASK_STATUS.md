@@ -147,6 +147,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-25 — Notification inbox native              | Done       | 2026-08-20 | [MOB-25](./tasks/MOB-25.md) |
 | MOB-26 — Telemetry flush                        | Done       | 2026-08-20 | [MOB-26](./tasks/MOB-26.md) |
 | MOB-27 — Accessibility pass                     | Done       | 2026-08-20 | [MOB-27](./tasks/MOB-27.md) |
+| MOB-28 — Localization foundation                | Done       | 2026-08-20 | [MOB-28](./tasks/MOB-28.md) |
 
 ## Quy tắc cập nhật
 
