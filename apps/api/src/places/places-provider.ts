@@ -1,9 +1,10 @@
 import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { normalizePlaceInput, type NormalizedPlaceInput } from '@wanderly/contracts';
+import type { ExternalProviderAdapter } from '../external/provider-adapter';
 
 export const PLACES_PROVIDER = Symbol('PLACES_PROVIDER');
 
-export interface PlacesProvider {
+export interface PlacesProvider extends ExternalProviderAdapter<void, NormalizedPlaceInput[]> {
   fetchPlaces(): Promise<NormalizedPlaceInput[]>;
 }
 
@@ -33,6 +34,7 @@ function slug(value: string, providerId: string): string {
 
 @Injectable()
 export class GooglePlacesProvider implements PlacesProvider {
+  readonly name = 'google-places';
   constructor(private readonly fetcher: typeof fetch = fetch) {}
 
   async fetchPlaces(): Promise<NormalizedPlaceInput[]> {
@@ -75,4 +77,5 @@ export class GooglePlacesProvider implements PlacesProvider {
       })];
     });
   }
+  execute() { return this.fetchPlaces(); }
 }

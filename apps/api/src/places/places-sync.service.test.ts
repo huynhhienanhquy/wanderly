@@ -10,7 +10,7 @@ describe('PlacesSyncService', () => {
       address: 'Hà Nội', district: null, city: 'Hà Nội', countryCode: 'VN', latitude: 21,
       longitude: 105, rating: 4, reviewCount: 10, priceMin: 50_000, priceMax: 100_000,
       typicalDurationMinutes: 60, indoorOutdoor: 'MIXED', categorySlugs: ['cafe'], images: [], openingHours: [],
-    }]) } as PlacesProvider;
+    }]), name: 'test-places', execute: vi.fn() } as PlacesProvider;
     const upsert = vi.fn().mockResolvedValue({ id: 'place-id' });
     const service = new PlacesSyncService(provider, { place: { upsert } } as unknown as PrismaService);
 

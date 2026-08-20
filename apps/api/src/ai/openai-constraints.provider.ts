@@ -3,6 +3,7 @@ import { extractConstraintsResponseSchema, type ExtractConstraintsRequest, type 
 import { buildConstraintPrompt, CONSTRAINT_SYSTEM_PROMPT } from './constraint-prompt';
 import { normalizeConstraints } from './constraint-normalizer';
 import { aiProviderConfig } from './ai-provider.config';
+import type { ExternalProviderAdapter } from '../external/provider-adapter';
 
 const responseSchema = {
   type: 'object', additionalProperties: false, required: ['constraints', 'missingFields', 'warnings'],
@@ -26,7 +27,8 @@ const responseSchema = {
 type Fetcher = typeof fetch;
 
 @Injectable()
-export class OpenAiConstraintsProvider {
+export class OpenAiConstraintsProvider implements ExternalProviderAdapter<ExtractConstraintsRequest, ExtractConstraintsResponse> {
+  readonly name = 'openai';
   constructor(@Inject('AI_FETCHER') private readonly fetcher: Fetcher) {}
 
   async extract(request: ExtractConstraintsRequest): Promise<ExtractConstraintsResponse> {
@@ -49,4 +51,5 @@ export class OpenAiConstraintsProvider {
     }
     throw new ServiceUnavailableException('AI provider không phản hồi thành công.');
   }
+  execute(request: ExtractConstraintsRequest) { return this.extract(request); }
 }
