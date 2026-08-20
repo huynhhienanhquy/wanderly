@@ -155,6 +155,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-33 — Loading state model                    | Done       | 2026-08-20 | [MOB-33](./tasks/MOB-33.md) |
 | MOB-34 — Empty state helper                     | Done       | 2026-08-20 | [MOB-34](./tasks/MOB-34.md) |
 | MOB-35 — Deep-link validation                   | Done       | 2026-08-20 | [MOB-35](./tasks/MOB-35.md) |
+| MOB-36 — Notification cleanup                  | Done       | 2026-08-20 | [MOB-36](./tasks/MOB-36.md) |
 
 ## Quy tắc cập nhật
 
