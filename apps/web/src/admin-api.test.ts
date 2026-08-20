@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { checkAdminAccess, fetchAdminReports, moderateAdminReport } from './admin-api';
+import { checkAdminAccess, fetchAdminPlaces, fetchAdminReports, moderateAdminReport } from './admin-api';
 
 describe('admin api', () => {
   it('checks admin access with the bearer token', async () => {
@@ -22,6 +22,15 @@ describe('admin api', () => {
     expect(fetcher).toHaveBeenCalledWith('http://api/admin/review-reports/report-1', expect.objectContaining({
       method: 'PATCH',
       body: JSON.stringify({ status: 'RESOLVED', hideReview: true }),
+    }));
+  });
+
+  it('loads the admin place catalog through the shared bearer request', async () => {
+    const places = [{ id: 'place-1', name: 'Hồ Gươm', slug: 'ho-guom' }];
+    const fetcher = vi.fn().mockResolvedValue({ ok: true, status: 200, json: vi.fn().mockResolvedValue(places) });
+    await expect(fetchAdminPlaces('http://api', 'token', fetcher)).resolves.toEqual(places);
+    expect(fetcher).toHaveBeenCalledWith('http://api/admin/catalog/places', expect.objectContaining({
+      headers: expect.objectContaining({ Authorization: 'Bearer token' }),
     }));
   });
 });

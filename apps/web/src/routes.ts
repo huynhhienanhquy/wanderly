@@ -16,6 +16,7 @@ export const routes = {
   profile: '/profile',
   preferences: '/onboarding/preferences',
   adminReports: '/admin/reports',
+  admin: '/admin',
 } as const;
 
 export const hasWebSession = (storage: Pick<Storage, 'getItem'>) =>

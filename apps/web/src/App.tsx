@@ -17,6 +17,7 @@ import { PreferenceOnboardingPage } from './pages/PreferenceOnboardingPage';
 import { ConstraintConfirmationPage } from './pages/ConstraintConfirmationPage';
 import { AuthGuard } from './components/AuthGuard';
 import { routes } from './routes';
+import { AdminDashboardPage } from './pages/AdminDashboardPage';
 
 export function App() {
   return (
@@ -27,6 +28,7 @@ export function App() {
       <Route path={routes.collections} element={<CollectionsPage />} />
       <Route path={routes.favorites} element={<AuthGuard><FavoritesPage /></AuthGuard>} />
       <Route path={routes.adminReports} element={<AdminGuard><AdminReportsPage /></AdminGuard>} />
+      <Route path={routes.admin} element={<AdminGuard><AdminDashboardPage /></AdminGuard>} />
       <Route path={routes.plans} element={<PlansPage />} />
       <Route path={routes.register} element={<RegisterPage />} />
       <Route path={routes.login} element={<LoginPage />} />
