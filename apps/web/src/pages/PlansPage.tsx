@@ -19,8 +19,12 @@ import { fetchReplacementCandidates } from '../replacement-candidates';
 import { getReplacementSlotConstraints } from '../replacement-constraints';
 import { previewReplacement, type ReplacementPreview } from '../replacement-preview';
 import { recordBehaviorSignal } from '../preference-api';
+import { webConfig } from '../app-config';
+import { getAccessToken } from '../auth-session';
+import { routes } from '../routes';
+import { buildCreatePlan, saveRemotePlan } from '../plan-api';
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
+const API_URL = webConfig.apiUrl;
 const PLAN_KEY = 'wanderly:current-plan';
 const META_KEY = 'wanderly:plan-meta';
 export function PlansPage() {
@@ -58,9 +62,19 @@ export function PlansPage() {
     setItems(sorted);
   }
 
-  function saveMeta() {
+  async function saveMeta() {
     localStorage.setItem(META_KEY, JSON.stringify(meta));
-    setMessage('Đã lưu thông tin kế hoạch.');
+    const token = getAccessToken(sessionStorage);
+    if (!token) {
+      setMessage('Đã lưu kế hoạch trên thiết bị. Đăng nhập để đồng bộ tài khoản.');
+      return;
+    }
+    try {
+      await saveRemotePlan(API_URL, token, buildCreatePlan(meta, items));
+      setMessage('Đã lưu và đồng bộ kế hoạch.');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Không thể đồng bộ kế hoạch.');
+    }
   }
 
   function updateTime(item: LocalPlanItem, startTime: string) {
@@ -184,11 +198,11 @@ export function PlansPage() {
 
   return (
     <main className="page-shell">
-      <Link className="home-link" to="/explore">Khám phá</Link>
+      <Link className="home-link" to={routes.explore}>Khám phá</Link>
       <p className="eyebrow">{readOnly ? 'Lịch trình Wanderly được chia sẻ' : 'Wanderly Planner'}</p>
       <h1>{meta.title}</h1>
       {!readOnly && (
-        <form onSubmit={(event) => { event.preventDefault(); saveMeta(); }}>
+        <form onSubmit={(event) => { event.preventDefault(); void saveMeta(); }}>
           <input value={meta.title} onChange={(event) => setMeta({ ...meta, title: event.target.value })} aria-label="Tên kế hoạch" required />
           <input type="date" value={meta.date} onChange={(event) => setMeta({ ...meta, date: event.target.value })} aria-label="Ngày kế hoạch" />
           <input type="time" value={meta.endTime} onChange={(event) => setMeta({ ...meta, endTime: event.target.value })} aria-label="Giờ kết thúc" />
@@ -223,7 +237,7 @@ export function PlansPage() {
       {items.length === 0 ? <p>Chưa có địa điểm trong kế hoạch.</p> : (
         <ol>{items.map((item) => {
           const open = details[item.id] ? isOpenAt(details[item.id]!.openingHours, meta.date, item.startTime) : null;
-          return <li key={item.id}>{readOnly ? <time>{item.startTime}</time> : <input type="time" value={item.startTime} onChange={(event) => updateTime(item, event.target.value)} aria-label={`Giờ bắt đầu ${item.name}`} />} <Link to={`/places/${item.slug}`}>{item.name}</Link>{open === false && <strong> — Ngoài giờ mở cửa</strong>} {!readOnly && <><button type="button" onClick={() => void openSmartReplace(item)}>Thay thế</button><button type="button" onClick={() => persistItems(items.filter(({ id }) => id !== item.id))}>Xóa</button></>}</li>;
+          return <li key={item.id}>{readOnly ? <time>{item.startTime}</time> : <input type="time" value={item.startTime} onChange={(event) => updateTime(item, event.target.value)} aria-label={`Giờ bắt đầu ${item.name}`} />} <Link to={routes.placeDetail(item.slug)}>{item.name}</Link>{open === false && <strong> — Ngoài giờ mở cửa</strong>} {!readOnly && <><button type="button" onClick={() => void openSmartReplace(item)}>Thay thế</button><button type="button" onClick={() => persistItems(items.filter(({ id }) => id !== item.id))}>Xóa</button></>}</li>;
         })}</ol>
       )}
     </main>
