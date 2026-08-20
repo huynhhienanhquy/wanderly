@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import * as Location from 'expo-location';
 import { useState } from 'react';
 import { MapCanvas } from '../../src/map-canvas';
@@ -10,17 +10,34 @@ export default function MapScreen() {
   const longitude = Number(params.longitude ?? 105.8542);
   const [current, setCurrent] = useState<{ latitude: number; longitude: number; label: string } | null>(null);
   const [message, setMessage] = useState('');
+  const [locating, setLocating] = useState(false);
+  const [openSettings, setOpenSettings] = useState(false);
   let route: Array<{ latitude: number; longitude: number; name?: string }> = [];
   try { route = params.points ? JSON.parse(params.points) as typeof route : []; } catch { route = []; }
   async function locate() {
-    const permission = await Location.requestForegroundPermissionsAsync();
-    if (permission.status !== 'granted') { setMessage('Bạn đã từ chối quyền vị trí. Có thể bật lại trong Cài đặt.'); return; }
-    const position = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
-    const addresses = await Location.reverseGeocodeAsync(position.coords);
-    const address = addresses[0];
-    setCurrent({ latitude: position.coords.latitude, longitude: position.coords.longitude, label: [address?.name, address?.district, address?.city].filter(Boolean).join(', ') || 'Vị trí hiện tại' });
+    try {
+      setLocating(true); setMessage(''); setOpenSettings(false);
+      const permission = await Location.requestForegroundPermissionsAsync();
+      if (permission.status !== 'granted') {
+        setOpenSettings(!permission.canAskAgain);
+        setMessage(permission.canAskAgain ? 'Wanderly cần quyền vị trí để tìm địa điểm gần bạn.' : 'Quyền vị trí đang bị tắt. Hãy bật lại trong Cài đặt.');
+        return;
+      }
+      const position = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
+      const addresses = await Location.reverseGeocodeAsync(position.coords);
+      const address = addresses[0];
+      setCurrent({ latitude: position.coords.latitude, longitude: position.coords.longitude, label: [address?.name, address?.district, address?.city].filter(Boolean).join(', ') || 'Vị trí hiện tại' });
+    } catch {
+      setMessage('Không thể lấy vị trí hiện tại. Hãy kiểm tra GPS và thử lại.');
+    } finally {
+      setLocating(false);
+    }
   }
   const markers = route.length > 0 ? route : [{ latitude, longitude, name: params.name }];
-  return <View style={styles.container}><MapCanvas markers={markers} current={current} /><Text onPress={() => void locate()} style={styles.button}>Dùng vị trí của tôi</Text><Text style={styles.caption}>{message || current?.label || params.name || 'Bản đồ Wanderly'}</Text></View>;
+  return <View style={styles.container}><MapCanvas markers={markers} current={current} />
+    <Pressable accessibilityRole="button" disabled={locating} onPress={() => void locate()} style={styles.button}><Text style={styles.buttonText}>{locating ? 'Đang xác định vị trí…' : 'Dùng vị trí của tôi'}</Text></Pressable>
+    {openSettings && <Pressable accessibilityRole="button" onPress={() => void Linking.openSettings()} style={styles.settings}><Text style={styles.settingsText}>Mở Cài đặt</Text></Pressable>}
+    <Text accessibilityLiveRegion="polite" style={styles.caption}>{message || current?.label || params.name || 'Bản đồ Wanderly'}</Text>
+  </View>;
 }
-const styles = StyleSheet.create({ container: { flex: 1 }, button: { backgroundColor: '#277253', color: 'white', padding: 14, textAlign: 'center', fontWeight: '700' }, caption: { backgroundColor: 'white', padding: 16, fontSize: 16, fontWeight: '600' } });
+const styles = StyleSheet.create({ container: { flex: 1 }, button: { backgroundColor: '#277253', padding: 14, alignItems: 'center' }, buttonText: { color: 'white', fontWeight: '700' }, settings: { backgroundColor: '#e6f2ec', padding: 12, alignItems: 'center' }, settingsText: { color: '#18563d', fontWeight: '700' }, caption: { backgroundColor: 'white', padding: 16, fontSize: 16, fontWeight: '600' } });
