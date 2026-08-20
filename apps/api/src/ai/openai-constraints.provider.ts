@@ -2,6 +2,7 @@ import { Inject, Injectable, ServiceUnavailableException } from '@nestjs/common'
 import { extractConstraintsResponseSchema, type ExtractConstraintsRequest, type ExtractConstraintsResponse } from '@wanderly/contracts';
 import { buildConstraintPrompt, CONSTRAINT_SYSTEM_PROMPT } from './constraint-prompt';
 import { normalizeConstraints } from './constraint-normalizer';
+import { aiProviderConfig } from './ai-provider.config';
 
 const responseSchema = {
   type: 'object', additionalProperties: false, required: ['constraints', 'missingFields', 'warnings'],
@@ -29,13 +30,13 @@ export class OpenAiConstraintsProvider {
   constructor(@Inject('AI_FETCHER') private readonly fetcher: Fetcher) {}
 
   async extract(request: ExtractConstraintsRequest): Promise<ExtractConstraintsResponse> {
-    const apiKey = process.env.OPENAI_API_KEY;
+    const { apiKey, model } = aiProviderConfig();
     if (!apiKey) throw new ServiceUnavailableException('AI provider chưa được cấu hình.');
     for (let attempt = 0; attempt < 2; attempt += 1) {
       try {
         const response = await this.fetcher('https://api.openai.com/v1/responses', {
           method: 'POST', signal: AbortSignal.timeout(8_000), headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model: process.env.OPENAI_MODEL ?? 'gpt-5.6-terra', store: false, input: [{ role: 'system', content: CONSTRAINT_SYSTEM_PROMPT }, { role: 'user', content: buildConstraintPrompt(request) }], text: { format: { type: 'json_schema', name: 'planning_constraints', strict: true, schema: responseSchema } } }),
+          body: JSON.stringify({ model, store: false, input: [{ role: 'system', content: CONSTRAINT_SYSTEM_PROMPT }, { role: 'user', content: buildConstraintPrompt(request) }], text: { format: { type: 'json_schema', name: 'planning_constraints', strict: true, schema: responseSchema } } }),
         });
         if (!response.ok) throw new Error(`provider status ${response.status}`);
         const body = await response.json() as { output?: Array<{ content?: Array<{ type?: string; text?: string }> }> };

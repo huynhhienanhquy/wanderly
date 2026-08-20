@@ -1,0 +1,2 @@
+import { expect, it } from 'vitest'; import { aiProviderConfig, AI_PROVIDER_DECISION, DEFAULT_OPENAI_MODEL } from './ai-provider.config';
+it('uses an explicit model or the documented default without exposing a key', () => { expect(aiProviderConfig({ OPENAI_API_KEY: ' key ', OPENAI_MODEL: '' })).toEqual({ apiKey: 'key', model: DEFAULT_OPENAI_MODEL }); expect(AI_PROVIDER_DECISION).toMatchObject({ provider: 'openai', api: 'responses', store: false }); });
