@@ -4,4 +4,4 @@ Redact email trong chuỗi telemetry trước khi lưu/gửi.
 
 ## Trạng thái
 
-Partial — helper redact chưa được gọi trong telemetry queue/flush.
+Telemetry queue hiện redact tên event trước khi lưu.

@@ -156,7 +156,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-34 — Empty state helper                     | Done       | 2026-08-20 | [MOB-34](./tasks/MOB-34.md) |
 | MOB-35 — Deep-link validation                   | Done       | 2026-08-20 | [MOB-35](./tasks/MOB-35.md) |
 | MOB-36 — Notification cleanup                  | Partial    | 2026-08-20 | [MOB-36](./tasks/MOB-36.md) |
-| MOB-37 — Telemetry privacy                     | Partial    | 2026-08-20 | [MOB-37](./tasks/MOB-37.md) |
+| MOB-37 — Telemetry privacy                     | Done       | 2026-08-20 | [MOB-37](./tasks/MOB-37.md) |
 | MOB-38 — Form validation helper                | Partial    | 2026-08-20 | [MOB-38](./tasks/MOB-38.md) |
 | MOB-39 — Performance hints                     | Partial    | 2026-08-20 | [MOB-39](./tasks/MOB-39.md) |
 | MOB-40 — CI smoke metadata                      | Partial    | 2026-08-20 | [MOB-40](./tasks/MOB-40.md) |
