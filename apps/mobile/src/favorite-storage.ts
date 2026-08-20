@@ -2,6 +2,7 @@ import * as SecureStore from 'expo-secure-store';
 
 const KEY = 'wanderlyFavoritePlaceIds';
 export async function syncFavoritePlaceIds(ids: string[]): Promise<void> { await SecureStore.setItemAsync(KEY, JSON.stringify([...new Set(ids)])); }
+export async function syncFavoritesToApi(baseUrl: string, fetcher: typeof fetch = fetch): Promise<boolean> { const ids = await getFavoritePlaceIds(); const responses = await Promise.all(ids.map((id) => fetcher(`${baseUrl}/favorites/${id}`, { method: 'POST' }))); return responses.every((response) => response.ok); }
 
 export async function getFavoritePlaceIds(): Promise<string[]> {
   try {
