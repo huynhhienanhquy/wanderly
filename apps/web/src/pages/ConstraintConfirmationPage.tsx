@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import type { PlanningConstraints } from '@wanderly/contracts';
-import { extractPlanningConstraints } from '../ai-api';
-
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
+import { extractPlanningConstraints, generatePlanCandidates } from '../ai-api';
+import { webConfig } from '../app-config';
+import { candidatesToPlan } from '../ai-plan';
+import { routes } from '../routes';
 
 export function ConstraintConfirmationPage() {
   const navigate = useNavigate();
@@ -15,17 +16,28 @@ export function ConstraintConfirmationPage() {
   async function extract() {
     try {
       setLoading(true);
-      const result = await extractPlanningConstraints(API_URL, input);
+      const result = await extractPlanningConstraints(webConfig.apiUrl, input);
       setConstraints(result.constraints);
       setMessages([...result.warnings, ...result.missingFields.map((field) => `Cần xác nhận: ${field}`)]);
     } catch (error) { setMessages([error instanceof Error ? error.message : 'Không thể phân tích yêu cầu.']); }
     finally { setLoading(false); }
   }
 
-  function confirm() {
+  async function confirm() {
     if (!constraints) return;
-    sessionStorage.setItem('wanderly:confirmed-constraints', JSON.stringify(constraints));
-    navigate('/plans');
+    try {
+      setLoading(true);
+      const candidates = await generatePlanCandidates(webConfig.apiUrl, constraints);
+      const plan = candidatesToPlan(candidates);
+      if (plan.length === 0) throw new Error('Không tìm thấy địa điểm phù hợp với yêu cầu.');
+      sessionStorage.setItem('wanderly:confirmed-constraints', JSON.stringify(constraints));
+      localStorage.setItem('wanderly:current-plan', JSON.stringify(plan));
+      navigate(routes.plans);
+    } catch (error) {
+      setMessages([error instanceof Error ? error.message : 'Không thể tạo kế hoạch.']);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return <main className="page-shell"><p className="eyebrow">Wanderly AI Planner</p><h1>Mô tả chuyến đi của bạn</h1>
@@ -36,7 +48,7 @@ export function ConstraintConfirmationPage() {
       <label>Số người <input type="number" min="1" value={constraints.peopleCount} onChange={(event) => setConstraints({ ...constraints, peopleCount: Number(event.target.value) })} /></label>
       <label>Ngân sách <input type="number" min="0" value={constraints.budget ?? ''} onChange={(event) => setConstraints({ ...constraints, budget: event.target.value ? Number(event.target.value) : null })} /></label>
       <label>Sở thích <input value={constraints.interests.join(', ')} onChange={(event) => setConstraints({ ...constraints, interests: event.target.value.split(',').map((item) => item.trim()).filter(Boolean) })} /></label>
-      <button type="button" onClick={confirm}>Xác nhận và tạo kế hoạch</button>
+      <button type="button" disabled={loading} onClick={() => void confirm()}>Xác nhận và tạo kế hoạch</button>
     </section>}
   </main>;
 }
