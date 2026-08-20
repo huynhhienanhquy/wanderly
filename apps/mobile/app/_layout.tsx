@@ -15,6 +15,7 @@ export default function RootLayout() {
         <Stack.Screen name="favorites" />
         <Stack.Screen name="events" />
         <Stack.Screen name="profile" />
+        <Stack.Screen name="reviews" />
       </Stack>
       <StatusBar style="dark" />
     </>

@@ -138,6 +138,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-16 — Favorites native hub                   | Done       | 2026-08-20 | [MOB-16](./tasks/MOB-16.md) |
 | MOB-17 — Events native                          | Done       | 2026-08-20 | [MOB-17](./tasks/MOB-17.md) |
 | MOB-18 — Profile native                         | Done       | 2026-08-20 | [MOB-18](./tasks/MOB-18.md) |
+| MOB-19 — Reviews native                         | Done       | 2026-08-20 | [MOB-19](./tasks/MOB-19.md) |
 
 ## Quy tắc cập nhật
 
