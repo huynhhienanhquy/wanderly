@@ -27,7 +27,7 @@ export default function HomeScreen() {
           .
         </Text>
         {__DEV__ && <Text style={styles.environment}>API: {mobileConfig.apiUrl}</Text>}
-        <Link href="/explore" style={styles.exploreLink}>
+        <Link accessibilityRole="link" href="/explore" style={styles.exploreLink}>
           Khám phá địa điểm
         </Link>
         <Link href="/planner" style={styles.plannerLink}>
