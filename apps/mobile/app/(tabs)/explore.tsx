@@ -17,6 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
 import { mobileConfig } from '../../src/app-config';
 import { readCache, writeCache } from '../../src/offline-cache';
+import { isFreshCache } from '../../src/mobile-hardening';
 
 const EXPLORE_CACHE_KEY = 'explore:first-page';
 
@@ -73,7 +74,7 @@ export default function ExploreScreen() {
       if (!nextCursor && !query.trim() && !category.trim()) await writeCache(EXPLORE_CACHE_KEY, page);
     } catch (caught) {
       const cached = !nextCursor ? await readCache<{ data: PlaceSummary[]; nextCursor: string | null }>(EXPLORE_CACHE_KEY) : null;
-      if (cached) { setPlaces(cached.value.data); setCursor(cached.value.nextCursor); setOfflineAt(cached.savedAt); setError(''); }
+      if (cached && isFreshCache(cached.savedAt, 24 * 60 * 60 * 1000)) { setPlaces(cached.value.data); setCursor(cached.value.nextCursor); setOfflineAt(cached.savedAt); setError(''); }
       else setError(caught instanceof Error ? caught.message : 'Không thể tải địa điểm.');
     } finally {
       setLoading(false);
