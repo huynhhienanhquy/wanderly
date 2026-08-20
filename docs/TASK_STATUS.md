@@ -109,6 +109,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | CLIENT-02 — Tạo typed API client              | Done       | 2026-08-20 | [CLIENT-02](./tasks/CLIENT-02.md) |
 | CLIENT-03 — Tạo domain helpers dùng chung     | Done       | 2026-08-20 | [CLIENT-03](./tasks/CLIENT-03.md) |
 | CLIENT-04 — Thiết kế query key convention     | Done       | 2026-08-20 | [CLIENT-04](./tasks/CLIENT-04.md) |
+| CLIENT-05 — Thiết kế deep link contract       | Done       | 2026-08-20 | [CLIENT-05](./tasks/CLIENT-05.md) |
 
 ## Quy tắc cập nhật
 

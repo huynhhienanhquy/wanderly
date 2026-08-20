@@ -27,3 +27,4 @@ export * from './event';
 export * from './api-client';
 export * from './domain-helpers';
 export * from './query-keys';
+export * from './deep-links';
