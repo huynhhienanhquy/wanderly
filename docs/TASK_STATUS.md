@@ -170,6 +170,11 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-48 — Analytics consent                      | Done       | 2026-08-20 | [MOB-48](./tasks/MOB-48.md) |
 | MOB-49 — Notification permission policy         | Done       | 2026-08-20 | [MOB-49](./tasks/MOB-49.md) |
 | MOB-50 — API URL validation                     | Done       | 2026-08-20 | [MOB-50](./tasks/MOB-50.md) |
+| MOB-51 — Settings native                        | Done       | 2026-08-20 | [MOB-51](./tasks/MOB-51.md) |
+| MOB-52 — Explore pull-to-refresh                | Done       | 2026-08-20 | [MOB-52](./tasks/MOB-52.md) |
+| MOB-53 — Optimistic favorite toggle             | Done       | 2026-08-20 | [MOB-53](./tasks/MOB-53.md) |
+| MOB-54 — Itinerary editing hardening            | Done       | 2026-08-20 | [MOB-54](./tasks/MOB-54.md) |
+| MOB-55 — Accessibility smoke tests              | Done       | 2026-08-20 | [MOB-55](./tasks/MOB-55.md) |
 
 ## Quy tắc cập nhật
 

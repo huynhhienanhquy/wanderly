@@ -90,6 +90,8 @@ export default function ExploreScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <FlatList
+        refreshing={loading}
+        onRefresh={() => void load()}
         contentContainerStyle={styles.content}
         data={places}
         keyExtractor={({ id }) => id}

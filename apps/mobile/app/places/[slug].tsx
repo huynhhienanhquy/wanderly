@@ -20,6 +20,7 @@ export default function PlaceDetailScreen() {
   const [place, setPlace] = useState<PlaceDetail | null>(null);
   const [error, setError] = useState('');
   const [favorite, setFavorite] = useState(false);
+  async function toggleFavorite() { if (!place) return; const previous = favorite; setFavorite(!previous); try { await toggleFavoritePlace(place.id); } catch { setFavorite(previous); } }
   useEffect(() => {
     if (slug)
       void fetchPlaceDetail(mobileConfig.apiUrl, slug)
@@ -49,7 +50,7 @@ export default function PlaceDetailScreen() {
               <Text style={styles.address}>
                 {place.address} · {place.city}
               </Text>
-              <Pressable accessibilityRole="button" style={styles.favorite} onPress={() => void toggleFavoritePlace(place.id).then(setFavorite)}><Text style={styles.favoriteText}>{favorite ? '♥ Đã lưu' : '♡ Lưu địa điểm'}</Text></Pressable>
+              <Pressable accessibilityRole="button" style={styles.favorite} onPress={() => void toggleFavorite()}><Text style={styles.favoriteText}>{favorite ? '♥ Đã lưu' : '♡ Lưu địa điểm'}</Text></Pressable>
               <Pressable onPress={() => router.push({ pathname: '/map', params: { latitude: String(place.latitude), longitude: String(place.longitude), name: place.name } })}><Text style={styles.mapLink}>Xem trên bản đồ</Text></Pressable>
               {place.description && (
                 <Text style={styles.description}>{place.description}</Text>
