@@ -16,6 +16,9 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
 import { mobileConfig } from '../../src/app-config';
+import { readCache, writeCache } from '../../src/offline-cache';
+
+const EXPLORE_CACHE_KEY = 'explore:first-page';
 
 function PlaceCard({ place }: { place: PlaceSummary }) {
   return (
@@ -50,6 +53,7 @@ export default function ExploreScreen() {
   const [error, setError] = useState('');
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('');
+  const [offlineAt, setOfflineAt] = useState('');
   async function load(nextCursor?: string | null) {
     if (nextCursor) setLoadingMore(true);
     else setLoading(true);
@@ -65,10 +69,12 @@ export default function ExploreScreen() {
         nextCursor ? [...current, ...page.data] : page.data,
       );
       setCursor(page.nextCursor);
+      setOfflineAt('');
+      if (!nextCursor && !query.trim() && !category.trim()) await writeCache(EXPLORE_CACHE_KEY, page);
     } catch (caught) {
-      setError(
-        caught instanceof Error ? caught.message : 'Không thể tải địa điểm.',
-      );
+      const cached = !nextCursor ? await readCache<{ data: PlaceSummary[]; nextCursor: string | null }>(EXPLORE_CACHE_KEY) : null;
+      if (cached) { setPlaces(cached.value.data); setCursor(cached.value.nextCursor); setOfflineAt(cached.savedAt); setError(''); }
+      else setError(caught instanceof Error ? caught.message : 'Không thể tải địa điểm.');
     } finally {
       setLoading(false);
       setLoadingMore(false);
@@ -98,6 +104,7 @@ export default function ExploreScreen() {
             <Text style={styles.eyebrow}>WANDERLY EXPLORE</Text>
             <Text style={styles.title}>Đi đâu hôm nay?</Text>
             <Text style={styles.subtitle}>Những gợi ý vừa vặn với bạn.</Text>
+            {!!offlineAt && <Text style={styles.offline}>Đang xem dữ liệu đã lưu lúc {new Date(offlineAt).toLocaleString('vi-VN')}.</Text>}
             <TextInput accessibilityLabel="Tìm kiếm địa điểm" style={styles.input} value={query} onChangeText={setQuery} placeholder="Tên hoặc khu vực" returnKeyType="search" onSubmitEditing={() => void load()} />
             <TextInput accessibilityLabel="Lọc theo danh mục" style={styles.input} value={category} onChangeText={setCategory} placeholder="Danh mục: cafe, food…" returnKeyType="search" onSubmitEditing={() => void load()} />
             <Pressable style={styles.filterButton} onPress={() => void load()}><Text style={styles.buttonText}>Tìm và lọc</Text></Pressable>
@@ -146,6 +153,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   subtitle: { color: '#52615b', fontSize: 17, marginTop: 10 },
+  offline: { backgroundColor: '#fff3db', borderRadius: 8, color: '#7a4b00', marginTop: 12, padding: 10 },
   input: { backgroundColor: 'white', borderColor: '#dce5df', borderWidth: 1, borderRadius: 12, marginTop: 12, padding: 13 },
   filterButton: { alignItems: 'center', backgroundColor: '#277253', borderRadius: 12, marginTop: 10, padding: 12 },
   card: {
