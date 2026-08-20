@@ -30,7 +30,7 @@ type Fetcher = typeof fetch;
 @Injectable()
 export class OpenAiConstraintsProvider implements ExternalProviderAdapter<ExtractConstraintsRequest, ExtractConstraintsResponse> {
   readonly name = 'openai';
-  private readonly policy = new ExternalCallPolicy();
+  private readonly policy = new ExternalCallPolicy(8_000, 1, 3, 30_000, 'openai');
   constructor(@Inject('AI_FETCHER') private readonly fetcher: Fetcher) {}
 
   async extract(request: ExtractConstraintsRequest): Promise<ExtractConstraintsResponse> {

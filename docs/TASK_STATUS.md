@@ -46,6 +46,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | EXT-03 — Chọn LLM provider/model            | Done       | 2026-08-20 | [EXT-03](./tasks/EXT-03.md)     |
 | EXT-04 — Xây dựng adapter cho provider      | Done       | 2026-08-20 | [EXT-04](./tasks/EXT-04.md)     |
 | EXT-05 — Timeout, retry và circuit breaker  | Done       | 2026-08-20 | [EXT-05](./tasks/EXT-05.md)     |
+| EXT-06 — Theo dõi quota và chi phí          | Done       | 2026-08-20 | [EXT-06](./tasks/EXT-06.md)     |
 | WEATHER-01 — Tích hợp Weather API           | Done       | 2026-08-19 | [WEATHER-01](./tasks/WEATHER-01.md) |
 | WEATHER-02 — Phân loại indoor/outdoor       | Done       | 2026-08-19 | [WEATHER-02](./tasks/WEATHER-02.md) |
 | WEATHER-03 — Phát hiện xung đột thời tiết   | Done       | 2026-08-19 | [WEATHER-03](./tasks/WEATHER-03.md) |

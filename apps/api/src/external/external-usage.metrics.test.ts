@@ -1,0 +1,2 @@
+import { expect, it } from 'vitest'; import { ExternalUsageMetrics } from './external-usage.metrics';
+it('aggregates provider usage without retaining individual calls', () => { const metrics = new ExternalUsageMetrics(); metrics.record('weather', 100, false); metrics.record('weather', 300, true); expect(metrics.summary()).toEqual([{ provider: 'weather', calls: 2, failures: 1, averageLatencyMs: 200 }]); });
