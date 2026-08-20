@@ -7,3 +7,4 @@ export const shouldClearNotification = (scheduledAt: number, now = Date.now()) =
 export const redactTelemetry = (value: string) => value.replace(/[\w.+-]+@[\w.-]+/g, '[redacted-email]');
 export const isValidRequiredText = (value: string, min = 1) => value.trim().length >= min;
 export const pageSizeHint = (requested: number, max = 20) => Math.min(Math.max(requested, 1), max);
+export const releaseSmokeMetadata = { platform: 'mobile', checks: ['typecheck', 'test'] } as const;
