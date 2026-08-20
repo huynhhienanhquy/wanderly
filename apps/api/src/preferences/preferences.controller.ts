@@ -3,10 +3,11 @@ import { behaviorSignalSchema, updateUserPreferencesRequestSchema, type Interest
 import { AuthGuard, type AuthenticatedRequest } from '../auth/auth.guard';
 import { PreferencesService } from './preferences.service';
 import { BehaviorSignalsService } from './behavior-signals.service';
+import { PreferenceLearningService } from './preference-learning.service';
 
 @Controller('preferences')
 export class PreferencesController {
-  constructor(private readonly preferences: PreferencesService, private readonly signals: BehaviorSignalsService) {}
+  constructor(private readonly preferences: PreferencesService, private readonly signals: BehaviorSignalsService, private readonly learning: PreferenceLearningService) {}
   @Get('categories') categories(): Promise<InterestCategory[]> { return this.preferences.categories(); }
 
   @UseGuards(AuthGuard)
@@ -28,4 +29,8 @@ export class PreferencesController {
     if (!signal.success) throw new UnprocessableEntityException(signal.error.flatten());
     return this.signals.record(request.user.sub, signal.data);
   }
+
+  @UseGuards(AuthGuard)
+  @Post('recalculate')
+  recalculate(@Req() request: AuthenticatedRequest) { return this.learning.recalculate(request.user.sub); }
 }

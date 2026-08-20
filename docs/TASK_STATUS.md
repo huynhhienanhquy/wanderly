@@ -23,6 +23,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | PREF-02 — Onboarding chọn sở thích         | Done       | 2026-08-18 | [PREF-02](./tasks/PREF-02.md)   |
 | PREF-03 — API cập nhật sở thích            | Done       | 2026-08-18 | [PREF-03](./tasks/PREF-03.md)   |
 | PREF-04 — Thu thập tín hiệu hành vi        | Done       | 2026-08-20 | [PREF-04](./tasks/PREF-04.md)   |
+| PREF-05 — Cập nhật preference score        | Done       | 2026-08-20 | [PREF-05](./tasks/PREF-05.md)   |
 | AI-01 — PlanningConstraints schema         | Done       | 2026-08-18 | [AI-01](./tasks/AI-01.md)       |
 | AI-02 — Prompt trích xuất yêu cầu          | Done       | 2026-08-18 | [AI-02](./tasks/AI-02.md)       |
 | AI-03 — Structured output                  | Done       | 2026-08-18 | [AI-03](./tasks/AI-03.md)       |
