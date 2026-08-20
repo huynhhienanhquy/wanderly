@@ -2,11 +2,13 @@ import {
   fetchPlacePage,
   formatPlacePrice,
   type PlaceSummary,
+  type WanderlyEvent,
 } from '@wanderly/contracts';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { Link } from 'react-router';
 import { currentBrowserLocation, reverseGeocode } from '../location-api';
+import { fetchEvents } from '../event-api';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 
@@ -50,6 +52,8 @@ export function ExplorePage() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState('');
   const [locationLabel, setLocationLabel] = useState('');
+  const [events, setEvents] = useState<WanderlyEvent[]>([]);
+  const [eventState, setEventState] = useState<'loading' | 'ready' | 'error'>('loading');
   const [searchParams, setSearchParams] = useSearchParams();
   const q = searchParams.get('q') ?? '';
   const priceMax = searchParams.get('priceMax') ?? '';
@@ -94,6 +98,8 @@ export function ExplorePage() {
     void load();
   }, [q, priceMax, category, minRating, indoorOutdoor, latitude, longitude, radiusMeters]);
 
+  useEffect(() => { void fetchEvents(API_URL).then((data) => { setEvents(data); setEventState('ready'); }).catch(() => setEventState('error')); }, []);
+
   function useCurrentLocation() {
     if (!navigator.geolocation) {
       setError('Trình duyệt không hỗ trợ định vị.');
@@ -122,6 +128,13 @@ export function ExplorePage() {
         </div>
         <nav aria-label="Điều hướng Explore"><Link className="home-link" to="/">Trang chủ</Link> <Link className="home-link" to="/favorites">Đã lưu</Link> <Link className="home-link" to="/collections">Bộ sưu tập</Link></nav>
       </header>
+      <section aria-label="Sự kiện sắp diễn ra">
+        <h2>Sự kiện sắp diễn ra</h2>
+        {eventState === 'loading' && <p role="status">Đang tải sự kiện…</p>}
+        {eventState === 'error' && <p role="alert">Không thể tải sự kiện lúc này.</p>}
+        {eventState === 'ready' && events.length === 0 && <p>Chưa có sự kiện sắp diễn ra.</p>}
+        {events.length > 0 && <div className="place-grid">{events.map((event) => <article className="place-card" key={event.id}><div className="place-card__body"><h3>{event.title}</h3><p>{new Date(event.startTime).toLocaleString('vi-VN')}</p><p>{event.description}</p>{event.bookingUrl && <a href={event.bookingUrl} target="_blank" rel="noreferrer">Đặt vé</a>}</div></article>)}</div>}
+      </section>
       <form className="explore-filters" onSubmit={(event) => { event.preventDefault(); const form = new FormData(event.currentTarget); const next = new URLSearchParams(); ['q', 'priceMax', 'category', 'minRating', 'indoorOutdoor', 'radiusMeters'].forEach((key) => { const value = String(form.get(key) ?? ''); if (value) next.set(key, value); }); if (latitude && longitude && next.has('radiusMeters')) { next.set('latitude', latitude); next.set('longitude', longitude); } setSearchParams(next); }}>
         <input name="q" defaultValue={q} placeholder="Tìm theo tên, quận..." aria-label="Tìm kiếm địa điểm" />
         <select name="priceMax" defaultValue={priceMax} aria-label="Giá tối đa"><option value="">Mọi mức giá</option><option value="100000">Dưới 100k</option><option value="300000">Dưới 300k</option></select>

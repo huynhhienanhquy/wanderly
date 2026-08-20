@@ -7,7 +7,7 @@ export const eventInputSchema = z.object({
   priceMin: z.number().int().nonnegative().nullable().default(null), priceMax: z.number().int().nonnegative().nullable().default(null),
   bookingUrl: z.url().nullable().default(null), status: z.enum(['DRAFT', 'PUBLISHED', 'CANCELLED']).default('DRAFT'),
 }).refine(({ startTime, endTime }) => startTime < endTime, { path: ['endTime'], message: 'endTime phải sau startTime.' });
-export const eventSchema = eventInputSchema.extend({ id: z.uuid() });
+export const eventSchema = eventInputSchema.safeExtend({ id: z.uuid() });
 export const eventListSchema = z.array(eventSchema);
 export type EventInput = z.infer<typeof eventInputSchema>;
 export type WanderlyEvent = z.infer<typeof eventSchema>;
