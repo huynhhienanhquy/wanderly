@@ -105,6 +105,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | EVENT-01 — Thiết kế và quản lý sự kiện      | Done       | 2026-08-20 | [EVENT-01](./tasks/EVENT-01.md) |
 | EVENT-02 — Đưa sự kiện vào recommendation   | Done       | 2026-08-20 | [EVENT-02](./tasks/EVENT-02.md) |
 | EVENT-03 — Hiển thị sự kiện trên Explore    | Done       | 2026-08-20 | [EVENT-03](./tasks/EVENT-03.md) |
+| CLIENT-01 — Tạo package contracts            | Done       | 2026-08-20 | [CLIENT-01](./tasks/CLIENT-01.md) |
 
 ## Quy tắc cập nhật
 
