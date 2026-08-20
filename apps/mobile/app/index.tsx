@@ -33,6 +33,7 @@ export default function HomeScreen() {
         <Link href="/planner" style={styles.plannerLink}>
           Tạo lịch trình bằng AI
         </Link>
+        <Link href="/favorites" style={styles.plannerLink}>Địa điểm đã lưu</Link>
         <Link href="/register" style={styles.registerLink}>
           Tạo tài khoản
         </Link>

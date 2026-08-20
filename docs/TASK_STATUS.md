@@ -135,6 +135,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-13 — Notification reminders                 | Done       | 2026-08-20 | [MOB-13](./tasks/MOB-13.md) |
 | MOB-14 — Mobile test suite                      | Done       | 2026-08-20 | [MOB-14](./tasks/MOB-14.md) |
 | MOB-15 — EAS build và release                   | Done       | 2026-08-20 | [MOB-15](./tasks/MOB-15.md) |
+| MOB-16 — Favorites native hub                   | Done       | 2026-08-20 | [MOB-16](./tasks/MOB-16.md) |
 
 ## Quy tắc cập nhật
 
