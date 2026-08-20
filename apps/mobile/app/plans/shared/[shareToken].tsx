@@ -3,11 +3,13 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Card } from '../../../src/ui';
+import { isSafeDeepLinkToken } from '../../../src/mobile-hardening';
 
 export default function SharedPlanScreen() {
   const { shareToken } = useLocalSearchParams<{ shareToken: string }>();
   const token = Array.isArray(shareToken) ? shareToken[0] : shareToken;
   const webUrl = token ? toWebUrl('https://wanderly.vn', { type: 'plan', shareToken: token }) : null;
+  if (!token || !isSafeDeepLinkToken(token)) return <SafeAreaView style={styles.safe}><View style={styles.container}><Card><Text style={styles.title}>Liên kết không hợp lệ</Text><Text style={styles.body}>Token chia sẻ không đúng định dạng.</Text></Card></View></SafeAreaView>;
   return <SafeAreaView style={styles.safe}><View style={styles.container}><Card>
     <Text style={styles.eyebrow}>LỊCH TRÌNH ĐƯỢC CHIA SẺ</Text><Text style={styles.title}>Cùng khám phá với Wanderly</Text>
     <Text style={styles.body}>Mở bản đầy đủ trên web để xem lịch trình từ liên kết chia sẻ này.</Text>
