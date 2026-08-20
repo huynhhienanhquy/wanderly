@@ -1,6 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 import { authResponseSchema } from '@wanderly/contracts';
+import { isSessionExpired } from './next-features';
 
 export async function saveAuthTokens(
   accessToken: string,
@@ -24,9 +25,10 @@ export async function getRefreshToken(): Promise<string | null> {
 }
 
 export async function getAccessToken(): Promise<string | null> {
-  return Platform.OS === 'web'
+  const token = Platform.OS === 'web'
     ? sessionStorage.getItem('wanderlyAccessToken')
     : SecureStore.getItemAsync('wanderlyAccessToken');
+  const value = await token; try { const payload = JSON.parse(atob(value!.split('.')[1])); if (payload.exp && isSessionExpired(payload.exp * 1000)) return null; } catch { /* opaque token */ } return value;
 }
 
 export async function clearAuthTokens(): Promise<void> {

@@ -3,6 +3,7 @@ import { Platform } from 'react-native';
 
 export async function schedulePlanReminder(title: string, date: string): Promise<Date> {
   const permission = await Notifications.requestPermissionsAsync();
+  if (!canRequestNotifications(permission.status)) throw new Error('Bạn đã tắt quyền thông báo.');
   if (!permission.granted) throw new Error('Bạn chưa cấp quyền thông báo.');
   if (Platform.OS === 'android') await Notifications.setNotificationChannelAsync('plans', { name: 'Nhắc lịch trình', importance: Notifications.AndroidImportance.HIGH });
   const departure = new Date(`${date}T08:00:00`);
