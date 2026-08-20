@@ -141,7 +141,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-19 — Reviews native                         | Done       | 2026-08-20 | [MOB-19](./tasks/MOB-19.md) |
 | MOB-20 — Mobile telemetry queue                 | Done       | 2026-08-20 | [MOB-20](./tasks/MOB-20.md) |
 | MOB-21 — Favorites sync foundation              | Done       | 2026-08-20 | [MOB-21](./tasks/MOB-21.md) |
-| MOB-22 — Preferences native                     | Partial    | 2026-08-20 | [MOB-22](./tasks/MOB-22.md) |
+| MOB-22 — Preferences native                     | Done       | 2026-08-20 | [MOB-22](./tasks/MOB-22.md) |
 | MOB-23 — Review submit native                   | Done       | 2026-08-20 | [MOB-23](./tasks/MOB-23.md) |
 | MOB-24 — Review report native                   | Done       | 2026-08-20 | [MOB-24](./tasks/MOB-24.md) |
 | MOB-25 — Notification inbox native              | Done       | 2026-08-20 | [MOB-25](./tasks/MOB-25.md) |
