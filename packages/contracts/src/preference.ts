@@ -14,3 +14,14 @@ export const updateUserPreferencesRequestSchema = userPreferencesSchema.refine(
 );
 export type UserPreferences = z.infer<typeof userPreferencesSchema>;
 export type UpdateUserPreferencesRequest = z.infer<typeof updateUserPreferencesRequestSchema>;
+
+export const behaviorSignalSchema = z.object({
+  type: z.enum(['LOVED', 'OKAY', 'DISLIKED', 'SKIP', 'REPLACE', 'VISITED']),
+  placeId: z.uuid().optional(),
+  planId: z.uuid().optional(),
+  planItemId: z.uuid().optional(),
+  rating: z.number().int().min(1).max(5).optional(),
+}).refine(({ placeId, planId, planItemId }) => placeId || planId || planItemId, {
+  message: 'Tín hiệu phải gắn với place, plan hoặc plan item.',
+});
+export type BehaviorSignal = z.infer<typeof behaviorSignalSchema>;
