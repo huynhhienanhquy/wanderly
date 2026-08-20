@@ -152,6 +152,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-30 — Mobile release smoke check             | Done       | 2026-08-20 | [MOB-30](./tasks/MOB-30.md) |
 | MOB-31 — API retry helper                       | Done       | 2026-08-20 | [MOB-31](./tasks/MOB-31.md) |
 | MOB-32 — Cache invalidation                     | Done       | 2026-08-20 | [MOB-32](./tasks/MOB-32.md) |
+| MOB-33 — Loading state model                    | Done       | 2026-08-20 | [MOB-33](./tasks/MOB-33.md) |
 
 ## Quy tắc cập nhật
 
