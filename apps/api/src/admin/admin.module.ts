@@ -8,6 +8,8 @@ import { AdminUsersController } from './admin-users.controller';
 import { AdminUsersService } from './admin-users.service';
 import { AdminDashboardController } from './admin-dashboard.controller';
 import { AdminDashboardService } from './admin-dashboard.service';
+import { AdminAiUsageController } from './admin-ai-usage.controller';
+import { AdminAiUsageService } from './admin-ai-usage.service';
 
-@Module({ imports: [AuthModule], controllers: [AdminReportsController, AdminCatalogController, AdminUsersController, AdminDashboardController], providers: [AdminReportsService, AdminCatalogService, AdminUsersService, AdminDashboardService] })
+@Module({ imports: [AuthModule], controllers: [AdminReportsController, AdminCatalogController, AdminUsersController, AdminDashboardController, AdminAiUsageController], providers: [AdminReportsService, AdminCatalogService, AdminUsersService, AdminDashboardService, AdminAiUsageService] })
 export class AdminModule {}
