@@ -150,6 +150,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-28 — Localization foundation                | Done       | 2026-08-20 | [MOB-28](./tasks/MOB-28.md) |
 | MOB-29 — Mobile error boundary                  | Done       | 2026-08-20 | [MOB-29](./tasks/MOB-29.md) |
 | MOB-30 — Mobile release smoke check             | Done       | 2026-08-20 | [MOB-30](./tasks/MOB-30.md) |
+| MOB-31 — API retry helper                       | Done       | 2026-08-20 | [MOB-31](./tasks/MOB-31.md) |
 
 ## Quy tắc cập nhật
 
