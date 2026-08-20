@@ -11,8 +11,9 @@ import { addRemoteFavorite, fetchRemoteFavorites, removeRemoteFavorite } from '.
 import { addPlanItem, parsePlanItems } from '../plan-storage';
 import { fetchReviews, reportRemoteReview, upsertReview } from '../review-api';
 import { PlaceMap } from '../components/PlaceMap';
-
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
+import { webConfig } from '../app-config';
+import { getAccessToken } from '../auth-session';
+import { routes } from '../routes';
 const DAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 const PLAN_KEY = 'wanderly:current-plan';
 const FAVORITES_KEY = 'wanderly:favorites';
@@ -36,9 +37,9 @@ export function PlaceDetailPage() {
     if (place) {
       const favorites = parseFavorites(localStorage.getItem(FAVORITES_KEY));
       setFavorite(favorites.some(({ id }) => id === place.id));
-      const accessToken = sessionStorage.getItem('wanderlyAccessToken');
+      const accessToken = getAccessToken(sessionStorage);
       if (accessToken) {
-        void fetchRemoteFavorites(API_URL, accessToken)
+        void fetchRemoteFavorites(webConfig.apiUrl, accessToken)
           .then((remoteFavorites) => setFavorite(remoteFavorites.some(({ id }) => id === place.id)))
           .catch(() => undefined);
       }
@@ -46,16 +47,16 @@ export function PlaceDetailPage() {
   }, [place]);
   useEffect(() => {
     if (!place) return;
-    void fetchReviews(API_URL, place.id).then(setReviews).catch(() => undefined);
+    void fetchReviews(webConfig.apiUrl, place.id).then(setReviews).catch(() => undefined);
     const all = JSON.parse(localStorage.getItem(REVIEWS_KEY) ?? '[]') as Array<{ placeId: string; rating: number; content: string; createdAt: string }>;
-    if (!sessionStorage.getItem('wanderlyAccessToken')) setReviews(all.filter((review) => review.placeId === place.id).slice(-20).reverse());
+    if (!getAccessToken(sessionStorage)) setReviews(all.filter((review) => review.placeId === place.id).slice(-20).reverse());
     setReportedReviews(JSON.parse(localStorage.getItem(REPORTS_KEY) ?? '[]') as string[]);
   }, [place, reviewMessage]);
   async function reportReview(review: { id?: string; createdAt: string }) {
-    const accessToken = sessionStorage.getItem('wanderlyAccessToken');
+    const accessToken = getAccessToken(sessionStorage);
     if (accessToken && review.id) {
       try {
-        await reportRemoteReview(API_URL, accessToken, review.id, 'Nội dung không phù hợp');
+        await reportRemoteReview(webConfig.apiUrl, accessToken, review.id, 'Nội dung không phù hợp');
         setReportedReviews((current) => [...new Set([...current, review.id!])]);
       } catch {
         setReviewMessage('Không thể báo cáo đánh giá.');
@@ -76,11 +77,11 @@ export function PlaceDetailPage() {
     localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
     const nextFavorite = next.some(({ id }) => id === place.id);
     setFavorite(nextFavorite);
-    const accessToken = sessionStorage.getItem('wanderlyAccessToken');
+    const accessToken = getAccessToken(sessionStorage);
     if (!accessToken) return;
     try {
-      if (nextFavorite) await addRemoteFavorite(API_URL, accessToken, place.id);
-      else await removeRemoteFavorite(API_URL, accessToken, place.id);
+      if (nextFavorite) await addRemoteFavorite(webConfig.apiUrl, accessToken, place.id);
+      else await removeRemoteFavorite(webConfig.apiUrl, accessToken, place.id);
     } catch {
       setFavorite(!nextFavorite);
     }
@@ -88,11 +89,11 @@ export function PlaceDetailPage() {
   async function submitReview(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!place) return;
-    const accessToken = sessionStorage.getItem('wanderlyAccessToken');
+    const accessToken = getAccessToken(sessionStorage);
     if (accessToken) {
       try {
-        await upsertReview(API_URL, accessToken, place.id, Number(reviewRating), reviewContent.trim());
-        setReviews(await fetchReviews(API_URL, place.id));
+        await upsertReview(webConfig.apiUrl, accessToken, place.id, Number(reviewRating), reviewContent.trim());
+        setReviews(await fetchReviews(webConfig.apiUrl, place.id));
       } catch {
         setReviewMessage('Không thể lưu đánh giá.');
         return;
@@ -127,7 +128,7 @@ export function PlaceDetailPage() {
   }
   useEffect(() => {
     if (slug)
-      void fetchPlaceDetail(API_URL, slug)
+      void fetchPlaceDetail(webConfig.apiUrl, slug)
         .then(setPlace)
         .catch((e) =>
           setError(e instanceof Error ? e.message : 'Không thể tải địa điểm.'),
@@ -136,7 +137,7 @@ export function PlaceDetailPage() {
   if (error)
     return (
       <main className="detail-shell">
-        <Link to="/explore" className="detail-back">
+        <Link to={routes.explore} className="detail-back">
           ← Khám phá
         </Link>
         <p className="state-message">{error}</p>
@@ -150,7 +151,7 @@ export function PlaceDetailPage() {
     );
   return (
     <main className="detail-shell">
-      <Link to="/explore" className="detail-back">
+      <Link to={routes.explore} className="detail-back">
         ← Khám phá
       </Link>
       <section className="detail-hero">

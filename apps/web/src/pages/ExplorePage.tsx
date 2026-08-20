@@ -9,8 +9,8 @@ import { useSearchParams } from 'react-router';
 import { Link } from 'react-router';
 import { currentBrowserLocation, reverseGeocode } from '../location-api';
 import { fetchEvents } from '../event-api';
-
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
+import { webConfig } from '../app-config';
+import { routes } from '../routes';
 
 function PlaceCard({ place }: { place: PlaceSummary }) {
   return (
@@ -28,7 +28,7 @@ function PlaceCard({ place }: { place: PlaceSummary }) {
           <span>★ {place.rating?.toFixed(1) ?? 'Mới'}</span>
         </div>
         <h2>
-          <Link to={`/places/${place.slug}`}>{place.name}</Link>
+          <Link to={routes.placeDetail(place.slug)}>{place.name}</Link>
         </h2>
         <p>{place.description ?? place.address}</p>
         <div className="place-card__footer">
@@ -68,7 +68,7 @@ export function ExplorePage() {
     nextCursor ? setLoadingMore(true) : setLoading(true);
     setError('');
     try {
-      const page = await fetchPlacePage(API_URL, {
+      const page = await fetchPlacePage(webConfig.apiUrl, {
         cursor: nextCursor,
         limit: 12,
         q: q || undefined,
@@ -98,7 +98,7 @@ export function ExplorePage() {
     void load();
   }, [q, priceMax, category, minRating, indoorOutdoor, latitude, longitude, radiusMeters]);
 
-  useEffect(() => { void fetchEvents(API_URL).then((data) => { setEvents(data); setEventState('ready'); }).catch(() => setEventState('error')); }, []);
+  useEffect(() => { void fetchEvents(webConfig.apiUrl).then((data) => { setEvents(data); setEventState('ready'); }).catch(() => setEventState('error')); }, []);
 
   function useCurrentLocation() {
     if (!navigator.geolocation) {
@@ -106,7 +106,7 @@ export function ExplorePage() {
       return;
     }
     void currentBrowserLocation().then(async ({ coords }) => {
-      const location = await reverseGeocode(API_URL, coords.latitude, coords.longitude);
+      const location = await reverseGeocode(webConfig.apiUrl, coords.latitude, coords.longitude);
       setLocationLabel(location.label);
       setSearchParams((current) => {
         const next = new URLSearchParams(current);
@@ -126,7 +126,7 @@ export function ExplorePage() {
           <h1>Đi đâu hôm nay?</h1>
           <p>Khám phá những nơi phù hợp với nhịp điệu và ngân sách của bạn.</p>
         </div>
-        <nav aria-label="Điều hướng Explore"><Link className="home-link" to="/">Trang chủ</Link> <Link className="home-link" to="/favorites">Đã lưu</Link> <Link className="home-link" to="/collections">Bộ sưu tập</Link></nav>
+        <nav aria-label="Điều hướng Explore"><Link className="home-link" to={routes.home}>Trang chủ</Link> <Link className="home-link" to={routes.favorites}>Đã lưu</Link> <Link className="home-link" to={routes.collections}>Bộ sưu tập</Link></nav>
       </header>
       <section aria-label="Sự kiện sắp diễn ra">
         <h2>Sự kiện sắp diễn ra</h2>

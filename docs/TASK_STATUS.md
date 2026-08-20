@@ -114,6 +114,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | WEB-02 — Thiết lập React Router                | Done       | 2026-08-20 | [WEB-02](./tasks/WEB-02.md) |
 | WEB-03 — Tạo Web design system                 | Done       | 2026-08-20 | [WEB-03](./tasks/WEB-03.md) |
 | WEB-04 — Auth và onboarding                    | Done       | 2026-08-20 | [WEB-04](./tasks/WEB-04.md) |
+| WEB-05 — Explore và Place Detail               | Done       | 2026-08-20 | [WEB-05](./tasks/WEB-05.md) |
 
 ## Quy tắc cập nhật
 
