@@ -11,6 +11,7 @@ export default function RootLayout() {
         <Stack.Screen name="plan" />
         <Stack.Screen name="planner" />
         <Stack.Screen name="places/[slug]" />
+        <Stack.Screen name="plans/shared/[shareToken]" />
       </Stack>
       <StatusBar style="dark" />
     </>

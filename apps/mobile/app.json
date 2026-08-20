@@ -13,11 +13,13 @@
     ],
     "android": {
       "package": "com.wanderly.app",
-      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
+      "intentFilters": [{ "action": "VIEW", "autoVerify": true, "data": [{ "scheme": "https", "host": "wanderly.vn", "pathPrefix": "/places" }, { "scheme": "https", "host": "wanderly.vn", "pathPrefix": "/plans/shared" }], "category": ["BROWSABLE", "DEFAULT"] }]
     },
     "ios": {
       "bundleIdentifier": "com.wanderly.app",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "associatedDomains": ["applinks:wanderly.vn"]
     }
   }
 }
