@@ -161,14 +161,14 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-39 — Performance hints                     | Done       | 2026-08-20 | [MOB-39](./tasks/MOB-39.md) |
 | MOB-40 — CI smoke metadata                      | Done       | 2026-08-20 | [MOB-40](./tasks/MOB-40.md) |
 | MOB-41 — Offline mutation queue                 | Done       | 2026-08-20 | [MOB-41](./tasks/MOB-41.md) |
-| MOB-42 — Session expiry guard                   | Done       | 2026-08-20 | [MOB-42](./tasks/MOB-42.md) |
-| MOB-43 — Event cache key                        | Done       | 2026-08-20 | [MOB-43](./tasks/MOB-43.md) |
-| MOB-44 — Review draft key                       | Done       | 2026-08-20 | [MOB-44](./tasks/MOB-44.md) |
+| MOB-42 — Session expiry guard                   | Partial    | 2026-08-20 | [MOB-42](./tasks/MOB-42.md) |
+| MOB-43 — Event cache key                        | Partial    | 2026-08-20 | [MOB-43](./tasks/MOB-43.md) |
+| MOB-44 — Review draft key                       | Partial    | 2026-08-20 | [MOB-44](./tasks/MOB-44.md) |
 | MOB-45 — Plan share formatter                   | Done       | 2026-08-20 | [MOB-45](./tasks/MOB-45.md) |
-| MOB-46 — Search debounce policy                 | Done       | 2026-08-20 | [MOB-46](./tasks/MOB-46.md) |
-| MOB-47 — Offline status helper                  | Done       | 2026-08-20 | [MOB-47](./tasks/MOB-47.md) |
-| MOB-48 — Analytics consent                      | Done       | 2026-08-20 | [MOB-48](./tasks/MOB-48.md) |
-| MOB-49 — Notification permission policy         | Done       | 2026-08-20 | [MOB-49](./tasks/MOB-49.md) |
+| MOB-46 — Search debounce policy                 | Partial    | 2026-08-20 | [MOB-46](./tasks/MOB-46.md) |
+| MOB-47 — Offline status helper                  | Partial    | 2026-08-20 | [MOB-47](./tasks/MOB-47.md) |
+| MOB-48 — Analytics consent                      | Partial    | 2026-08-20 | [MOB-48](./tasks/MOB-48.md) |
+| MOB-49 — Notification permission policy         | Partial    | 2026-08-20 | [MOB-49](./tasks/MOB-49.md) |
 | MOB-50 — API URL validation                     | Done       | 2026-08-20 | [MOB-50](./tasks/MOB-50.md) |
 
 ## Quy tắc cập nhật
