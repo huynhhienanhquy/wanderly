@@ -19,6 +19,7 @@ export default function RootLayout() {
         <Stack.Screen name="preferences" />
         <Stack.Screen name="review-submit" />
         <Stack.Screen name="review-report" />
+        <Stack.Screen name="notifications" />
       </Stack>
       <StatusBar style="dark" />
     </>
