@@ -9,6 +9,7 @@
     "newArchEnabled": true,
     "plugins": [
       "expo-router",
+      "expo-notifications",
       ["expo-location", { "locationWhenInUsePermission": "Cho phép Wanderly dùng vị trí để gợi ý địa điểm và tuyến đường gần bạn." }]
     ],
     "android": {

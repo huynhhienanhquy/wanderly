@@ -132,6 +132,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-10 — Smart Replace native                   | Done       | 2026-08-20 | [MOB-10](./tasks/MOB-10.md) |
 | MOB-11 — Deep link và Universal Link            | Done       | 2026-08-20 | [MOB-11](./tasks/MOB-11.md) |
 | MOB-12 — Offline cache cơ bản                   | Done       | 2026-08-20 | [MOB-12](./tasks/MOB-12.md) |
+| MOB-13 — Notification reminders                 | Done       | 2026-08-20 | [MOB-13](./tasks/MOB-13.md) |
 
 ## Quy tắc cập nhật
 
