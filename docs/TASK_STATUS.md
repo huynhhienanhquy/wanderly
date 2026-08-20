@@ -89,6 +89,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | ADMIN-04 — Quản lý review/report            | Done       | 2026-08-18 | [ADMIN-04](./tasks/ADMIN-04.md) |
 | PLAN-01 — Kế hoạch cơ bản                   | Done       | 2026-08-13 | [PLAN-01](./tasks/PLAN-01.md)   |
 | EVENT-01 — Thiết kế và quản lý sự kiện      | Done       | 2026-08-20 | [EVENT-01](./tasks/EVENT-01.md) |
+| EVENT-02 — Đưa sự kiện vào recommendation   | Done       | 2026-08-20 | [EVENT-02](./tasks/EVENT-02.md) |
 
 ## Quy tắc cập nhật
 
