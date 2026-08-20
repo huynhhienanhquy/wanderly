@@ -139,6 +139,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-17 — Events native                          | Done       | 2026-08-20 | [MOB-17](./tasks/MOB-17.md) |
 | MOB-18 — Profile native                         | Done       | 2026-08-20 | [MOB-18](./tasks/MOB-18.md) |
 | MOB-19 — Reviews native                         | Done       | 2026-08-20 | [MOB-19](./tasks/MOB-19.md) |
+| MOB-20 — Mobile telemetry queue                 | Done       | 2026-08-20 | [MOB-20](./tasks/MOB-20.md) |
 
 ## Quy tắc cập nhật
 

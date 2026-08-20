@@ -10,6 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { mobileConfig } from '../src/app-config';
 import { saveMobilePlan } from '../src/plan-storage';
 import { Button, Card } from '../src/ui';
+import { trackMobileEvent } from '../src/telemetry';
 
 function scheduleTime(index: number, startTime = '09:00') {
   const [hour = 9] = startTime.split(':').map(Number);
@@ -37,6 +38,7 @@ export default function PlannerScreen() {
       });
       if (!response.ok) throw new Error('Không thể phân tích yêu cầu.');
       const result = extractConstraintsResponseSchema.parse(await response.json());
+      await trackMobileEvent('planner_constraints_analyzed', { interests: result.constraints.interests.length });
       setConstraints(result.constraints);
       setPeopleCount(String(result.constraints.peopleCount));
       setBudget(result.constraints.budget === null ? '' : String(result.constraints.budget));
@@ -83,6 +85,7 @@ export default function PlannerScreen() {
           longitude: place.longitude,
         })),
       });
+      await trackMobileEvent('planner_plan_created', { places: candidates.length });
       router.replace('/plan');
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Đã có lỗi xảy ra.');
