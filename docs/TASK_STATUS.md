@@ -157,6 +157,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-35 — Deep-link validation                   | Done       | 2026-08-20 | [MOB-35](./tasks/MOB-35.md) |
 | MOB-36 — Notification cleanup                  | Done       | 2026-08-20 | [MOB-36](./tasks/MOB-36.md) |
 | MOB-37 — Telemetry privacy                     | Done       | 2026-08-20 | [MOB-37](./tasks/MOB-37.md) |
+| MOB-38 — Form validation helper                | Done       | 2026-08-20 | [MOB-38](./tasks/MOB-38.md) |
 
 ## Quy tắc cập nhật
 
