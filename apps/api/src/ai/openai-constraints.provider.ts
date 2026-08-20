@@ -4,6 +4,7 @@ import { buildConstraintPrompt, CONSTRAINT_SYSTEM_PROMPT } from './constraint-pr
 import { normalizeConstraints } from './constraint-normalizer';
 import { aiProviderConfig } from './ai-provider.config';
 import type { ExternalProviderAdapter } from '../external/provider-adapter';
+import { ExternalCallPolicy } from '../external/external-call.policy';
 
 const responseSchema = {
   type: 'object', additionalProperties: false, required: ['constraints', 'missingFields', 'warnings'],
@@ -29,15 +30,16 @@ type Fetcher = typeof fetch;
 @Injectable()
 export class OpenAiConstraintsProvider implements ExternalProviderAdapter<ExtractConstraintsRequest, ExtractConstraintsResponse> {
   readonly name = 'openai';
+  private readonly policy = new ExternalCallPolicy();
   constructor(@Inject('AI_FETCHER') private readonly fetcher: Fetcher) {}
 
   async extract(request: ExtractConstraintsRequest): Promise<ExtractConstraintsResponse> {
     const { apiKey, model } = aiProviderConfig();
     if (!apiKey) throw new ServiceUnavailableException('AI provider chưa được cấu hình.');
-    for (let attempt = 0; attempt < 2; attempt += 1) {
-      try {
+    try {
+      return await this.policy.execute(async (signal) => {
         const response = await this.fetcher('https://api.openai.com/v1/responses', {
-          method: 'POST', signal: AbortSignal.timeout(8_000), headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+          method: 'POST', signal, headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({ model, store: false, input: [{ role: 'system', content: CONSTRAINT_SYSTEM_PROMPT }, { role: 'user', content: buildConstraintPrompt(request) }], text: { format: { type: 'json_schema', name: 'planning_constraints', strict: true, schema: responseSchema } } }),
         });
         if (!response.ok) throw new Error(`provider status ${response.status}`);
@@ -45,11 +47,10 @@ export class OpenAiConstraintsProvider implements ExternalProviderAdapter<Extrac
         const text = body.output?.flatMap(({ content }) => content ?? []).find((content) => content.type === 'output_text')?.text;
         if (!text) throw new Error('missing output');
         return normalizeConstraints(JSON.parse(text) as Record<string, unknown>, request);
-      } catch (error) {
-        if (attempt === 1) throw new ServiceUnavailableException('AI provider không phản hồi thành công.', { cause: error });
-      }
+      });
+    } catch (error) {
+      throw new ServiceUnavailableException('AI provider không phản hồi thành công.', { cause: error });
     }
-    throw new ServiceUnavailableException('AI provider không phản hồi thành công.');
   }
   execute(request: ExtractConstraintsRequest) { return this.extract(request); }
 }
