@@ -19,6 +19,7 @@ import { mobileConfig } from '../../src/app-config';
 import { readCache, writeCache } from '../../src/offline-cache';
 import { isFreshCache } from '../../src/mobile-hardening';
 import { pageSizeHint } from '../../src/mobile-hardening';
+import { debounceDelayMs } from '../../src/next-features';
 
 const EXPLORE_CACHE_KEY = 'explore:first-page';
 
@@ -85,6 +86,7 @@ export default function ExploreScreen() {
   useEffect(() => {
     void load();
   }, []);
+  useEffect(() => { const timer = setTimeout(() => { if (query.trim().length >= 3) void load(); }, debounceDelayMs(query)); return () => clearTimeout(timer); }, [query]);
   return (
     <SafeAreaView style={styles.safeArea}>
       <FlatList
