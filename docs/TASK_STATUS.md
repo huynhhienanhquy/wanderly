@@ -95,6 +95,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | ADMIN-03 — Quản lý users và events          | Done       | 2026-08-20 | [ADMIN-03](./tasks/ADMIN-03.md) |
 | ADMIN-05 — Dashboard số liệu cơ bản         | Done       | 2026-08-20 | [ADMIN-05](./tasks/ADMIN-05.md) |
 | ADMIN-06 — Theo dõi AI usage                | Done       | 2026-08-20 | [ADMIN-06](./tasks/ADMIN-06.md) |
+| OPS-01 — Docker Compose local                | Done       | 2026-08-20 | [OPS-01](./tasks/OPS-01.md)     |
 | PLAN-01 — Kế hoạch cơ bản                   | Done       | 2026-08-13 | [PLAN-01](./tasks/PLAN-01.md)   |
 | EVENT-01 — Thiết kế và quản lý sự kiện      | Done       | 2026-08-20 | [EVENT-01](./tasks/EVENT-01.md) |
 | EVENT-02 — Đưa sự kiện vào recommendation   | Done       | 2026-08-20 | [EVENT-02](./tasks/EVENT-02.md) |
