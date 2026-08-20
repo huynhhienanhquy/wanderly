@@ -1,5 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
+import { authResponseSchema } from '@wanderly/contracts';
 
 export async function saveAuthTokens(
   accessToken: string,
@@ -38,4 +39,19 @@ export async function clearAuthTokens(): Promise<void> {
     SecureStore.deleteItemAsync('wanderlyAccessToken'),
     SecureStore.deleteItemAsync('wanderlyRefreshToken'),
   ]);
+}
+
+export async function refreshAuthSession(baseUrl: string, fetcher: typeof fetch = fetch): Promise<string | null> {
+  const refreshToken = await getRefreshToken();
+  if (!refreshToken) return null;
+  const response = await fetcher(`${baseUrl}/auth/refresh`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ refreshToken }),
+  });
+  if (!response.ok) {
+    await clearAuthTokens();
+    return null;
+  }
+  const auth = authResponseSchema.parse(await response.json());
+  await saveAuthTokens(auth.tokens.accessToken, auth.tokens.refreshToken);
+  return auth.tokens.accessToken;
 }

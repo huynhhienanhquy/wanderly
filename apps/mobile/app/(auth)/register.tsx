@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { saveAuthTokens } from '../../src/auth-storage';
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
+import { mobileConfig } from '../../src/app-config';
+import { useRouter } from 'expo-router';
 
 export default function RegisterScreen() {
+  const router = useRouter();
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,7 +27,7 @@ export default function RegisterScreen() {
     }
     setSubmitting(true);
     try {
-      const response = await fetch(`${API_URL}/auth/register`, {
+      const response = await fetch(`${mobileConfig.apiUrl}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(parsed.data),
@@ -40,7 +41,7 @@ export default function RegisterScreen() {
         );
       }
       await saveAuthTokens(body.tokens.accessToken, body.tokens.refreshToken);
-      setMessage(`Chào mừng ${body.user.displayName}!`);
+      router.replace('/profile');
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Không thể đăng ký.');
     } finally {

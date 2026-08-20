@@ -3,8 +3,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { clearAuthTokens, getRefreshToken } from '../../src/auth-storage';
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
+import { mobileConfig } from '../../src/app-config';
 
 export default function LogoutScreen() {
   const [done, setDone] = useState(false);
@@ -12,7 +11,7 @@ export default function LogoutScreen() {
     async function logout() {
       const refreshToken = await getRefreshToken();
       if (refreshToken) {
-        await fetch(`${API_URL}/auth/logout`, {
+        await fetch(`${mobileConfig.apiUrl}/auth/logout`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ refreshToken }),

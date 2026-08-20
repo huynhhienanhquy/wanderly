@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { saveAuthTokens } from '../../src/auth-storage';
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
+import { mobileConfig } from '../../src/app-config';
+import { useRouter } from 'expo-router';
 
 export default function LoginScreen() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -21,7 +22,7 @@ export default function LoginScreen() {
     }
     setSubmitting(true);
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const response = await fetch(`${mobileConfig.apiUrl}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(parsed.data),
@@ -35,7 +36,7 @@ export default function LoginScreen() {
         );
       }
       await saveAuthTokens(body.tokens.accessToken, body.tokens.refreshToken);
-      setMessage(`Xin chào ${body.user.displayName}!`);
+      router.replace('/explore');
     } catch (error) {
       setMessage(
         error instanceof Error ? error.message : 'Không thể đăng nhập.',
