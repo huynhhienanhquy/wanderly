@@ -2,6 +2,7 @@ import { planningConstraintsSchema } from '@wanderly/contracts';
 import { Link } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { mobileConfig } from '../src/app-config';
 
 const example = planningConstraintsSchema.parse({
   peopleCount: 2,
@@ -25,6 +26,7 @@ export default function HomeScreen() {
           Kịch bản mẫu có {example.peopleCount} người và ngân sách {budgetLabel}
           .
         </Text>
+        {__DEV__ && <Text style={styles.environment}>API: {mobileConfig.apiUrl}</Text>}
         <Link href="/explore" style={styles.exploreLink}>
           Khám phá địa điểm
         </Link>
@@ -91,4 +93,5 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   logoutLink: { color: '#9d2922', fontSize: 16, marginTop: 12 },
+  environment: { color: '#718078', fontSize: 12, marginTop: 8 },
 });
