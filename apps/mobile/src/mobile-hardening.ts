@@ -6,3 +6,4 @@ export const isSafeDeepLinkToken = (token: string) => /^[A-Za-z0-9_-]{3,200}$/.t
 export const shouldClearNotification = (scheduledAt: number, now = Date.now()) => scheduledAt < now;
 export const redactTelemetry = (value: string) => value.replace(/[\w.+-]+@[\w.-]+/g, '[redacted-email]');
 export const isValidRequiredText = (value: string, min = 1) => value.trim().length >= min;
+export const pageSizeHint = (requested: number, max = 20) => Math.min(Math.max(requested, 1), max);
