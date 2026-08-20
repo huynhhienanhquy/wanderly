@@ -10,3 +10,4 @@ export async function schedulePlanReminder(title: string, date: string): Promise
   await Notifications.scheduleNotificationAsync({ content: { title: 'Sắp đến giờ khám phá!', body: title, data: { route: '/plan' } }, trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: triggerDate, channelId: Platform.OS === 'android' ? 'plans' : undefined } });
   return triggerDate;
 }
+import { canRequestNotifications } from './next-features';

@@ -7,6 +7,7 @@ import { Card } from '../../src/ui';
 import { SmartReplaceSheet } from '../../src/smart-replace-sheet';
 import { schedulePlanReminder } from '../../src/notifications';
 import { formatMobileMoney } from '../../src/i18n';
+import { formatPlanShareText } from '../../src/next-features';
 
 const formatMoney = (value: number) => `${value.toLocaleString('vi-VN')}đ`;
 
@@ -30,8 +31,7 @@ export default function PlanScreen() {
 
   async function sharePlan() {
     if (!plan) return;
-    const timeline = plan.items.map((item) => `${item.startTime} — ${item.name}`).join('\n');
-    await Share.share({ message: `${plan.title} (${plan.date})\n${timeline}\n\nTạo bởi Wanderly` });
+    await Share.share({ message: `${formatPlanShareText(plan.title, plan.items)}\n\nTạo bởi Wanderly` });
   }
 
   function openMap() {
