@@ -6,8 +6,10 @@ import { flushMobileTelemetry } from '../src/telemetry';
 import { mobileConfig } from '../src/app-config';
 import { useEffect } from 'react';
 import { flushMutations } from '../src/offline-mutations';
+import { AppThemeProvider, useAppTheme } from '../src/theme';
 
-export default function RootLayout() {
+function RootNavigator() {
+  const { theme } = useAppTheme();
   useEffect(() => {
     void flushMobileTelemetry(mobileConfig.apiUrl);
     void flushMutations(mobileConfig.apiUrl);
@@ -31,7 +33,11 @@ export default function RootLayout() {
         <Stack.Screen name="notifications" />
         <Stack.Screen name="settings" />
       </Stack>
-      <StatusBar style="dark" />
+      <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
     </></MobileErrorBoundary>
   );
+}
+
+export default function RootLayout() {
+  return <AppThemeProvider><RootNavigator /></AppThemeProvider>;
 }
