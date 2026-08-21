@@ -174,7 +174,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-52 — Explore pull-to-refresh                | Done       | 2026-08-20 | [MOB-52](./tasks/MOB-52.md) |
 | MOB-53 — Optimistic favorite toggle             | Done       | 2026-08-20 | [MOB-53](./tasks/MOB-53.md) |
 | MOB-54 — Itinerary editing hardening            | Done       | 2026-08-21 | [MOB-54](./tasks/MOB-54.md) |
-| MOB-55 — Accessibility smoke tests              | Partial    | —          | [MOB-55](./tasks/MOB-55.md) |
+| MOB-55 — Accessibility smoke tests              | Done       | 2026-08-21 | [MOB-55](./tasks/MOB-55.md) |
 
 ## Quy tắc cập nhật
 
