@@ -2,7 +2,7 @@ import { Link, router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, Share, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { getMobilePlan, saveMobilePlan, type MobilePlan } from '../../src/plan-storage';
+import { getMobilePlan, removeMobilePlanItem, replaceMobilePlanItem, saveMobilePlan, type MobilePlan } from '../../src/plan-storage';
 import { Card } from '../../src/ui';
 import { SmartReplaceSheet } from '../../src/smart-replace-sheet';
 import { schedulePlanReminder } from '../../src/notifications';
@@ -16,6 +16,7 @@ export default function PlanScreen() {
   const [loading, setLoading] = useState(true);
   const [replacingId, setReplacingId] = useState<string | null>(null);
   const [reminderMessage, setReminderMessage] = useState('');
+  const [editError, setEditError] = useState('');
   useFocusEffect(useCallback(() => {
     let active = true;
     getMobilePlan().then((saved) => { if (active) { setPlan(saved); setLoading(false); } });
@@ -24,9 +25,12 @@ export default function PlanScreen() {
 
   async function removeItem(id: string) {
     if (!plan) return;
-    const updated = { ...plan, items: plan.items.filter((item) => item.id !== id) };
+    const previous = plan;
+    const updated = removeMobilePlanItem(plan, id);
     setPlan(updated);
-    await saveMobilePlan(updated);
+    setEditError('');
+    try { await saveMobilePlan(updated); }
+    catch { setPlan(previous); setEditError('Không thể lưu thay đổi. Lịch trình đã được khôi phục.'); }
   }
 
   async function sharePlan() {
@@ -41,9 +45,11 @@ export default function PlanScreen() {
 
   async function replaceItem(replacement: MobilePlan['items'][number]) {
     if (!plan || !replacingId) return;
-    const current = plan.items.find((item) => item.id === replacingId);
-    const updated = { ...plan, items: plan.items.map((item) => item.id === replacingId ? { ...replacement, startTime: current?.startTime ?? replacement.startTime } : item) };
-    setPlan(updated); setReplacingId(null); await saveMobilePlan(updated);
+    const previous = plan;
+    const updated = replaceMobilePlanItem(plan, replacingId, replacement);
+    setPlan(updated); setReplacingId(null); setEditError('');
+    try { await saveMobilePlan(updated); }
+    catch { setPlan(previous); setEditError('Không thể lưu thay đổi. Lịch trình đã được khôi phục.'); }
   }
 
   async function remindMe() {
@@ -64,12 +70,12 @@ export default function PlanScreen() {
       <Card className="mt-4"><Text style={styles.budgetLabel}>Chi phí dự kiến</Text><Text style={styles.budget}>{formatMobileMoney(estimatedCost)}</Text><Text style={styles.body}>Ngân sách: {formatMobileMoney(plan.budget)}</Text></Card></View>}
     renderItem={({ item, index }) => <View style={styles.row}><View style={styles.rail}><View style={styles.dot} />{index < plan.items.length - 1 && <View style={styles.line} />}</View>
       <View style={styles.item}><Text style={styles.time}>{item.startTime}</Text><Text style={styles.place}>{item.name}</Text><View style={styles.actions}><Link href={`/places/${item.slug}`} style={styles.link}>Chi tiết</Link><Pressable onPress={() => setReplacingId(item.id)}><Text style={styles.replace}>Thay thế</Text></Pressable><Pressable onPress={() => removeItem(item.id)}><Text style={styles.remove}>Xóa</Text></Pressable></View></View></View>}
-    ListFooterComponent={<View style={styles.footer}><Pressable onPress={openMap} style={styles.mapButton}><Text style={styles.mapText}>Xem toàn bộ tuyến đường</Text></Pressable><Pressable onPress={remindMe} style={styles.mapButton}><Text style={styles.mapText}>Nhắc tôi trước chuyến đi</Text></Pressable>{!!reminderMessage && <Text style={styles.reminder}>{reminderMessage}</Text>}<Pressable onPress={sharePlan} style={styles.share}><Text style={styles.shareText}>Chia sẻ lịch trình</Text></Pressable><Link href="/planner" style={styles.link}>Tạo lịch trình mới</Link></View>} />
+    ListFooterComponent={<View style={styles.footer}>{!!editError && <Text accessibilityLiveRegion="assertive" style={styles.editError}>{editError}</Text>}<Pressable onPress={openMap} style={styles.mapButton}><Text style={styles.mapText}>Xem toàn bộ tuyến đường</Text></Pressable><Pressable onPress={remindMe} style={styles.mapButton}><Text style={styles.mapText}>Nhắc tôi trước chuyến đi</Text></Pressable>{!!reminderMessage && <Text style={styles.reminder}>{reminderMessage}</Text>}<Pressable onPress={sharePlan} style={styles.share}><Text style={styles.shareText}>Chia sẻ lịch trình</Text></Pressable><Link href="/planner" style={styles.link}>Tạo lịch trình mới</Link></View>} />
     <SmartReplaceSheet visible={replacingId !== null} currentId={replacingId} peopleCount={plan.peopleCount} budget={plan.budget} onClose={() => setReplacingId(null)} onReplace={replaceItem} />
   </SafeAreaView>;
 }
 
 const styles = StyleSheet.create({
   safe: { backgroundColor: '#f4f7f2', flex: 1 }, loader: { flex: 1 }, empty: { flex: 1, justifyContent: 'center', padding: 24 }, container: { padding: 24 }, header: { marginBottom: 24 }, eyebrow: { color: '#277253', fontWeight: '700', letterSpacing: 1 }, title: { color: '#17231f', fontSize: 34, fontWeight: '700', marginTop: 8 }, body: { color: '#52615b', fontSize: 16, lineHeight: 24, marginTop: 8 }, budgetLabel: { color: '#52615b' }, budget: { color: '#17231f', fontSize: 28, fontWeight: '700', marginTop: 4 },
-  row: { flexDirection: 'row', minHeight: 112 }, rail: { alignItems: 'center', marginRight: 16, width: 18 }, dot: { backgroundColor: '#277253', borderRadius: 9, height: 18, width: 18 }, line: { backgroundColor: '#b9cec3', flex: 1, width: 2 }, item: { backgroundColor: '#fff', borderColor: '#d8e1dc', borderRadius: 14, borderWidth: 1, flex: 1, marginBottom: 14, padding: 16 }, time: { color: '#277253', fontWeight: '700' }, place: { color: '#17231f', fontSize: 18, fontWeight: '700', marginTop: 4 }, actions: { flexDirection: 'row', gap: 20, marginTop: 12 }, link: { color: '#277253', fontWeight: '700', marginTop: 12 }, replace: { color: '#277253', fontWeight: '600', marginTop: 12 }, remove: { color: '#9d2922', fontWeight: '600', marginTop: 12 }, footer: { alignItems: 'center', paddingBottom: 24 }, mapButton: { borderColor: '#277253', borderRadius: 12, borderWidth: 1, marginBottom: 12, padding: 13, width: '100%' }, mapText: { color: '#277253', fontWeight: '700', textAlign: 'center' }, reminder: { color: '#52615b', marginBottom: 12 }, share: { backgroundColor: '#277253', borderRadius: 12, paddingHorizontal: 24, paddingVertical: 14, width: '100%' }, shareText: { color: '#fff', fontWeight: '700', textAlign: 'center' },
+  row: { flexDirection: 'row', minHeight: 112 }, rail: { alignItems: 'center', marginRight: 16, width: 18 }, dot: { backgroundColor: '#277253', borderRadius: 9, height: 18, width: 18 }, line: { backgroundColor: '#b9cec3', flex: 1, width: 2 }, item: { backgroundColor: '#fff', borderColor: '#d8e1dc', borderRadius: 14, borderWidth: 1, flex: 1, marginBottom: 14, padding: 16 }, time: { color: '#277253', fontWeight: '700' }, place: { color: '#17231f', fontSize: 18, fontWeight: '700', marginTop: 4 }, actions: { flexDirection: 'row', gap: 20, marginTop: 12 }, link: { color: '#277253', fontWeight: '700', marginTop: 12 }, replace: { color: '#277253', fontWeight: '600', marginTop: 12 }, remove: { color: '#9d2922', fontWeight: '600', marginTop: 12 }, footer: { alignItems: 'center', paddingBottom: 24 }, editError: { color: '#9d2922', marginBottom: 12 }, mapButton: { borderColor: '#277253', borderRadius: 12, borderWidth: 1, marginBottom: 12, padding: 13, width: '100%' }, mapText: { color: '#277253', fontWeight: '700', textAlign: 'center' }, reminder: { color: '#52615b', marginBottom: 12 }, share: { backgroundColor: '#277253', borderRadius: 12, paddingHorizontal: 24, paddingVertical: 14, width: '100%' }, shareText: { color: '#fff', fontWeight: '700', textAlign: 'center' },
 });
