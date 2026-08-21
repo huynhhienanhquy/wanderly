@@ -4,16 +4,26 @@
     "slug": "wanderly",
     "scheme": "wanderly",
     "version": "0.1.0",
+    "runtimeVersion": { "policy": "appVersion" },
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router",
+      "expo-notifications",
+      ["expo-location", { "locationWhenInUsePermission": "Cho phép Wanderly dùng vị trí để gợi ý địa điểm và tuyến đường gần bạn." }]
+    ],
     "android": {
-      "package": "com.wanderly.app"
+      "package": "com.wanderly.app",
+      "versionCode": 1,
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
+      "intentFilters": [{ "action": "VIEW", "autoVerify": true, "data": [{ "scheme": "https", "host": "wanderly.vn", "pathPrefix": "/places" }, { "scheme": "https", "host": "wanderly.vn", "pathPrefix": "/plans/shared" }], "category": ["BROWSABLE", "DEFAULT"] }]
     },
     "ios": {
       "bundleIdentifier": "com.wanderly.app",
-      "supportsTablet": true
+      "buildNumber": "1",
+      "supportsTablet": true,
+      "associatedDomains": ["applinks:wanderly.vn"]
     }
   }
 }

@@ -380,6 +380,7 @@ pnpm build
 
 - [Theo dõi trạng thái task](./docs/TASK_STATUS.md)
 - [Hướng dẫn đóng góp](./CONTRIBUTING.md)
+- [OpenAPI contract](./docs/api/openapi.yaml)
 - [Kế hoạch triển khai](./WANDERLY_PROJECT_PLAN.md)
 - [Backlog theo nhóm chức năng](./WANDERLY_FUNCTIONAL_TASKS.md)
 - [Phân tích, thiết kế hệ thống và database](./WANDERLY_SYSTEM_ANALYSIS_AND_DATABASE_DESIGN.md)

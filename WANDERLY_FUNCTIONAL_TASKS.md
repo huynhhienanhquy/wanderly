@@ -284,7 +284,7 @@
 | WEB-09 | Admin Web               | CRUD place, category, event và review           | P1      | ADMIN-01–ADMIN-05                |
 | WEB-10 | Web test                | Component test và Playwright E2E                | P0      | WEB-04–WEB-08                    |
 
-### Mobile React Native
+### Mobile React Native — MVP
 
 | ID     | Task                         | Đầu ra                                                | Ưu tiên | Phụ thuộc                          |
 | ------ | ---------------------------- | ----------------------------------------------------- | ------- | ---------------------------------- |
@@ -303,6 +303,56 @@
 | MOB-13 | Push notification            | Expo Notifications cho reminder/weather phase 2       | P2      | NOTI-01, NOTI-02                   |
 | MOB-14 | Mobile test                  | React Native Testing Library và flow test chính       | P0      | MOB-04–MOB-10                      |
 | MOB-15 | EAS Build/Submit             | Bản internal Android/iOS và cấu hình signing          | P1      | MOB-14, QA-06                      |
+
+### Mobile React Native — mở rộng sản phẩm
+
+| ID     | Task                       | Đầu ra                                                   | Ưu tiên | Phụ thuộc       |
+| ------ | -------------------------- | -------------------------------------------------------- | ------- | --------------- |
+| MOB-16 | Favorites native hub       | Danh sách địa điểm yêu thích trên Mobile                  | P1      | MOB-06, FAV-02  |
+| MOB-17 | Events native              | Danh sách và chi tiết sự kiện trên Mobile                 | P1      | EVENT-01        |
+| MOB-18 | Profile native             | Xem và chỉnh sửa hồ sơ cá nhân                            | P1      | AUTH-06         |
+| MOB-19 | Reviews native             | Hiển thị danh sách đánh giá địa điểm                      | P1      | REVIEW-01       |
+| MOB-20 | Mobile telemetry queue     | Lưu cục bộ sự kiện telemetry trước khi gửi                | P2      | MOB-01          |
+| MOB-21 | Favorites sync foundation  | Đồng bộ favorite cục bộ với Backend                       | P1      | MOB-16, FAV-01  |
+| MOB-22 | Preferences native         | Chọn và lưu sở thích trên Mobile                          | P1      | PREF-03         |
+| MOB-23 | Review submit native       | Tạo đánh giá địa điểm từ Mobile                           | P1      | MOB-19          |
+| MOB-24 | Review report native       | Báo cáo đánh giá vi phạm từ Mobile                        | P2      | MOB-19          |
+| MOB-25 | Notification inbox native | Hộp thư thông báo trong ứng dụng                          | P2      | MOB-13          |
+| MOB-26 | Telemetry flush            | Gửi batch telemetry đã lưu lên Backend                    | P2      | MOB-20          |
+| MOB-27 | Accessibility pass         | Role, label và trạng thái trợ năng cho màn hình chính     | P1      | MOB-03          |
+| MOB-28 | Localization foundation    | Nền tảng bản địa hóa nội dung Mobile                      | P2      | MOB-03          |
+| MOB-29 | Mobile error boundary      | Giao diện fallback khi ứng dụng gặp lỗi render            | P1      | MOB-02          |
+| MOB-30 | Mobile release smoke check | Kiểm tra cấu hình, typecheck và test trước release        | P1      | MOB-14, MOB-15  |
+
+### Mobile React Native — hardening và polish
+
+| ID     | Task                           | Đầu ra                                                     | Ưu tiên | Phụ thuộc       |
+| ------ | ------------------------------ | ---------------------------------------------------------- | ------- | --------------- |
+| MOB-31 | API retry helper               | Retry có giới hạn cho lỗi API tạm thời                     | P1      | CLIENT-02       |
+| MOB-32 | Cache invalidation             | Quy tắc hết hạn và làm mới cache Mobile                    | P1      | MOB-12          |
+| MOB-33 | Loading state model            | Trạng thái loading dùng thống nhất                         | P2      | MOB-03          |
+| MOB-34 | Empty state helper             | Empty state dùng thống nhất                                | P2      | MOB-03          |
+| MOB-35 | Deep-link validation           | Kiểm tra route và tham số deep link                        | P1      | MOB-11          |
+| MOB-36 | Notification cleanup           | Hủy reminder không còn hợp lệ                              | P2      | MOB-13          |
+| MOB-37 | Telemetry privacy              | Loại bỏ dữ liệu định danh khỏi telemetry                   | P1      | MOB-20          |
+| MOB-38 | Form validation helper         | Validation đầu vào dùng chung cho form Mobile              | P1      | MOB-03          |
+| MOB-39 | Performance hints              | Giới hạn page size và tải dữ liệu Mobile                   | P2      | MOB-06          |
+| MOB-40 | CI smoke metadata              | Metadata và lệnh smoke check dùng trong CI                 | P2      | MOB-30          |
+| MOB-41 | Offline mutation queue         | Xếp hàng và tự gửi lại mutation có xác thực                | P1      | MOB-12, MOB-21  |
+| MOB-42 | Session expiry guard           | Phát hiện access token hết hạn                             | P1      | MOB-04          |
+| MOB-43 | Event cache key                | Cache sự kiện theo ngày và fallback khi offline            | P2      | MOB-17, MOB-32  |
+| MOB-44 | Review draft key               | Tự lưu và khôi phục bản nháp đánh giá                      | P2      | MOB-23          |
+| MOB-45 | Plan share formatter           | Chuẩn hóa nội dung chia sẻ lịch trình                      | P2      | MOB-08          |
+| MOB-46 | Search debounce policy         | Debounce tìm kiếm và tránh request dư thừa                 | P1      | MOB-06          |
+| MOB-47 | Offline status helper          | Trạng thái offline được tích hợp vào UI                    | P1      | MOB-12          |
+| MOB-48 | Analytics consent              | Cho phép cấp, rút và thực thi consent analytics            | P1      | MOB-20, MOB-37  |
+| MOB-49 | Notification permission policy | Chỉ yêu cầu quyền notification khi policy cho phép         | P1      | MOB-13          |
+| MOB-50 | API URL validation             | Chặn URL API không dùng HTTP/HTTPS                         | P1      | MOB-01          |
+| MOB-51 | Settings native                | Settings Mobile và áp dụng theme đã lưu                    | P1      | MOB-03          |
+| MOB-52 | Explore pull-to-refresh        | Làm mới danh sách Explore bằng thao tác kéo                | P1      | MOB-06          |
+| MOB-53 | Optimistic favorite toggle     | Cập nhật favorite tức thời và rollback khi lỗi             | P1      | MOB-16, MOB-21  |
+| MOB-54 | Itinerary editing hardening    | Bảo vệ thao tác sửa lịch trình và dữ liệu cục bộ           | P1      | MOB-08          |
+| MOB-55 | Accessibility smoke tests      | Test accessibility trên màn hình và control thật           | P1      | MOB-27, MOB-14  |
 
 Không chia sẻ UI component trực tiếp giữa Web và Mobile. Chỉ chia sẻ contract, API client, validation schema, query convention và domain logic không phụ thuộc nền tảng.
 

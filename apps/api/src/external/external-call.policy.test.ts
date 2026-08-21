@@ -1,0 +1,2 @@
+import { expect, it, vi } from 'vitest'; import { ExternalCallPolicy } from './external-call.policy';
+it('retries bounded failures and opens the circuit after the threshold', async () => { const policy = new ExternalCallPolicy(100, 1, 1, 1000); const operation = vi.fn().mockRejectedValue(new Error('down')); await expect(policy.execute(operation)).rejects.toThrow('down'); expect(operation).toHaveBeenCalledTimes(2); await expect(policy.execute(operation)).rejects.toThrow('circuit is open'); expect(operation).toHaveBeenCalledTimes(2); });

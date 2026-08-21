@@ -1,0 +1,219 @@
+import {
+  fetchPlaceDetail,
+  formatPlacePrice,
+  type PlaceDetail,
+} from '@wanderly/contracts';
+import { useEffect, useState } from 'react';
+import type { FormEvent } from 'react';
+import { Link, useParams } from 'react-router';
+import { parseFavorites, toggleFavorite as updateFavorites } from '../favorite-storage';
+import { addRemoteFavorite, fetchRemoteFavorites, removeRemoteFavorite } from '../favorite-api';
+import { addPlanItem, parsePlanItems } from '../plan-storage';
+import { fetchReviews, reportRemoteReview, upsertReview } from '../review-api';
+import { PlaceMap } from '../components/PlaceMap';
+import { webConfig } from '../app-config';
+import { getAccessToken } from '../auth-session';
+import { routes } from '../routes';
+const DAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+const PLAN_KEY = 'wanderly:current-plan';
+const FAVORITES_KEY = 'wanderly:favorites';
+const REVIEWS_KEY = 'wanderly:reviews';
+const REPORTS_KEY = 'wanderly:review-reports';
+
+export function PlaceDetailPage() {
+  const { slug } = useParams();
+  const [place, setPlace] = useState<PlaceDetail | null>(null);
+  const [error, setError] = useState('');
+  const [shareMessage, setShareMessage] = useState('');
+  const [planMessage, setPlanMessage] = useState('');
+  const [planStartTime, setPlanStartTime] = useState('08:00');
+  const [favorite, setFavorite] = useState(false);
+  const [reviewRating, setReviewRating] = useState('5');
+  const [reviewContent, setReviewContent] = useState('');
+  const [reviewMessage, setReviewMessage] = useState('');
+  const [reviews, setReviews] = useState<Array<{ id?: string; rating: number; content: string | null; createdAt: string }>>([]);
+  const [reportedReviews, setReportedReviews] = useState<string[]>([]);
+  useEffect(() => {
+    if (place) {
+      const favorites = parseFavorites(localStorage.getItem(FAVORITES_KEY));
+      setFavorite(favorites.some(({ id }) => id === place.id));
+      const accessToken = getAccessToken(sessionStorage);
+      if (accessToken) {
+        void fetchRemoteFavorites(webConfig.apiUrl, accessToken)
+          .then((remoteFavorites) => setFavorite(remoteFavorites.some(({ id }) => id === place.id)))
+          .catch(() => undefined);
+      }
+    }
+  }, [place]);
+  useEffect(() => {
+    if (!place) return;
+    void fetchReviews(webConfig.apiUrl, place.id).then(setReviews).catch(() => undefined);
+    const all = JSON.parse(localStorage.getItem(REVIEWS_KEY) ?? '[]') as Array<{ placeId: string; rating: number; content: string; createdAt: string }>;
+    if (!getAccessToken(sessionStorage)) setReviews(all.filter((review) => review.placeId === place.id).slice(-20).reverse());
+    setReportedReviews(JSON.parse(localStorage.getItem(REPORTS_KEY) ?? '[]') as string[]);
+  }, [place, reviewMessage]);
+  async function reportReview(review: { id?: string; createdAt: string }) {
+    const accessToken = getAccessToken(sessionStorage);
+    if (accessToken && review.id) {
+      try {
+        await reportRemoteReview(webConfig.apiUrl, accessToken, review.id, 'Nội dung không phù hợp');
+        setReportedReviews((current) => [...new Set([...current, review.id!])]);
+      } catch {
+        setReviewMessage('Không thể báo cáo đánh giá.');
+      }
+      return;
+    }
+    const key = `${place?.id}:${review.createdAt}`;
+    const reports = JSON.parse(localStorage.getItem(REPORTS_KEY) ?? '[]') as string[];
+    if (reports.includes(key)) return;
+    const next = [...reports, key];
+    localStorage.setItem(REPORTS_KEY, JSON.stringify(next));
+    setReportedReviews(next);
+  }
+  async function toggleFavorite() {
+    if (!place) return;
+    const favorites = parseFavorites(localStorage.getItem(FAVORITES_KEY));
+    const next = updateFavorites(favorites, { id: place.id, slug: place.slug });
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
+    const nextFavorite = next.some(({ id }) => id === place.id);
+    setFavorite(nextFavorite);
+    const accessToken = getAccessToken(sessionStorage);
+    if (!accessToken) return;
+    try {
+      if (nextFavorite) await addRemoteFavorite(webConfig.apiUrl, accessToken, place.id);
+      else await removeRemoteFavorite(webConfig.apiUrl, accessToken, place.id);
+    } catch {
+      setFavorite(!nextFavorite);
+    }
+  }
+  async function submitReview(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!place) return;
+    const accessToken = getAccessToken(sessionStorage);
+    if (accessToken) {
+      try {
+        await upsertReview(webConfig.apiUrl, accessToken, place.id, Number(reviewRating), reviewContent.trim());
+        setReviews(await fetchReviews(webConfig.apiUrl, place.id));
+      } catch {
+        setReviewMessage('Không thể lưu đánh giá.');
+        return;
+      }
+    } else {
+      const localReviews = JSON.parse(localStorage.getItem(REVIEWS_KEY) ?? '[]') as unknown[];
+      localReviews.push({ placeId: place.id, rating: Number(reviewRating), content: reviewContent.trim(), createdAt: new Date().toISOString() });
+      localStorage.setItem(REVIEWS_KEY, JSON.stringify(localReviews));
+    }
+    setReviewContent('');
+    setReviewMessage('Đã lưu đánh giá nháp.');
+  }
+  function addToPlan() {
+    if (!place) return;
+    const result = addPlanItem(parsePlanItems(localStorage.getItem(PLAN_KEY)), { id: place.id, slug: place.slug, name: place.name, startTime: planStartTime });
+    if (!result.added) { setPlanMessage('Địa điểm đã có trong kế hoạch.'); return; }
+    localStorage.setItem(PLAN_KEY, JSON.stringify(result.items));
+    setPlanMessage(`Đã thêm vào kế hoạch lúc ${planStartTime}.`);
+  }
+  function openDirections() {
+    if (!place) return;
+    const destination = encodeURIComponent(`${place.latitude},${place.longitude}`);
+    window.open(`https://www.google.com/maps/dir/?api=1&destination=${destination}`, '_blank', 'noopener,noreferrer');
+  }
+  async function sharePlace() {
+    if (!place) return;
+    const url = window.location.href;
+    try {
+      if (navigator.share) await navigator.share({ title: place.name, text: place.address, url });
+      else { await navigator.clipboard.writeText(url); setShareMessage('Đã sao chép liên kết.'); }
+    } catch { setShareMessage('Chia sẻ đã bị hủy.'); }
+  }
+  useEffect(() => {
+    if (slug)
+      void fetchPlaceDetail(webConfig.apiUrl, slug)
+        .then(setPlace)
+        .catch((e) =>
+          setError(e instanceof Error ? e.message : 'Không thể tải địa điểm.'),
+        );
+  }, [slug]);
+  if (error)
+    return (
+      <main className="detail-shell">
+        <Link to={routes.explore} className="detail-back">
+          ← Khám phá
+        </Link>
+        <p className="state-message">{error}</p>
+      </main>
+    );
+  if (!place)
+    return (
+      <main className="detail-shell">
+        <p className="state-message">Đang tải địa điểm…</p>
+      </main>
+    );
+  return (
+    <main className="detail-shell">
+      <Link to={routes.explore} className="detail-back">
+        ← Khám phá
+      </Link>
+      <section className="detail-hero">
+        {place.coverImageUrl ? (
+          <img src={place.coverImageUrl} alt={place.name} />
+        ) : (
+          <div className="detail-image-fallback">W</div>
+        )}
+      </section>
+      <section className="detail-content">
+        <p className="eyebrow">{place.district ?? place.city}</p>
+        <h1>{place.name}</h1>
+        <div className="detail-kpis">
+          <span>
+            ★ {place.rating?.toFixed(1) ?? 'Mới'} ({place.reviewCount})
+          </span>
+          <span>{formatPlacePrice(place.priceMin, place.priceMax)}</span>
+        </div>
+        <p className="detail-address">
+          {place.address} · {place.city}
+        </p>
+        <div className="detail-actions">
+          <button type="button" onClick={openDirections}>Chỉ đường</button>
+          <button type="button" onClick={() => void sharePlace()}>Chia sẻ</button>
+          {shareMessage && <span role="status">{shareMessage}</span>}
+          <label>Giờ bắt đầu <input type="time" value={planStartTime} onChange={(event) => setPlanStartTime(event.target.value)} /></label>
+          <button type="button" onClick={addToPlan}>Thêm vào kế hoạch</button>
+          {planMessage && <span role="status">{planMessage}</span>}
+          <button type="button" onClick={() => void toggleFavorite()} aria-pressed={favorite}>{favorite ? 'Đã lưu' : 'Lưu địa điểm'}</button>
+        </div>
+        {place.description && (
+          <p className="detail-description">{place.description}</p>
+        )}
+        <div className="detail-section">
+          <h2>Thông tin</h2>
+          <div className="category-list">
+            {place.categories.map((category) => (
+              <span className="category-pill" key={category.slug}>
+                {category.name}
+              </span>
+            ))}
+          </div>
+        </div>
+        <PlaceMap latitude={place.latitude} longitude={place.longitude} name={place.name} />
+        <div className="detail-section"><h2>Đánh giá của bạn</h2><form onSubmit={submitReview}><label>Điểm <select value={reviewRating} onChange={(event) => setReviewRating(event.target.value)}>{[5, 4, 3, 2, 1].map((value) => <option key={value} value={value}>{value}/5</option>)}</select></label><textarea value={reviewContent} onChange={(event) => setReviewContent(event.target.value)} maxLength={1000} placeholder="Chia sẻ trải nghiệm của bạn" /><button type="submit">Gửi đánh giá</button>{reviewMessage && <span role="status">{reviewMessage}</span>}</form></div>
+        <div className="detail-section"><h2>Đánh giá gần đây ({reviews.length})</h2>{reviews.length === 0 ? <p>Chưa có đánh giá nào.</p> : reviews.map((review, index) => { const key = review.id ?? `${place.id}:${review.createdAt}`; return <article key={`${review.createdAt}-${index}`}><b>{'★'.repeat(review.rating)}</b><p>{review.content || 'Không có nội dung.'}</p><small>{new Date(review.createdAt).toLocaleDateString('vi-VN')}</small><button type="button" onClick={() => void reportReview(review)} disabled={reportedReviews.includes(key)}>{reportedReviews.includes(key) ? 'Đã báo cáo' : 'Báo cáo'}</button></article>; })}</div>
+        <div className="detail-section">
+          <h2>Giờ mở cửa</h2>
+          <div className="hours-grid">
+            {place.openingHours.map((hour) => (
+              <div key={hour.dayOfWeek}>
+                <b>{DAYS[hour.dayOfWeek]}</b>
+                <span>
+                  {hour.isClosed
+                    ? 'Đóng cửa'
+                    : `${hour.open ?? ''} – ${hour.close ?? ''}`}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}

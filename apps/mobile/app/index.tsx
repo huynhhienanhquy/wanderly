@@ -1,6 +1,8 @@
 import { planningConstraintsSchema } from '@wanderly/contracts';
+import { Link } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { mobileConfig } from '../src/app-config';
 
 const example = planningConstraintsSchema.parse({
   peopleCount: 2,
@@ -24,6 +26,26 @@ export default function HomeScreen() {
           Kịch bản mẫu có {example.peopleCount} người và ngân sách {budgetLabel}
           .
         </Text>
+        {__DEV__ && <Text style={styles.environment}>API: {mobileConfig.apiUrl}</Text>}
+        <Link accessibilityRole="link" href="/explore" style={styles.exploreLink}>
+          Khám phá địa điểm
+        </Link>
+        <Link href="/planner" style={styles.plannerLink}>
+          Tạo lịch trình bằng AI
+        </Link>
+        <Link href="/favorites" style={styles.plannerLink}>Địa điểm đã lưu</Link>
+        <Link href="/events" style={styles.plannerLink}>Xem sự kiện</Link>
+        <Link href="/profile" style={styles.plannerLink}>Hồ sơ cá nhân</Link>
+        <Link href="/settings" style={styles.plannerLink}>Cài đặt</Link>
+        <Link href="/register" style={styles.registerLink}>
+          Tạo tài khoản
+        </Link>
+        <Link href="/login" style={styles.loginLink}>
+          Đăng nhập
+        </Link>
+        <Link href="/logout" style={styles.logoutLink}>
+          Đăng xuất
+        </Link>
       </View>
     </SafeAreaView>
   );
@@ -59,4 +81,25 @@ const styles = StyleSheet.create({
     lineHeight: 27,
     marginTop: 24,
   },
+  exploreLink: {
+    color: '#277253',
+    fontSize: 17,
+    fontWeight: '700',
+    marginTop: 24,
+  },
+  registerLink: {
+    color: '#277253',
+    fontSize: 17,
+    fontWeight: '700',
+    marginTop: 24,
+  },
+  plannerLink: { color: '#17231f', fontSize: 17, fontWeight: '700', marginTop: 12 },
+  loginLink: {
+    color: '#52615b',
+    fontSize: 17,
+    fontWeight: '700',
+    marginTop: 12,
+  },
+  logoutLink: { color: '#9d2922', fontSize: 16, marginTop: 12 },
+  environment: { color: '#718078', fontSize: 12, marginTop: 8 },
 });

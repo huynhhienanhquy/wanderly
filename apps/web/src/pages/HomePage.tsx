@@ -1,4 +1,6 @@
 import { planningConstraintsSchema } from '@wanderly/contracts';
+import { Link } from 'react-router';
+import { buttonVariants } from '../components/ui/button';
 
 const example = planningConstraintsSchema.parse({
   peopleCount: 2,
@@ -21,6 +23,9 @@ export function HomePage() {
         MVP đang được xây dựng cho Web React và Mobile React Native. Kịch bản
         mẫu có {example.peopleCount} người với ngân sách {budgetLabel}.
       </p>
+      <Link className={buttonVariants({ variant: 'outline', size: 'lg' })} to="/explore">
+        Khám phá địa điểm
+      </Link>
     </main>
   );
 }

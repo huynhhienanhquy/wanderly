@@ -10,6 +10,8 @@ coverage/
 
 # Web
 apps/web/dist/
+apps/web/playwright-report/
+apps/web/test-results/
 
 # Expo / React Native
 apps/mobile/.expo/

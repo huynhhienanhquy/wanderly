@@ -1,0 +1,2 @@
+import { expect, it } from 'vitest'; import { FixedWindowRateLimiter } from './rate-limit.guard';
+it('blocks calls beyond a fixed window and resets afterward', () => { const limiter = new FixedWindowRateLimiter(); expect(limiter.consume('ip', 2, 1000, 0)).toBe(true); expect(limiter.consume('ip', 2, 1000, 1)).toBe(true); expect(limiter.consume('ip', 2, 1000, 2)).toBe(false); expect(limiter.consume('ip', 2, 1000, 1000)).toBe(true); });
