@@ -1,3 +1,37 @@
-import { eventListSchema } from '@wanderly/contracts'; import { useEffect, useState } from 'react'; import { ActivityIndicator, Linking, Pressable, StyleSheet, Text, View } from 'react-native'; import { SafeAreaView } from 'react-native-safe-area-context'; import { mobileConfig } from '../src/app-config'; import { eventCacheKey } from '../src/next-features'; import { readCache, writeCache } from '../src/offline-cache';
-export default function EventsScreen() { const [events, setEvents] = useState<ReturnType<typeof eventListSchema.parse>>([]); const [error, setError] = useState(''); useEffect(() => { const key = eventCacheKey(); fetch(`${mobileConfig.apiUrl}/events`).then(async (response) => { if (!response.ok) throw new Error('Không thể tải sự kiện.'); return eventListSchema.parse(await response.json()); }).then((value) => { setEvents(value); void writeCache(key, value); }).catch(async (cause: unknown) => { const cached = await readCache<ReturnType<typeof eventListSchema.parse>>(key); if (cached) setEvents(cached.value); else setError(cause instanceof Error ? cause.message : 'Không thể tải sự kiện.'); }); }, []); return <SafeAreaView style={styles.safe}><View style={styles.container}><Text style={styles.eyebrow}>SỰ KIỆN</Text><Text style={styles.title}>Đang diễn ra gần bạn</Text>{!events.length && !error && <ActivityIndicator color="#277253" />}{!!error && <Text style={styles.error}>{error}</Text>}{events.map((event) => <View key={event.id} style={styles.card}><Text style={styles.name}>{event.title}</Text><Text style={styles.body}>{new Date(event.startTime).toLocaleString('vi-VN')}</Text>{event.bookingUrl && <Pressable onPress={() => void Linking.openURL(event.bookingUrl!)}><Text style={styles.link}>Đặt chỗ</Text></Pressable>}</View>)}</View></SafeAreaView>; }
+import { eventListSchema } from '@wanderly/contracts';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { mobileConfig } from '../src/app-config';
+import { eventCacheKey, isOfflineStatus } from '../src/next-features';
+import { readCache, writeCache } from '../src/offline-cache';
+import { OfflineNotice } from '../src/offline-notice';
+
+type ConnectionStatus = 'online' | 'offline';
+
+export default function EventsScreen() {
+  const [events, setEvents] = useState<ReturnType<typeof eventListSchema.parse>>([]);
+  const [error, setError] = useState('');
+  const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>('online');
+  useEffect(() => {
+    const key = eventCacheKey();
+    fetch(`${mobileConfig.apiUrl}/events`).then(async (response) => {
+      if (!response.ok) throw new Error('Không thể tải sự kiện.');
+      return eventListSchema.parse(await response.json());
+    }).then((value) => {
+      setConnectionStatus('online'); setEvents(value); void writeCache(key, value);
+    }).catch(async (cause: unknown) => {
+      setConnectionStatus('offline');
+      const cached = await readCache<ReturnType<typeof eventListSchema.parse>>(key);
+      if (cached) setEvents(cached.value);
+      else setError(cause instanceof Error ? cause.message : 'Không thể tải sự kiện.');
+    });
+  }, []);
+  return <SafeAreaView style={styles.safe}><View style={styles.container}>
+    <Text accessibilityRole="header" style={styles.eyebrow}>SỰ KIỆN</Text><Text style={styles.title}>Đang diễn ra gần bạn</Text>
+    <OfflineNotice visible={isOfflineStatus(connectionStatus)} />
+    {!events.length && !error && <ActivityIndicator color="#277253" />}{!!error && <Text style={styles.error}>{error}</Text>}
+    {events.map((event) => <View key={event.id} style={styles.card}><Text style={styles.name}>{event.title}</Text><Text style={styles.body}>{new Date(event.startTime).toLocaleString('vi-VN')}</Text>{event.bookingUrl && <Pressable accessibilityRole="link" onPress={() => void Linking.openURL(event.bookingUrl!)}><Text style={styles.link}>Đặt chỗ</Text></Pressable>}</View>)}
+  </View></SafeAreaView>;
+}
 const styles = StyleSheet.create({ safe: { backgroundColor: '#f4f7f2', flex: 1 }, container: { padding: 24 }, eyebrow: { color: '#277253', fontWeight: '700' }, title: { color: '#17231f', fontSize: 34, fontWeight: '700', marginVertical: 16 }, error: { color: '#9d2922' }, card: { backgroundColor: '#fff', borderRadius: 14, marginTop: 14, padding: 16 }, name: { color: '#17231f', fontWeight: '700' }, body: { color: '#52615b', marginTop: 8 }, link: { color: '#277253', fontWeight: '700', marginTop: 12 } });
