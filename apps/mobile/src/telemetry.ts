@@ -1,13 +1,14 @@
 import { Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { redactTelemetry } from './mobile-hardening';
+import { hasAnalyticsConsent } from './next-features';
 
 const KEY = 'wanderlyTelemetryQueue';
 export type MobileTelemetryEvent = { name: string; properties?: Record<string, string | number | boolean>; occurredAt: string };
 
 export async function trackMobileEvent(name: string, properties?: MobileTelemetryEvent['properties']): Promise<void> {
   const consent = Platform.OS === 'web' ? localStorage.getItem('wanderlyAnalyticsConsent') : await SecureStore.getItemAsync('wanderlyAnalyticsConsent');
-  if (consent !== 'granted') return;
+  if (!hasAnalyticsConsent(consent)) return;
   const raw = Platform.OS === 'web' ? localStorage.getItem(KEY) : await SecureStore.getItemAsync(KEY);
   let queue: MobileTelemetryEvent[] = [];
   try { queue = raw ? JSON.parse(raw) as MobileTelemetryEvent[] : []; } catch { queue = []; }

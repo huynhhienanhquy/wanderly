@@ -1,5 +1,11 @@
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from 'react-native';
 export type MobileTheme = 'light' | 'dark';
 const KEY = 'wanderlyTheme';
-export const getMobileTheme = async (): Promise<MobileTheme> => (await SecureStore.getItemAsync(KEY)) === 'dark' ? 'dark' : 'light';
-export const saveMobileTheme = (theme: MobileTheme) => SecureStore.setItemAsync(KEY, theme);
+const CONSENT_KEY = 'wanderlyAnalyticsConsent';
+const readValue = (key: string) => Platform.OS === 'web' ? Promise.resolve(localStorage.getItem(key)) : SecureStore.getItemAsync(key);
+const saveValue = (key: string, value: string) => Platform.OS === 'web' ? Promise.resolve(localStorage.setItem(key, value)) : SecureStore.setItemAsync(key, value);
+export const getMobileTheme = async (): Promise<MobileTheme> => (await readValue(KEY)) === 'dark' ? 'dark' : 'light';
+export const saveMobileTheme = (theme: MobileTheme) => saveValue(KEY, theme);
+export const getAnalyticsConsent = async (): Promise<boolean> => (await readValue(CONSENT_KEY)) === 'granted';
+export const saveAnalyticsConsent = (granted: boolean) => saveValue(CONSENT_KEY, granted ? 'granted' : 'denied');
