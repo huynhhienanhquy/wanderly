@@ -160,21 +160,21 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-38 — Form validation helper                | Done       | 2026-08-20 | [MOB-38](./tasks/MOB-38.md) |
 | MOB-39 — Performance hints                     | Done       | 2026-08-20 | [MOB-39](./tasks/MOB-39.md) |
 | MOB-40 — CI smoke metadata                      | Done       | 2026-08-20 | [MOB-40](./tasks/MOB-40.md) |
-| MOB-41 — Offline mutation queue                 | Done       | 2026-08-20 | [MOB-41](./tasks/MOB-41.md) |
+| MOB-41 — Offline mutation queue                 | Partial    | —          | [MOB-41](./tasks/MOB-41.md) |
 | MOB-42 — Session expiry guard                   | Done       | 2026-08-20 | [MOB-42](./tasks/MOB-42.md) |
 | MOB-43 — Event cache key                        | Done       | 2026-08-20 | [MOB-43](./tasks/MOB-43.md) |
 | MOB-44 — Review draft key                       | Done       | 2026-08-20 | [MOB-44](./tasks/MOB-44.md) |
 | MOB-45 — Plan share formatter                   | Done       | 2026-08-20 | [MOB-45](./tasks/MOB-45.md) |
 | MOB-46 — Search debounce policy                 | Done       | 2026-08-20 | [MOB-46](./tasks/MOB-46.md) |
-| MOB-47 — Offline status helper                  | Done       | 2026-08-20 | [MOB-47](./tasks/MOB-47.md) |
-| MOB-48 — Analytics consent                      | Done       | 2026-08-20 | [MOB-48](./tasks/MOB-48.md) |
-| MOB-49 — Notification permission policy         | Done       | 2026-08-20 | [MOB-49](./tasks/MOB-49.md) |
+| MOB-47 — Offline status helper                  | Partial    | —          | [MOB-47](./tasks/MOB-47.md) |
+| MOB-48 — Analytics consent                      | Partial    | —          | [MOB-48](./tasks/MOB-48.md) |
+| MOB-49 — Notification permission policy         | Needs Fix  | —          | [MOB-49](./tasks/MOB-49.md) |
 | MOB-50 — API URL validation                     | Done       | 2026-08-20 | [MOB-50](./tasks/MOB-50.md) |
-| MOB-51 — Settings native                        | Done       | 2026-08-20 | [MOB-51](./tasks/MOB-51.md) |
+| MOB-51 — Settings native                        | Partial    | —          | [MOB-51](./tasks/MOB-51.md) |
 | MOB-52 — Explore pull-to-refresh                | Done       | 2026-08-20 | [MOB-52](./tasks/MOB-52.md) |
 | MOB-53 — Optimistic favorite toggle             | Done       | 2026-08-20 | [MOB-53](./tasks/MOB-53.md) |
-| MOB-54 — Itinerary editing hardening            | Done       | 2026-08-20 | [MOB-54](./tasks/MOB-54.md) |
-| MOB-55 — Accessibility smoke tests              | Done       | 2026-08-20 | [MOB-55](./tasks/MOB-55.md) |
+| MOB-54 — Itinerary editing hardening            | Needs Fix  | —          | [MOB-54](./tasks/MOB-54.md) |
+| MOB-55 — Accessibility smoke tests              | Partial    | —          | [MOB-55](./tasks/MOB-55.md) |
 
 ## Quy tắc cập nhật
 
