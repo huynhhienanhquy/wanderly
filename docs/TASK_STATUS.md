@@ -160,7 +160,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-38 — Form validation helper                | Done       | 2026-08-20 | [MOB-38](./tasks/MOB-38.md) |
 | MOB-39 — Performance hints                     | Done       | 2026-08-20 | [MOB-39](./tasks/MOB-39.md) |
 | MOB-40 — CI smoke metadata                      | Done       | 2026-08-20 | [MOB-40](./tasks/MOB-40.md) |
-| MOB-41 — Offline mutation queue                 | Partial    | —          | [MOB-41](./tasks/MOB-41.md) |
+| MOB-41 — Offline mutation queue                 | Done       | 2026-08-21 | [MOB-41](./tasks/MOB-41.md) |
 | MOB-42 — Session expiry guard                   | Done       | 2026-08-20 | [MOB-42](./tasks/MOB-42.md) |
 | MOB-43 — Event cache key                        | Done       | 2026-08-20 | [MOB-43](./tasks/MOB-43.md) |
 | MOB-44 — Review draft key                       | Done       | 2026-08-20 | [MOB-44](./tasks/MOB-44.md) |

@@ -5,9 +5,13 @@ import { MobileErrorBoundary } from '../src/error-boundary';
 import { flushMobileTelemetry } from '../src/telemetry';
 import { mobileConfig } from '../src/app-config';
 import { useEffect } from 'react';
+import { flushMutations } from '../src/offline-mutations';
 
 export default function RootLayout() {
-  useEffect(() => { void flushMobileTelemetry(mobileConfig.apiUrl); }, []);
+  useEffect(() => {
+    void flushMobileTelemetry(mobileConfig.apiUrl);
+    void flushMutations(mobileConfig.apiUrl);
+  }, []);
   return (
     <MobileErrorBoundary><>
       <Stack screenOptions={{ headerShown: false }}>
