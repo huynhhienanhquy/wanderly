@@ -168,7 +168,7 @@ Tài liệu này là nguồn theo dõi tiến độ triển khai. Mỗi task ho�
 | MOB-46 — Search debounce policy                 | Done       | 2026-08-20 | [MOB-46](./tasks/MOB-46.md) |
 | MOB-47 — Offline status helper                  | Done       | 2026-08-21 | [MOB-47](./tasks/MOB-47.md) |
 | MOB-48 — Analytics consent                      | Done       | 2026-08-21 | [MOB-48](./tasks/MOB-48.md) |
-| MOB-49 — Notification permission policy         | Needs Fix  | —          | [MOB-49](./tasks/MOB-49.md) |
+| MOB-49 — Notification permission policy         | Done       | 2026-08-21 | [MOB-49](./tasks/MOB-49.md) |
 | MOB-50 — API URL validation                     | Done       | 2026-08-20 | [MOB-50](./tasks/MOB-50.md) |
 | MOB-51 — Settings native                        | Partial    | —          | [MOB-51](./tasks/MOB-51.md) |
 | MOB-52 — Explore pull-to-refresh                | Done       | 2026-08-20 | [MOB-52](./tasks/MOB-52.md) |

@@ -5,5 +5,5 @@ export const formatPlanShareText = (title: string, items: Array<{ startTime: str
 export const debounceDelayMs = (query: string) => query.trim().length < 3 ? 350 : 200;
 export const isOfflineStatus = (status: string) => status.toLowerCase() === 'offline';
 export const hasAnalyticsConsent = (value: string | null) => value === 'granted';
-export const canRequestNotifications = (status: string) => status !== 'denied';
+export const canRequestNotifications = (status: string) => status === 'undetermined';
 export const validateApiUrl = (value: string) => { try { const url = new URL(value); return url.protocol === 'http:' || url.protocol === 'https:'; } catch { return false; } };

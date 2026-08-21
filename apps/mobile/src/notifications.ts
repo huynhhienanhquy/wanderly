@@ -2,8 +2,13 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
 export async function schedulePlanReminder(title: string, date: string): Promise<Date> {
-  const permission = await Notifications.requestPermissionsAsync();
-  if (!canRequestNotifications(permission.status)) throw new Error('Bạn đã tắt quyền thông báo.');
+  const currentPermission = await Notifications.getPermissionsAsync();
+  const permission = currentPermission.granted
+    ? currentPermission
+    : canRequestNotifications(currentPermission.status)
+      ? await Notifications.requestPermissionsAsync()
+      : currentPermission;
+  if (!permission.granted && !canRequestNotifications(permission.status)) throw new Error('Bạn đã tắt quyền thông báo.');
   if (!permission.granted) throw new Error('Bạn chưa cấp quyền thông báo.');
   if (Platform.OS === 'android') await Notifications.setNotificationChannelAsync('plans', { name: 'Nhắc lịch trình', importance: Notifications.AndroidImportance.HIGH });
   const departure = new Date(`${date}T08:00:00`);
