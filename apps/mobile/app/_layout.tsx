@@ -7,12 +7,13 @@ import { mobileConfig } from '../src/app-config';
 import { useEffect } from 'react';
 import { flushMutations } from '../src/offline-mutations';
 import { AppThemeProvider, useAppTheme } from '../src/theme';
+import { getAccessToken } from '../src/auth-storage';
 
 function RootNavigator() {
   const { theme } = useAppTheme();
   useEffect(() => {
     void flushMobileTelemetry(mobileConfig.apiUrl);
-    void flushMutations(mobileConfig.apiUrl);
+    void flushMutations(mobileConfig.apiUrl, fetch, getAccessToken);
   }, []);
   return (
     <MobileErrorBoundary><>

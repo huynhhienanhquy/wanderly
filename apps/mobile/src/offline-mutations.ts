@@ -1,6 +1,4 @@
 import * as SecureStore from 'expo-secure-store';
-import { getAccessToken } from './auth-storage';
-
 const KEY = 'wanderlyOfflineMutations';
 export type OfflineMutation = { method: 'POST' | 'PUT' | 'PATCH' | 'DELETE'; path: string; body?: unknown };
 export async function enqueueMutation(mutation: OfflineMutation): Promise<void> { const queue = await readMutations(); queue.push(mutation); await SecureStore.setItemAsync(KEY, JSON.stringify(queue.slice(-50))); }
@@ -8,7 +6,7 @@ export async function readMutations(): Promise<OfflineMutation[]> { try { const 
 export async function flushMutations(
   baseUrl: string,
   fetcher: typeof fetch = fetch,
-  tokenProvider: () => Promise<string | null> = getAccessToken,
+  tokenProvider: () => Promise<string | null>,
 ): Promise<number> {
   const queue = await readMutations();
   if (!queue.length) return 0;

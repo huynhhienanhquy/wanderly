@@ -15,13 +15,13 @@ describe('accessibility smoke', () => {
     const screen = render(<AppThemeProvider><SettingsScreen /></AppThemeProvider>);
     expect(screen.getByRole('header', { name: 'Cài đặt' })).toBeVisible();
     const themeSwitch = screen.getByRole('switch', { name: 'Giao diện tối' });
-    expect(themeSwitch).toHaveAccessibilityState({ checked: false });
+    expect(themeSwitch.props.accessibilityState).toEqual({ checked: false });
     fireEvent.press(themeSwitch);
-    await waitFor(() => expect(screen.getByRole('switch', { name: 'Giao diện tối' })).toHaveAccessibilityState({ checked: true }));
+    await waitFor(() => expect(screen.getByRole('switch', { name: 'Giao diện tối' }).props.accessibilityState).toEqual({ checked: true }));
   });
 
   it('announces the real offline notice as an alert', () => {
     const screen = render(<OfflineNotice visible />);
-    expect(screen.getByRole('alert')).toHaveTextContent('Bạn đang ngoại tuyến');
+    expect(screen.getByRole('alert')).toHaveTextContent('Bạn đang ngoại tuyến. Nội dung đã lưu có thể không phải mới nhất.');
   });
 });
